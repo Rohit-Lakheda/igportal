@@ -1,0 +1,220 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ article.title }} — Bharat IG Sphere{% endblock %}
+{% block body_class %}lp-page{% endblock %}
+
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'UI-CSS/landing.css' %}">
+<link rel="stylesheet" href="{% static 'UI-CSS/events.css' %}">
+<link rel="stylesheet" href="{% static 'UI-CSS/blogs.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<section class="events-header">
+  <div class="events-header-bg"></div>
+  <div class="events-header-content">
+    <h1>Blogs</h1>
+    <p>Research, policy notes, and writing from India’s Internet Governance community.</p>
+  </div>
+</section>
+
+<section class="bl-page">
+  <div class="bl-wrap">
+    <article class="bl-article">
+      <a class="bl-back" href="{% url 'blogs' %}"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> All articles</a>
+
+      <div class="bl-article-layout">
+        <div class="bl-article-main">
+          <div class="bl-meta">
+            {% if article.article_type %}<span class="bl-type">{{ article.article_type }}</span>{% endif %}
+            <time datetime="{{ article.created_at|date:'Y-m-d' }}">{{ article.created_at|date:"d M Y" }}</time>
+            {% if article.read_time %}<span>{{ article.read_time }}</span>{% endif %}
+          </div>
+          <h1>{{ article.title }}</h1>
+          {% if article.Contributor %}<p class="bl-by">{{ article.Contributor }}</p>{% endif %}
+          {% if article.description %}
+          <p class="bl-lead">{{ article.description }}</p>
+          {% endif %}
+          {% if article.image %}
+          <img class="bl-article-img" src="{{ article.image.url }}" alt="">
+          {% endif %}
+          <div class="bl-article-body">
+            <input type="hidden" id="blogId" value="{{ article.id }}">
+            {{ article.content|linebreaks }}
+          </div>
+          {% if tag_list %}
+          <div class="bl-tags">
+            {% for tag in tag_list %}
+            <span>{{ tag }}</span>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </div>
+
+        {% if latest_articles %}
+        <aside class="bl-more" aria-label="More articles">
+          <h2>More articles</h2>
+          <ul>
+            {% for item in latest_articles %}
+            <li>
+              <a href="{% url 'blog_detail' item.id %}">{{ item.title }}</a>
+              <span>{{ item.created_at|date:"d M Y" }}{% if item.Contributor %} · {{ item.Contributor }}{% endif %}</span>
+            </li>
+            {% endfor %}
+          </ul>
+        </aside>
+        {% endif %}
+      </div>
+    </article>
+  </div>
+</section>
+
+<footer class="lp-footer">
+  <div class="lp-footer-grid">
+    <div class="lp-footer-brand">
+      <img src="{% static 'img/ig-logo3.jpeg' %}" alt="Bharat IG">
+      <div>
+        <strong>Bharat Internet Governance Sphere</strong>
+        <p>Connection, policy, people and participation in India's digital governance.</p>
+      </div>
+    </div>
+    <div>
+      <h4>Explore</h4>
+      <a href="{% url 'home' %}">Home</a>
+      <a href="{% url 'events' %}">Events</a>
+      <a href="{% url 'research_hub' %}">Research</a>
+      <a href="{% url 'blogs' %}">Blogs</a>
+    </div>
+    <div>
+      <h4>Participate</h4>
+      <a href="{% url 'consultations' %}">Stakeholder Engagement</a>
+      <a href="{% url 'capacity' %}">Capacity Building</a>
+      <a href="{% url 'global' %}">India at Global Forums</a>
+      <a href="{% url 'sig' %}">SIG</a>
+    </div>
+    <div>
+      <h4>Connect</h4>
+      <p>Stay connected with India's internet governance community.</p>
+      <div class="lp-social">
+        <a href="https://x.com" target="_blank" rel="noopener" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
+        <a href="https://www.linkedin.com" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+        <a href="https://www.youtube.com" target="_blank" rel="noopener" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+      </div>
+    </div>
+  </div>
+  <div class="lp-footer-bar">
+    <span>© {% now "Y" %} Bharat Internet Governance Sphere (BIG-S). All rights reserved.</span>
+    <span>Privacy Policy · Terms of Use · Contact Us</span>
+  </div>
+</footer>
+
+<script>
+
+let activeSeconds = 0;
+let lastActivity = Date.now();
+
+document.addEventListener('mousemove', () => {
+    lastActivity = Date.now();
+});
+
+document.addEventListener('scroll', () => {
+    lastActivity = Date.now();
+});
+
+setInterval(() => {
+
+    if (
+        !document.hidden &&
+        (Date.now() - lastActivity) < 5000
+    ){
+        activeSeconds++;
+        console.log("Active:", activeSeconds);
+    }
+
+},1000);
+
+
+// TEST MODE
+// save every 2 seconds
+
+setInterval(() => {
+
+    if(activeSeconds >= 2){
+
+        console.log("Sending Request");
+
+        fetch('/save-read-time/',{
+
+            method:'POST',
+
+            headers:{
+                'Content-Type':'application/json',
+                'X-CSRFToken':
+                getCookie('csrftoken')
+            },
+
+            body:JSON.stringify({
+
+                blog_id:
+                document.getElementById('blogId').value,
+
+                seconds:
+                activeSeconds
+
+            })
+
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log("Saved:", data);
+        })
+        .catch(error => {
+            console.log("Error:", error);
+        });
+
+        activeSeconds = 0;
+    }
+
+},2000);
+
+
+// CSRF Helper
+
+function getCookie(name) {
+
+    let cookieValue = null;
+
+    if (document.cookie && document.cookie !== '') {
+
+        const cookies = document.cookie.split(';');
+
+        for (let i = 0; i < cookies.length; i++) {
+
+            const cookie = cookies[i].trim();
+
+            if (
+                cookie.substring(
+                    0,
+                    name.length + 1
+                ) === (name + '=')
+            ) {
+
+                cookieValue = decodeURIComponent(
+                    cookie.substring(
+                        name.length + 1
+                    )
+                );
+
+                break;
+            }
+        }
+    }
+
+    return cookieValue;
+}
+
+</script>
+
+{% endblock %}

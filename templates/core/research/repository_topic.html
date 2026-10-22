@@ -1,0 +1,89 @@
+{% extends "core/research/base_research.html" %}
+{% load static %}
+{% block title %}{{ topic.name }} — Research repository{% endblock %}
+{% block body_class %}lp-page{% endblock %}
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'UI-CSS/landing.css' %}">
+<link rel="stylesheet" href="{% static 'UI-CSS/research.css' %}">
+{% endblock %}
+{% block research_body %}
+<section class="events-header">
+  <div class="events-header-bg"></div>
+  <div class="events-header-content">
+    <h1>{{ topic.name }}</h1>
+    <p>Versions are listed newest first. Each upload is a separate record.</p>
+  </div>
+</section>
+
+<section class="rr-page">
+  <div class="rr-wrap">
+    <article class="rr-sheet">
+      <div class="rr-top">
+        <a href="{% url 'research_repository_broad' broad.slug %}" class="rr-back"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> {{ broad.name }}</a>
+        {% if request.session.member_uuid and request.session.member_role|default:''|lower == 'member' %}
+        <a href="{% url 'research_repository_submit' %}" class="rr-submit">Submit an update</a>
+        {% endif %}
+      </div>
+
+      {% for paper in papers %}
+      <article class="rr-paper">
+        <div class="rr-paper-head">
+          <span class="rr-version">Version {{ paper.version }}</span>
+          <time>{{ paper.uploaded_at|date:"d M Y" }}</time>
+        </div>
+        <h2>{{ paper.title }}</h2>
+        <p>{{ paper.abstract }}</p>
+        <div class="rr-paper-foot">
+          <span>{{ paper.submitter_display_name }}</span>
+          {% if paper.document %}
+          <a class="rr-open" href="{% url 'research_paper_download' paper.pk %}">Download</a>
+          {% endif %}
+        </div>
+      </article>
+      {% empty %}
+      <p class="rr-empty">No approved papers in this topic.</p>
+      {% endfor %}
+    </article>
+  </div>
+</section>
+
+<footer class="lp-footer">
+  <div class="lp-footer-grid">
+    <div class="lp-footer-brand">
+      <img src="{% static 'img/ig-logo3.jpeg' %}" alt="Bharat IG">
+      <div>
+        <strong>Bharat Internet Governance Sphere</strong>
+        <p>Connection, policy, people and participation in India's digital governance.</p>
+      </div>
+    </div>
+    <div>
+      <h4>Explore</h4>
+      <a href="{% url 'home' %}">Home</a>
+      <a href="{% url 'events' %}">Events</a>
+      <a href="{% url 'research_hub' %}">Research</a>
+      <a href="{% url 'blogs' %}">Blogs</a>
+    </div>
+    <div>
+      <h4>Participate</h4>
+      <a href="{% url 'consultations' %}">Stakeholder Engagement</a>
+      <a href="{% url 'capacity' %}">Capacity Building</a>
+      <a href="{% url 'global' %}">India at Global Forums</a>
+      <a href="{% url 'sig' %}">SIG</a>
+    </div>
+    <div>
+      <h4>Connect</h4>
+      <p>Stay connected with India's internet governance community.</p>
+      <div class="lp-social">
+        <a href="https://x.com" target="_blank" rel="noopener" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
+        <a href="https://www.linkedin.com" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+        <a href="https://www.youtube.com" target="_blank" rel="noopener" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+      </div>
+    </div>
+  </div>
+  <div class="lp-footer-bar">
+    <span>© {% now "Y" %} Bharat Internet Governance Sphere (BIG-S). All rights reserved.</span>
+    <span>Privacy Policy · Terms of Use · Contact Us</span>
+  </div>
+</footer>
+{% endblock %}

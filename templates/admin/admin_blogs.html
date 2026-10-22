@@ -1,0 +1,142 @@
+{% extends "admin/base.html" %}
+{% block title %}Blogs | Admin{% endblock %}
+
+{% block admin_css %}
+<style>
+  .bl-head{ display:flex; justify-content:space-between; align-items:flex-end; gap:16px; flex-wrap:wrap; }
+  .bl-head h1{ margin:0; font-family:"Playfair Display", Georgia, serif; }
+  .bl-head p{ margin:6px 0 0; color:#5b6b7c; }
+  .bl-count{ padding:8px 12px; border-radius:999px; background:#fff; border:1px solid #e8edf3; font-weight:700; font-size:14px; }
+  .bl-bar{ display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; align-items:center; }
+  .bl-search{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .bl-tools{ display:flex; align-items:center; gap:8px; flex:0 0 auto; }
+  .bl-search input, .bl-search select{
+    box-sizing:border-box; height:44px; padding:0 14px; border:1px solid #e8edf3; border-radius:12px; background:#fff; color:#122033; font:inherit; font-size:14px;
+  }
+  .bl-search input{ width:min(280px, 100%); }
+  .bl-search input:focus, .bl-search select:focus{ outline:2px solid rgba(224,123,42,.35); border-color:#e07b2a; }
+  .bl-search button{
+    display:inline-flex; align-items:center; justify-content:center; height:44px; padding:0 16px; border:0; border-radius:12px; background:#e07b2a; color:#fff; font-weight:700; line-height:1; cursor:pointer;
+  }
+  .bl-search button:hover{ background:#c96416; }
+  .bl-list{ display:flex; flex-direction:column; gap:12px; }
+  .bl-card{
+    display:grid; grid-template-columns:168px minmax(0, 1fr) auto; gap:16px; align-items:center;
+    background:#fff; border:1px solid #e8edf3; border-radius:18px; padding:14px;
+    box-shadow:0 10px 24px rgba(15,23,42,.05);
+  }
+  .bl-photo{ width:168px; height:96px; object-fit:cover; border-radius:12px; background:#eef1f5; }
+  .bl-photo.empty{ display:grid; place-items:center; color:#8a97a6; font-size:12px; font-weight:700; border:1px dashed #d7dee7; }
+  .bl-card h2{ margin:0; font-size:18px; color:#122033; }
+  .bl-card p{ margin:8px 0 0; color:#5b6b7c; font-size:14px; line-height:1.45; }
+  .bl-meta{ display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+  .bl-meta span{
+    padding:4px 10px; border-radius:999px; background:#f4f7fb; border:1px solid #e8edf3; color:#5b6b7c; font-size:12.5px; font-weight:700;
+  }
+  .bl-meta .Pending{ color:#c96416; background:rgba(224,123,42,.12); border-color:transparent; }
+  .bl-meta .Approved{ color:#166534; background:rgba(22,163,74,.1); border-color:transparent; }
+  .bl-meta .Rejected{ color:#b42318; background:#fff5f5; border-color:transparent; }
+  .bl-actions{ display:flex; align-items:center; gap:8px; }
+  .bl-actions form{ margin:0; display:flex; gap:8px; }
+  .bl-actions a, .bl-actions button{
+    display:inline-flex; align-items:center; justify-content:center; height:38px; padding:0 14px;
+    border-radius:10px; border:1px solid #e8edf3; background:#fff; color:#122033; font-weight:700; font-size:13px; line-height:1; text-decoration:none; cursor:pointer;
+  }
+  .bl-actions a:hover{ border-color:#e07b2a; color:#c96416; }
+  .bl-actions .yes{ background:#e07b2a; border-color:#e07b2a; color:#fff; }
+  .bl-actions .yes:hover{ background:#c96416; }
+  .bl-actions .danger{ color:#b42318; }
+  .bl-actions .danger:hover{ border-color:#b42318; background:#fff5f5; }
+  .bl-empty{ padding:28px 16px; text-align:center; background:#fff; border:1px dashed #d7dee7; border-radius:18px; color:#5b6b7c; }
+  .bl-pages{ display:flex; flex-wrap:wrap; gap:6px; }
+  .bl-pages a{
+    min-width:36px; min-height:36px; padding:0 10px; display:inline-flex; align-items:center; justify-content:center;
+    border-radius:10px; border:1px solid #e8edf3; background:#fff; color:#122033; text-decoration:none; font-weight:700; font-size:13px;
+  }
+  .bl-pages a.is-on{ background:#e07b2a; border-color:#e07b2a; color:#fff; }
+  @media (max-width: 800px){
+    .bl-card{ grid-template-columns:1fr; }
+    .bl-photo{ width:100%; height:180px; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-section">
+  <div class="bl-head">
+    <div>
+      <h1>Blogs</h1>
+      <p>Approve a submission so it can appear on the public blogs page. {{ pending_count }} waiting, {{ approved_count }} approved.</p>
+    </div>
+    <div class="bl-count">{{ blogs.paginator.count }} article{{ blogs.paginator.count|pluralize }}</div>
+  </div>
+
+  <div class="bl-bar">
+    <form method="get" class="bl-search">
+      <input type="text" name="search" value="{{ search }}" placeholder="Search title, category, or tags">
+      <div class="bl-tools">
+        <select name="status" onchange="this.form.submit()" aria-label="Status">
+          <option value="">All statuses</option>
+          <option value="Pending" {% if status == "Pending" %}selected{% endif %}>Pending</option>
+          <option value="Approved" {% if status == "Approved" %}selected{% endif %}>Approved</option>
+          <option value="Rejected" {% if status == "Rejected" %}selected{% endif %}>Rejected</option>
+        </select>
+        <button type="submit">Search</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="bl-list">
+    {% for blog in blogs %}
+    <article class="bl-card">
+      {% if blog.image %}
+      <img class="bl-photo" src="{{ blog.image.url }}" alt="">
+      {% else %}
+      <div class="bl-photo empty">No image</div>
+      {% endif %}
+      <div>
+        <h2>{{ blog.title }}</h2>
+        <div class="bl-meta">
+          {% if blog.article_type %}<span>{{ blog.article_type }}</span>{% endif %}
+          <span class="{{ blog.status }}">{{ blog.status }}</span>
+          {% if blog.read_time %}<span>{{ blog.read_time }}</span>{% endif %}
+          <span>{{ blog.created_at|date:"d M Y" }}</span>
+          {% if blog.tags %}<span>{{ blog.tags }}</span>{% endif %}
+        </div>
+        {% if blog.description %}<p>{{ blog.description|truncatewords:24 }}</p>{% endif %}
+      </div>
+      <div class="bl-actions">
+        <a href="{% url 'blog_detail' blog.id %}">View</a>
+        <form method="post" action="{% url 'admin_blogs' %}">
+          {% csrf_token %}
+          <input type="hidden" name="blog_id" value="{{ blog.id }}">
+          <input type="hidden" name="current_page" value="{{ blogs.number }}">
+          <input type="hidden" name="search" value="{{ search }}">
+          <input type="hidden" name="status_filter" value="{{ status }}">
+          {% if blog.status != "Approved" %}
+          <button type="submit" name="action" value="approve" class="yes">Approve</button>
+          {% endif %}
+          <button type="submit" name="action" value="delete" class="danger" onclick="return confirm('Delete this article?');">Delete</button>
+        </form>
+      </div>
+    </article>
+    {% empty %}
+    <div class="bl-empty">No articles match this filter.</div>
+    {% endfor %}
+  </div>
+
+  {% if blogs.paginator.num_pages > 1 %}
+  <div class="bl-pages">
+    {% if blogs.has_previous %}
+    <a href="?page={{ blogs.previous_page_number }}&search={{ search }}&status={{ status }}">Prev</a>
+    {% endif %}
+    {% for p in blogs.paginator.page_range %}
+    <a href="?page={{ p }}&search={{ search }}&status={{ status }}" class="{% if p == blogs.number %}is-on{% endif %}">{{ p }}</a>
+    {% endfor %}
+    {% if blogs.has_next %}
+    <a href="?page={{ blogs.next_page_number }}&search={{ search }}&status={{ status }}">Next</a>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

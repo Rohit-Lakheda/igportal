@@ -1,0 +1,123 @@
+{% extends "admin/base.html" %}
+{% load static %}
+{% block title %}SIG profile requests | Admin{% endblock %}
+
+{% block admin_css %}
+<style>
+  .rq-head{ display:flex; justify-content:space-between; align-items:flex-end; gap:16px; flex-wrap:wrap; }
+  .rq-head h1{ margin:0; font-family:"Playfair Display", Georgia, serif; }
+  .rq-head p{ margin:6px 0 0; color:#5b6b7c; }
+  .rq-count{ padding:8px 12px; border-radius:999px; background:#fff; border:1px solid #e8edf3; font-weight:700; font-size:14px; }
+  .rq-search{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .rq-tools{ display:flex; align-items:center; gap:8px; flex:0 0 auto; }
+  .rq-search input, .rq-search select{
+    box-sizing:border-box; height:44px; min-height:44px; padding:0 14px; border:1px solid #e8edf3; border-radius:12px; background:#fff; color:#122033; font:inherit; font-size:14px; line-height:1.2;
+  }
+  .rq-search input{ width:min(280px, 100%); }
+  .rq-search input:focus, .rq-search select:focus, .rq-pass:focus{
+    outline:2px solid rgba(224,123,42,.35); border-color:#e07b2a;
+  }
+  .rq-search button{
+    display:inline-flex; align-items:center; justify-content:center; height:44px; padding:0 16px; border:0; border-radius:12px; background:#e07b2a; color:#fff; font-weight:700; line-height:1; white-space:nowrap; cursor:pointer;
+  }
+  .rq-search button:hover{ background:#c96416; }
+  .rq-list{ display:flex; flex-direction:column; gap:12px; }
+  .rq-card{
+    background:#fff; border:1px solid #e8edf3; border-radius:18px; padding:16px 18px;
+    box-shadow:0 10px 24px rgba(15,23,42,.05);
+  }
+  .rq-top{ display:flex; justify-content:space-between; gap:12px; align-items:flex-start; }
+  .rq-card h3{ margin:0; font-size:18px; color:#122033; }
+  .rq-card .sub{ margin:4px 0 0; color:#5b6b7c; font-size:13.5px; }
+  .rq-tags{ display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
+  .rq-tags span, .rq-status{
+    padding:4px 10px; border-radius:999px; background:#f4f7fb; border:1px solid #e8edf3; color:#5b6b7c; font-size:12.5px; font-weight:700;
+  }
+  .rq-status.pending{ color:#c96416; background:rgba(224,123,42,.12); border-color:transparent; }
+  .rq-status.approved{ color:#166534; background:rgba(22,163,74,.1); border-color:transparent; }
+  .rq-status.rejected{ color:#b42318; background:#fff5f5; border-color:transparent; }
+  .rq-note{ margin:10px 0 0; color:#334155; font-size:14px; line-height:1.5; }
+  .rq-actions{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-top:14px; }
+  .rq-actions form{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:0; }
+  .rq-pass{
+    box-sizing:border-box; height:38px; width:min(220px, 100%); padding:0 12px; border:1px solid #e8edf3; border-radius:10px; font:inherit; font-size:13px;
+  }
+  .rq-actions button{
+    display:inline-flex; align-items:center; justify-content:center; height:38px; padding:0 14px;
+    border-radius:10px; border:1px solid #e8edf3; background:#fff; font-weight:700; font-size:13px; line-height:1; cursor:pointer;
+  }
+  .rq-actions .yes{ background:#e07b2a; border-color:#e07b2a; color:#fff; }
+  .rq-actions .yes:hover{ background:#c96416; }
+  .rq-actions .no{ color:#b42318; }
+  .rq-actions .no:hover{ border-color:#b42318; background:#fff5f5; }
+  .rq-empty{ padding:28px 16px; text-align:center; background:#fff; border:1px dashed #d7dee7; border-radius:18px; color:#5b6b7c; }
+  .rq-link{ color:#c96416; font-weight:700; text-decoration:none; }
+  .rq-link:hover{ color:#e07b2a; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-section">
+  <div class="rq-head">
+    <div>
+      <h1>SIG profile requests</h1>
+      <p>Approve or reject a SIG profile. Leave the password blank to send a generated one.</p>
+    </div>
+    <div class="rq-count">{{ sig_member_requests|length }} profile{{ sig_member_requests|length|pluralize }}</div>
+  </div>
+
+  <form method="get" class="rq-search">
+    <input type="text" name="search" value="{{ search }}" placeholder="Search name, email, or organization">
+    <div class="rq-tools">
+      <select name="status" onchange="this.form.submit()" aria-label="Status">
+        <option value="">All statuses</option>
+        <option value="pending" {% if status == "pending" %}selected{% endif %}>Pending</option>
+        <option value="approved" {% if status == "approved" %}selected{% endif %}>Approved</option>
+        <option value="rejected" {% if status == "rejected" %}selected{% endif %}>Rejected</option>
+      </select>
+      <button type="submit">Search</button>
+    </div>
+  </form>
+
+  <div class="rq-list">
+    {% for req in sig_member_requests %}
+    <article class="rq-card">
+      <div class="rq-top">
+        <div>
+          <h3>{{ req.first_name }} {{ req.last_name }}</h3>
+          <p class="sub">{{ req.email }}{% if req.mobile %} · {{ req.mobile }}{% endif %} · {{ req.submitted_at|date:"d M Y" }}</p>
+        </div>
+        <span class="rq-status {{ req.status }}">{{ req.status|title }}</span>
+      </div>
+      <div class="rq-tags">
+        {% if req.organization %}<span>{{ req.organization }}</span>{% endif %}
+        {% if req.designation %}<span>{{ req.designation }}</span>{% endif %}
+        {% if req.state %}<span>{{ req.state }}</span>{% endif %}
+        {% if req.target_sigs %}<span>{{ req.target_sigs }}</span>{% endif %}
+      </div>
+      {% if req.bio %}<p class="rq-note">{{ req.bio|truncatewords:40 }}</p>{% endif %}
+      {% if req.linkedin %}<p class="sub"><a class="rq-link" href="{{ req.linkedin }}" target="_blank" rel="noopener">LinkedIn</a></p>{% endif %}
+      {% if req.status == "pending" %}
+      <div class="rq-actions">
+        <form method="post" onsubmit="return confirm('Approve this SIG profile?');">
+          {% csrf_token %}
+          <input type="hidden" name="request_id" value="{{ req.id }}">
+          <input type="hidden" name="action" value="approve">
+          <input class="rq-pass" type="text" name="custom_password" placeholder="Password, or leave blank" minlength="6">
+          <button type="submit" class="yes">Approve</button>
+        </form>
+        <form method="post" onsubmit="return confirm('Reject this SIG profile?');">
+          {% csrf_token %}
+          <input type="hidden" name="request_id" value="{{ req.id }}">
+          <input type="hidden" name="action" value="reject">
+          <button type="submit" class="no">Reject</button>
+        </form>
+      </div>
+      {% endif %}
+    </article>
+    {% empty %}
+    <div class="rq-empty">No SIG profile requests match this filter.</div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

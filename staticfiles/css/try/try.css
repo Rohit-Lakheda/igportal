@@ -1,0 +1,321 @@
+/* =========================================================
+   BHARAT IG SPHERE — GLASS NAV SYSTEM
+   Professional Governance UI
+   Secure | Clean | Responsive | Modern | Institutional
+========================================================= */
+
+:root{
+  --bg-glass: rgba(255,255,255,0.55);
+  --bg-glass-dark: rgba(20,30,50,0.65);
+  --blur: blur(18px);
+
+  --primary:#2a6fdb;        /* governance blue (soft) */
+  --secondary:#1fa37a;      /* digital green */
+  --accent:#7c5cff;         /* digital violet */
+  --text:#0f172a;
+  --muted:#64748b;
+
+  --radius-lg:22px;
+  --radius-pill:999px;
+  --shadow-soft:0 20px 50px rgba(0,0,0,.12);
+  --shadow-strong:0 25px 70px rgba(0,0,0,.18);
+}
+
+/* ================= BODY ================= */
+
+body{
+  margin:0;
+  font-family:'Inter',system-ui,sans-serif;
+  background:
+    radial-gradient(circle at 10% 10%, rgba(124,92,255,.08), transparent 40%),
+    radial-gradient(circle at 90% 20%, rgba(31,163,122,.08), transparent 40%),
+    linear-gradient(180deg,#f8fafc,#eef2ff);
+  color:var(--text);
+}
+
+/* ================= HEADER ================= */
+
+.glass-header{
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  z-index:1000;
+  padding:16px 0;
+  transition:.4s ease;
+}
+
+/* Scroll state */
+body.scrolled .glass-header{
+  padding:6px 0;
+}
+
+/* ================= WRAPPER ================= */
+
+.glass-wrapper{
+  max-width:1400px;
+  margin:auto;
+  padding:0 28px;
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  align-items:center;
+  gap:24px;
+}
+
+/* ================= BRAND ================= */
+
+.glass-brand{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+
+.glass-logo{
+  height:48px;
+  border-radius:10px;
+  box-shadow:0 10px 25px rgba(0,0,0,.2);
+}
+
+.glass-text{
+  display:flex;
+  flex-direction:column;
+  line-height:1.1;
+}
+
+.glass-title{
+  font-weight:800;
+  font-size:16px;
+}
+
+.glass-sub{
+  font-size:12px;
+  color:var(--muted);
+}
+
+/* ================= NAV CAPSULE ================= */
+
+.glass-nav-box{
+  display:flex;
+  justify-content:center;
+}
+
+.glass-nav{
+  background:var(--bg-glass);
+  backdrop-filter:var(--blur);
+  padding:10px 14px;
+  border-radius:var(--radius-pill);
+  display:flex;
+  align-items:center;
+  gap:6px;
+  box-shadow:var(--shadow-soft);
+  transition:.4s ease;
+}
+
+/* Scroll transform */
+body.scrolled .glass-nav{
+  border-radius:16px;
+  box-shadow:var(--shadow-strong);
+  background:rgba(255,255,255,.75);
+}
+
+/* ================= LINKS ================= */
+
+.glass-link{
+  text-decoration:none;
+  padding:10px 18px;
+  border-radius:var(--radius-pill);
+  font-weight:600;
+  font-size:14px;
+  color:var(--text);
+  transition:.3s ease;
+  position:relative;
+}
+
+/* Hover */
+.glass-link:hover{
+  background:rgba(0,0,0,.05);
+  transform:translateY(-1px);
+}
+
+/* Active */
+.glass-link.active{
+  background:linear-gradient(135deg,var(--primary),var(--accent));
+  color:#fff;
+  box-shadow:0 8px 25px rgba(42,111,219,.45);
+}
+
+/* ================= DROPDOWN ================= */
+
+.glass-dropdown{
+  position:relative;
+}
+
+.glass-dropdown-menu{
+  position:absolute;
+  top:130%;
+  left:0;
+  min-width:220px;
+  background:var(--bg-glass);
+  backdrop-filter:var(--blur);
+  border-radius:14px;
+  box-shadow:0 20px 50px rgba(0,0,0,.2);
+  padding:10px;
+  opacity:0;
+  visibility:hidden;
+  transform:translateY(10px);
+  transition:.3s ease;
+  z-index:100;
+}
+
+.glass-dropdown:hover .glass-dropdown-menu{
+  opacity:1;
+  visibility:visible;
+  transform:translateY(0);
+}
+
+.glass-dropdown-menu a{
+  display:block;
+  padding:10px 12px;
+  border-radius:10px;
+  font-size:13px;
+  color:var(--text);
+  text-decoration:none;
+  transition:.3s;
+}
+
+.glass-dropdown-menu a:hover{
+  background:rgba(0,0,0,.06);
+}
+
+/* ================= USER ================= */
+
+.glass-user{
+  position:relative;
+}
+
+.user-icon{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  background:var(--bg-glass);
+  backdrop-filter:var(--blur);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  box-shadow:var(--shadow-soft);
+  transition:.3s;
+}
+
+.user-icon:hover{
+  transform:scale(1.05);
+}
+
+/* User menu */
+.user-menu{
+  position:absolute;
+  right:0;
+  top:120%;
+  min-width:200px;
+  background:var(--bg-glass);
+  backdrop-filter:var(--blur);
+  border-radius:14px;
+  box-shadow:0 20px 50px rgba(0,0,0,.2);
+  padding:10px;
+  display:none;
+  z-index:200;
+}
+
+.user-menu a{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 12px;
+  border-radius:10px;
+  text-decoration:none;
+  color:var(--text);
+  font-size:13px;
+  transition:.3s;
+}
+
+.user-menu a:hover{
+  background:rgba(0,0,0,.06);
+}
+
+.user-menu .danger{
+  color:#c62828;
+}
+
+.user-menu .divider{
+  height:1px;
+  background:rgba(0,0,0,.1);
+  margin:6px 0;
+}
+
+/* ================= MOBILE TOGGLE ================= */
+
+.glass-toggle{
+  display:none;
+  flex-direction:column;
+  gap:5px;
+  cursor:pointer;
+}
+
+.glass-toggle span{
+  width:26px;
+  height:2px;
+  background:#111;
+  border-radius:2px;
+}
+
+/* ================= MAIN ================= */
+
+.site-main{
+  padding-top:140px;
+}
+
+/* ================= FOOTER ================= */
+
+.site-footer{
+  margin-top:120px;
+  padding:40px 0;
+  text-align:center;
+  color:#64748b;
+  font-size:13px;
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width:900px){
+
+  .glass-wrapper{
+    grid-template-columns:auto auto;
+  }
+
+  .glass-nav-box{
+    grid-column:1 / -1;
+    order:3;
+  }
+
+  .glass-nav{
+    width:100%;
+    justify-content:flex-start;
+    flex-wrap:wrap;
+    border-radius:18px;
+    display:none;
+  }
+
+  .glass-nav.open{
+    display:flex;
+  }
+
+  .glass-link{
+    width:100%;
+    text-align:left;
+  }
+
+  .glass-toggle{
+    display:flex;
+  }
+
+}

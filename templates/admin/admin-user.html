@@ -1,0 +1,136 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}Profile | Admin{% endblock %}
+
+{% block admin_css %}
+<link rel="stylesheet" href="{% static 'css/admin/admin-table.css' %}">
+<style>
+  .profile-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .info-label {
+    font-size: 0.85rem;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.25rem;
+  }
+
+  .info-value {
+    font-weight: 600;
+    color: #111827;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="admin-section">
+
+  <!-- HEADER + BREADCRUMB -->
+  <div class="admin-header">
+    <div class="admin-header-title">
+      <h1>Admin Profile</h1>
+      <div class="admin-breadcrumb">
+        <a href="{% url 'admin_dashboard' %}">Dashboard</a>
+        <span>/</span>
+        <span>Profile</span>
+      </div>
+      <p>Manage your account security and view information.</p>
+    </div>
+  </div>
+
+  <div class="row g-4 mt-2">
+
+    <!-- Account Information -->
+    <div class="col-lg-7">
+      <div class="admin-table-card h-100">
+        <div class="card-header bg-white py-3">
+          <h5 class="mb-0 text-secondary">Account Information</h5>
+        </div>
+        <div class="p-4">
+          <div class="profile-info-grid">
+            <div>
+              <div class="info-label">Email</div>
+              <div class="info-value">{{ user.1 }}</div>
+            </div>
+            <div>
+              <div class="info-label">Role</div>
+              <div class="info-value"><span class="badge bg-secondary">{{ user.2 }}</span></div>
+            </div>
+            <div>
+              <div class="info-label">Organization</div>
+              <div class="info-value">{{ user.3|default:"—" }}</div>
+            </div>
+            <div>
+              <div class="info-label">Mobile</div>
+              <div class="info-value">{{ user.4|default:"—" }}</div>
+            </div>
+            <div>
+              <div class="info-label">Last Login</div>
+              <div class="info-value small">{{ user.5|default:"—" }}</div>
+            </div>
+            <div>
+              <div class="info-label">Created</div>
+              <div class="info-value small">{{ user.6|date:"M d, Y" }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Change Password -->
+    <div class="col-lg-5">
+      <div class="admin-table-card h-100">
+        <div class="card-header bg-white py-3">
+          <h5 class="mb-0 text-secondary">Security</h5>
+        </div>
+        <div class="p-4">
+          <form method="post">
+            {% csrf_token %}
+
+            <div class="mb-3">
+              <label class="form-label small fw-bold text-muted">Current Password</label>
+              <input type="password" name="current_password" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small fw-bold text-muted">New Password</label>
+              <input type="password" name="new_password" class="form-control" required minlength="6">
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label small fw-bold text-muted">Confirm New Password</label>
+              <input type="password" name="confirm_password" class="form-control" required>
+            </div>
+
+            <button class="btn-primary-admin w-100 py-2">
+              <i class="fas fa-key me-2"></i> Update Password
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- SWEET ALERT -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+{% if sweet_message %}
+<script>
+  Swal.fire({
+    icon: "{{ sweet_icon }}",
+    text: "{{ sweet_message }}",
+    confirmButtonColor: "#b87333"
+  });
+</script>
+{% endif %}
+
+{% endblock %}

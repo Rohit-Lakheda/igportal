@@ -1,0 +1,343 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<!-- FINAL KNOWLEDGE HUB SUBMISSION PAGE -->
+<style>
+/* Premium compact responsive template */
+*{box-sizing:border-box}
+.kh-page{max-width:1200px;margin:25px auto;padding:0 15px}
+.kh-header{background:linear-gradient(135deg,#0f172a,#2563eb);color:#fff;padding:30px;border-radius:24px;margin-bottom:20px}
+.kh-form{background:#fff;padding:22px;border-radius:24px;box-shadow:0 10px 35px rgba(0,0,0,.08)}
+.kh-grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}
+.kh-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+.kh-grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}
+.kh-card{background:#fafcff;border:1px solid #e4ebf5;border-radius:16px;padding:15px;margin-bottom:15px}
+.kh-label{display:block;font-weight:600;margin-bottom:8px}
+.kh-input,.kh-select,.kh-textarea{width:100%;padding:12px;border:1px solid #d7dfeb;border-radius:12px}
+.kh-readonly{background:#eef4ff}
+.kh-editor{min-height:350px}
+.choice-group{display:flex;gap:10px;flex-wrap:wrap}
+.choice-group input{display:none}
+.choice-pill{padding:10px 16px;border-radius:30px;background:#eef3ff;border:1px solid #d9e4f4;cursor:pointer}
+.choice-group input:checked + .choice-pill{background:#2563eb;color:#fff}
+.upload-box{border:2px dashed #cbd5e1;padding:20px;border-radius:16px;text-align:center}
+.upload-preview{display:none;width:100%;max-height:220px;object-fit:cover;border-radius:10px;margin-top:10px}
+.submit-btn{width:100%;padding:16px;border:none;border-radius:14px;background:#2563eb;color:#fff;font-size:18px;font-weight:700}
+.counter{font-size:12px;color:#666;margin-top:5px}
+@media(max-width:992px){.kh-grid-4,.kh-grid-3{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:768px){.kh-grid-4,.kh-grid-3,.kh-grid-2{grid-template-columns:1fr}}
+
+
+.validation-msg{
+    font-size:12px;
+    margin-top:6px;
+    font-weight:500;
+}
+
+.validation-error{
+    color:#dc2626;
+}
+
+.validation-success{
+    color:#16a34a;
+}
+
+.kh-input.error,
+.kh-select.error,
+.kh-textarea.error{
+    border-color:#dc2626 !important;
+    background:#fff5f5;
+}
+
+.kh-input.success,
+.kh-select.success,
+.kh-textarea.success{
+    border-color:#16a34a !important;
+}
+
+.submit-btn:disabled{
+    opacity:.6;
+    cursor:not-allowed;
+}
+</style>
+
+<div class="kh-page">
+<div class="kh-header">
+<h1>Submit Research Article</h1>
+<p>Knowledge Hub Contribution Portal</p>
+</div>
+
+{% if messages %}
+{% for message in messages %}
+
+{{ message }}
+
+{% endfor %}
+{% endif %}
+
+<form method="POST" enctype="multipart/form-data" class="kh-form" action="{% url 'blog_page' %}">
+{% csrf_token %}
+
+<div class="kh-grid-4">
+<div class="kh-card"><label class="kh-label">Email</label><input class="kh-input kh-readonly" readonly value="{{ email }}"></div>
+<div class="kh-card"><label class="kh-label">Organisation</label><input class="kh-input kh-readonly" readonly value="{{ company_name }}"></div>
+<div class="kh-card"><label class="kh-label">Designation</label><input class="kh-input kh-readonly" readonly value="{{ designation }}" maxlength="200"></div>
+<div class="kh-card"><label class="kh-label">Member Type</label><input class="kh-input kh-readonly" readonly value="{{ member_type }}"></div>
+</div>
+
+<div class="kh-grid-2">
+<div class="kh-card">
+<label class="kh-label">Article Title *</label>
+
+<input class="kh-input" id="title" name="title" required maxlength="150">
+<div id="titleMsg" class="validation-msg"></div>
+</div>
+
+<div class="kh-card">
+<label class="kh-label">Category *</label>
+<select class="kh-select" name="article_type" required>
+<option value="">Select Category</option>
+<option>AI Governance</option>
+<option>Cybersecurity</option>
+<option>Research</option>
+<option>Digital Policy</option>
+</select>
+</div>
+</div>
+
+<div class="kh-grid-3">
+<div class="kh-card">
+<label class="kh-label">Contributor *</label>
+<select class="kh-select" name="CONTRIBUTOR" required>
+<option value="">Select</option>
+<option>Government Body</option>
+<option>Technical Community</option>
+<option>Academia</option>
+<option>Industry & Private Sector</option>
+</select>
+</div>
+
+<div class="kh-card">
+<label class="kh-label">Tag *</label>
+<select class="kh-select" name="tag" id="tagSelect" onchange="toggleCustomTag()" required>
+<option value="">Select Tag</option>
+{% for tag in tags %}
+<option value="{{ tag.id }}">{{ tag.name }}</option>
+{% endfor %}
+<option value="other">Other</option>
+</select>
+<input class="kh-input" id="customTag" name="custom_tags" style="display:none;margin-top:10px" placeholder="Enter custom tags">
+</div>
+
+<div class="kh-card">
+
+</div>
+</div>
+
+<div class="kh-grid-2">
+<div class="kh-card">
+<label class="kh-label">AI Assisted? *</label>
+<div class="choice-group">
+<input id="a1" type="radio" name="ai_assisted" value="Yes" required><label class="choice-pill" for="a1">Yes</label>
+<input id="a2" type="radio" name="ai_assisted" value="Partially"><label class="choice-pill" for="a2">Partial</label>
+<input id="a3" type="radio" name="ai_assisted" value="No"><label class="choice-pill" for="a3">No</label>
+</div>
+</div>
+
+<div class="kh-card">
+<label class="kh-label">Previously Published? *</label>
+<div class="choice-group">
+<input id="p1" type="radio" name="previously_published" value="Yes" required><label class="choice-pill" for="p1">Yes</label>
+<input id="p2" type="radio" name="previously_published" value="No"><label class="choice-pill" for="p2">No</label>
+</div>
+</div>
+</div>
+
+<div class="kh-card">
+<label class="kh-label">Description * (30-40 words)</label>
+<textarea class="kh-textarea" id="description" name="description" maxlength="300" required></textarea>
+<div class="counter" id="descCounter">0 words</div>
+<div id="descMsg" class="validation-msg"></div>
+</div>
+
+<div class="kh-card">
+<label class="kh-label">Article Content *</label>
+<textarea class="kh-textarea kh-editor" id="content" name="content"></textarea>
+<div class="counter" id="contentCounter">0 words</div>
+<div id="contentMsg" class="validation-msg"></div>
+
+<hr style="margin:15px 0">
+
+<label class="kh-label">OR Upload Article (Optional PDF/DOC/DOCX)</label>
+<input class="kh-input" type="file"
+       id="articleFile"
+       name="article_file"
+       accept=".pdf,.doc,.docx">
+
+<div id="fileMsg" class="validation-msg"></div>
+</div>
+
+<button class="submit-btn">Submit For Review</button>
+</form>
+</div>
+
+<script>
+
+function toggleCustomTag(){
+    let t = document.getElementById('tagSelect');
+    let c = document.getElementById('customTag');
+
+    if(t.value === 'other'){
+        c.style.display='block';
+        c.required=true;
+    }else{
+        c.style.display='none';
+        c.required=false;
+        c.value='';
+    }
+}
+
+function countWords(text){
+    return text.trim().split(/\s+/).filter(Boolean).length;
+}
+
+const title = document.getElementById('title');
+const description = document.getElementById('description');
+const content = document.getElementById('content');
+const fileInput = document.getElementById('articleFile');
+const form = document.querySelector('.kh-form');
+
+title.addEventListener('input',function(){
+
+    let len = this.value.trim().length;
+    let msg = document.getElementById('titleMsg');
+
+    if(len < 10){
+        msg.innerHTML = 'Minimum 10 characters required';
+        msg.className='validation-msg validation-error';
+        this.classList.add('error');
+        this.classList.remove('success');
+    }else{
+        msg.innerHTML = len + '/150 characters';
+        msg.className='validation-msg validation-success';
+        this.classList.remove('error');
+        this.classList.add('success');
+    }
+
+});
+
+description.addEventListener('input',function(){
+
+    let words = countWords(this.value);
+
+    document.getElementById('descCounter').innerHTML =
+        words + ' words';
+
+    let msg = document.getElementById('descMsg');
+
+    if(words < 30){
+        msg.innerHTML='Minimum 30 words required';
+        msg.className='validation-msg validation-error';
+    }
+    else if(words > 100){
+        msg.innerHTML='Maximum 100 words allowed';
+        msg.className='validation-msg validation-error';
+    }
+    else{
+        msg.innerHTML='Description looks good';
+        msg.className='validation-msg validation-success';
+    }
+
+});
+
+content.addEventListener('input',function(){
+
+    let words = countWords(this.value);
+
+    document.getElementById('contentCounter').innerHTML =
+        words + ' words';
+
+    let msg = document.getElementById('contentMsg');
+
+    if(words < 200){
+        msg.innerHTML='Minimum 200 words required';
+        msg.className='validation-msg validation-error';
+    }else{
+        msg.innerHTML='Content validation passed';
+        msg.className='validation-msg validation-success';
+    }
+
+});
+
+fileInput.addEventListener('change',function(){
+
+    let msg = document.getElementById('fileMsg');
+
+    if(!this.files.length){
+        msg.innerHTML='';
+        return;
+    }
+
+    let file = this.files[0];
+
+    let ext = file.name.split('.').pop().toLowerCase();
+
+    if(!['pdf','doc','docx'].includes(ext)){
+        msg.innerHTML='Only PDF, DOC and DOCX files allowed';
+        msg.className='validation-msg validation-error';
+        this.value='';
+        return;
+    }
+
+    if(file.size > 10 * 1024 * 1024){
+        msg.innerHTML='Maximum file size is 10 MB';
+        msg.className='validation-msg validation-error';
+        this.value='';
+        return;
+    }
+
+    msg.innerHTML =
+        'Selected: ' +
+        file.name +
+        ' (' +
+        (file.size/1024/1024).toFixed(2) +
+        ' MB)';
+
+    msg.className='validation-msg validation-success';
+
+});
+
+form.addEventListener('submit',function(e){
+
+    let titleLen = title.value.trim().length;
+    let descWords = countWords(description.value);
+    let contentWords = countWords(content.value);
+
+    if(titleLen < 10){
+        alert('Article title must contain at least 10 characters.');
+        title.focus();
+        e.preventDefault();
+        return;
+    }
+
+    if(descWords < 30 || descWords > 100){
+        alert('Description must contain between 30 and 100 words.');
+        description.focus();
+        e.preventDefault();
+        return;
+    }
+
+    if(contentWords < 200 && !fileInput.files.length){
+        alert(
+            'Provide article content with minimum 200 words OR upload a document.'
+        );
+        content.focus();
+        e.preventDefault();
+        return;
+    }
+
+});
+
+</script>
+
+{% endblock %}

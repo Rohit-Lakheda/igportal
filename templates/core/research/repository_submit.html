@@ -1,0 +1,232 @@
+{% extends "core/research/base_research.html" %}
+{% load static %}
+{% block title %}Submit research paper — Bharat IG Sphere{% endblock %}
+{% block body_class %}lp-page{% endblock %}
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'UI-CSS/landing.css' %}">
+<link rel="stylesheet" href="{% static 'UI-CSS/research.css' %}">
+{% endblock %}
+{% block research_body %}
+<section class="events-header">
+  <div class="events-header-bg"></div>
+  <div class="events-header-content">
+    <h1>Submit a research paper</h1>
+    <p>Uploads are reviewed by administrators. New versions get the next version number automatically.</p>
+  </div>
+</section>
+
+<section class="rr-page">
+  <div class="rs-wrap">
+    <a href="{% url 'research_repository_index' %}" class="rr-back"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Repository</a>
+    <form method="post" enctype="multipart/form-data" class="rs-form" id="researchSubmitForm">
+      {% csrf_token %}
+
+      <section class="rs-block">
+        <header class="rs-block-head">
+          <span>1</span>
+          <div>
+            <h2>Topic</h2>
+            <p>Choose where this paper belongs.</p>
+          </div>
+        </header>
+
+        <label class="rs-label" for="broad_topic">Broad topic</label>
+        <select name="broad_topic" id="broad_topic" class="rs-input" required>
+          <option value="">Select a broad topic</option>
+          {% for bt in broad_topics %}
+          <option value="{{ bt.id }}">{{ bt.name }}</option>
+          {% endfor %}
+        </select>
+
+        <p class="rs-label">Specific topic</p>
+        <div class="rs-choices">
+          <label class="rs-choice is-on" for="mode_existing">
+            <input type="radio" name="topic_mode" value="existing" checked id="mode_existing">
+            <strong>Existing topic</strong>
+            <span>Use a topic that is already approved.</span>
+          </label>
+          <label class="rs-choice" for="mode_new">
+            <input type="radio" name="topic_mode" value="new" id="mode_new">
+            <strong>Propose a new topic</strong>
+            <span>It stays pending until an admin approves it.</span>
+          </label>
+        </div>
+
+        <div id="block_existing">
+          <label class="rs-label" for="specific_topic_id">Approved topic</label>
+          <select name="specific_topic_id" id="specific_topic_id" class="rs-input">
+            <option value="">Select a broad topic first</option>
+          </select>
+        </div>
+
+        <div id="block_new" hidden>
+          <label class="rs-label" for="new_topic_name">New topic name</label>
+          <input type="text" name="new_topic_name" id="new_topic_name" class="rs-input" maxlength="255" placeholder="e.g. DNS abuse metrics">
+        </div>
+      </section>
+
+      <section class="rs-block">
+        <header class="rs-block-head">
+          <span>2</span>
+          <div>
+            <h2>Paper</h2>
+            <p>A short abstract and the document file.</p>
+          </div>
+        </header>
+
+        <label class="rs-label" for="title">Title</label>
+        <input type="text" name="title" id="title" class="rs-input" required maxlength="500" placeholder="Title of the paper">
+
+        <label class="rs-label" for="abstract">Abstract <em>2–3 sentences</em></label>
+        <textarea name="abstract" id="abstract" class="rs-input rs-area" rows="5" required placeholder="What the paper covers and why it matters."></textarea>
+
+        <label class="rs-label" for="document">Document</label>
+        <label class="rs-file" for="document">
+          <i class="fa-solid fa-file-arrow-up" aria-hidden="true"></i>
+          <strong id="document_name">Choose a PDF, DOC, or DOCX</strong>
+          <span>Maximum one file. It is reviewed before it is published.</span>
+        </label>
+        <input type="file" name="document" id="document" class="rs-file-input" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" required>
+      </section>
+
+      <section class="rs-block">
+        <header class="rs-block-head">
+          <span>3</span>
+          <div>
+            <h2>Author</h2>
+            <p>How your name appears on the paper.</p>
+          </div>
+        </header>
+
+        <label class="rs-label" for="display_name">Display name</label>
+        <input type="text" name="display_name" id="display_name" class="rs-input" maxlength="200" placeholder="{{ member.email }}">
+        <p class="rs-hint">Leave this blank to use your account email.</p>
+
+        <label class="rs-check" for="is_nixi_intern">
+          <input type="checkbox" name="is_nixi_intern" id="is_nixi_intern">
+          <span>
+            <strong>NIXI internship</strong>
+            This work is from the NIXI internship programme.
+          </span>
+        </label>
+
+        <div id="nixi_block" hidden>
+          <label class="rs-label" for="internship_batch_or_year">Internship batch or year</label>
+          <input type="text" name="internship_batch_or_year" id="internship_batch_or_year" class="rs-input" maxlength="120" placeholder="e.g. 2026">
+        </div>
+      </section>
+
+      <div class="rs-actions">
+        <p>An administrator reviews the paper before it appears in the repository.</p>
+        <button type="submit" class="rs-submit">Submit for review</button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<footer class="lp-footer">
+  <div class="lp-footer-grid">
+    <div class="lp-footer-brand">
+      <img src="{% static 'img/ig-logo3.jpeg' %}" alt="Bharat IG">
+      <div>
+        <strong>Bharat Internet Governance Sphere</strong>
+        <p>Connection, policy, people and participation in India's digital governance.</p>
+      </div>
+    </div>
+    <div>
+      <h4>Explore</h4>
+      <a href="{% url 'home' %}">Home</a>
+      <a href="{% url 'events' %}">Events</a>
+      <a href="{% url 'research_hub' %}">Research</a>
+      <a href="{% url 'blogs' %}">Blogs</a>
+    </div>
+    <div>
+      <h4>Participate</h4>
+      <a href="{% url 'consultations' %}">Stakeholder Engagement</a>
+      <a href="{% url 'capacity' %}">Capacity Building</a>
+      <a href="{% url 'global' %}">India at Global Forums</a>
+      <a href="{% url 'sig' %}">SIG</a>
+    </div>
+    <div>
+      <h4>Connect</h4>
+      <p>Stay connected with India's internet governance community.</p>
+      <div class="lp-social">
+        <a href="https://x.com" target="_blank" rel="noopener" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
+        <a href="https://www.linkedin.com" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+        <a href="https://www.youtube.com" target="_blank" rel="noopener" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+      </div>
+    </div>
+  </div>
+  <div class="lp-footer-bar">
+    <span>© {% now "Y" %} Bharat Internet Governance Sphere (BIG-S). All rights reserved.</span>
+    <span>Privacy Policy · Terms of Use · Contact Us</span>
+  </div>
+</footer>
+
+{{ existing_topics_map|json_script:"research-topics-by-broad" }}
+<script>
+(function(){
+  const el = document.getElementById("research-topics-by-broad");
+  const topicsByBroad = el ? JSON.parse(el.textContent) : {};
+  const broadSel = document.getElementById("broad_topic");
+  const topicSel = document.getElementById("specific_topic_id");
+  const modeExisting = document.getElementById("mode_existing");
+  const modeNew = document.getElementById("mode_new");
+  const blockExisting = document.getElementById("block_existing");
+  const blockNew = document.getElementById("block_new");
+  const nixi = document.getElementById("is_nixi_intern");
+  const nixiBlock = document.getElementById("nixi_block");
+
+  function refillTopics() {
+    const bid = broadSel.value;
+    const list = topicsByBroad[bid] || [];
+    topicSel.innerHTML = "";
+    const opt0 = document.createElement("option");
+    opt0.value = "";
+    opt0.textContent = list.length ? "Select topic…" : "No approved topics yet — propose a new one";
+    topicSel.appendChild(opt0);
+    list.forEach(function(t) {
+      const o = document.createElement("option");
+      o.value = t.id;
+      o.textContent = t.name;
+      topicSel.appendChild(o);
+    });
+  }
+
+  function syncMode() {
+    const isNew = modeNew.checked;
+    blockNew.hidden = !isNew;
+    blockExisting.hidden = isNew;
+    modeExisting.closest(".rs-choice").classList.toggle("is-on", !isNew);
+    modeNew.closest(".rs-choice").classList.toggle("is-on", isNew);
+    if (isNew) {
+      topicSel.removeAttribute("required");
+      document.getElementById("new_topic_name").toggleAttribute("required", true);
+    } else {
+      topicSel.setAttribute("required", "");
+      document.getElementById("new_topic_name").removeAttribute("required");
+    }
+  }
+
+  const fileInput = document.getElementById("document");
+  const fileName = document.getElementById("document_name");
+  const fileBox = document.querySelector(".rs-file");
+
+  broadSel.addEventListener("change", refillTopics);
+  modeExisting.addEventListener("change", syncMode);
+  modeNew.addEventListener("change", syncMode);
+  nixi.addEventListener("change", function() {
+    nixiBlock.hidden = !nixi.checked;
+    nixi.closest(".rs-check").classList.toggle("is-on", nixi.checked);
+  });
+  fileInput.addEventListener("change", function() {
+    const picked = fileInput.files && fileInput.files[0];
+    fileName.textContent = picked ? picked.name : "Choose a PDF, DOC, or DOCX";
+    fileBox.classList.toggle("is-on", !!picked);
+  });
+  refillTopics();
+  syncMode();
+})();
+</script>
+{% endblock %}

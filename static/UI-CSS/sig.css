@@ -1,0 +1,171 @@
+.sig-page {
+  background: #eef1f5;
+  padding: 28px 0 72px;
+}
+
+.sig-wrap {
+  width: min(1120px, calc(100% - 40px));
+  margin: 0 auto;
+}
+
+.sig-intro,
+.sig-card,
+.sig-cta {
+  background: #fff;
+  border: 1px solid #e8edf3;
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+}
+
+.sig-intro,
+.sig-cta {
+  padding: 28px 32px;
+}
+
+.sig-intro h2,
+.sig-section-title,
+.sig-cta h2,
+.sig-card h3 {
+  margin: 0;
+  font-family: "Playfair Display", Georgia, serif;
+  color: #122033;
+}
+
+.sig-intro h2,
+.sig-cta h2 {
+  font-size: 28px;
+}
+
+.sig-section-title {
+  margin: 28px 0 16px;
+  font-size: 26px;
+}
+
+.sig-intro p,
+.sig-card p,
+.sig-cta p {
+  margin: 12px 0 0;
+  color: #5b6b7c;
+  line-height: 1.65;
+  font-size: 15.5px;
+}
+
+.sig-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.sig-card {
+  padding: 22px 22px 24px;
+}
+
+.sig-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.sig-card h3 {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 20px;
+  line-height: 1.25;
+}
+
+.sig-tag {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  margin-top: 2px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(224, 123, 42, 0.12);
+  color: #c96416;
+  font-family: Inter, sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+.sig-cta {
+  margin-top: 28px;
+  text-align: center;
+}
+
+.sig-cta p {
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.sig-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.events-header .sig-hero-actions {
+  margin-top: 26px;
+}
+
+.sig-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0 16px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.sig-btn-solid {
+  background: #e07b2a;
+  color: #fff;
+  border: 1px solid #e07b2a;
+}
+
+.sig-btn-solid:hover {
+  background: #c96416;
+  border-color: #c96416;
+  color: #fff;
+}
+
+.sig-btn-ghost {
+  background: transparent;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+}
+
+.sig-btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.sig-btn-line {
+  background: #fff;
+  color: #122033;
+  border: 1px solid #e8edf3;
+}
+
+.sig-btn-line:hover {
+  border-color: #e07b2a;
+  color: #c96416;
+}
+
+@media (max-width: 900px) {
+  .sig-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sig-intro,
+  .sig-cta {
+    padding: 22px 18px;
+  }
+}

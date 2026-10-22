@@ -1,0 +1,111 @@
+{% extends "admin/base.html" %}
+{% block title %}{{ forum.name }} positions | Admin{% endblock %}
+
+{% block admin_css %}
+<style>
+  .gf-back{ display:inline-flex; align-items:center; gap:8px; margin-bottom:14px; color:#122033; font-weight:700; font-size:14px; text-decoration:none; }
+  .gf-back:hover{ color:#c96416; }
+  .gf-head h1, .gf-form h2{ margin:0; font-family:"Playfair Display", Georgia, serif; }
+  .gf-head p{ margin:6px 0 0; color:#5b6b7c; }
+  .gf-form, .gf-card{ background:#fff; border:1px solid #e8edf3; border-radius:18px; padding:22px; box-shadow:0 10px 24px rgba(15,23,42,.05); }
+  .gf-form h2{ font-size:26px; margin-bottom:16px; }
+  .gf-grid{ display:grid; grid-template-columns:180px 1fr; gap:16px; }
+  .gf-span{ grid-column:1 / -1; }
+  .gf-form label{ display:block; margin:0 0 6px; font-size:14px; font-weight:700; }
+  .gf-form input, .gf-form textarea{
+    box-sizing:border-box; width:100%; height:44px; padding:0 14px; border:1px solid #e8edf3; border-radius:12px; background:#fff; color:#122033; font:inherit; font-size:14px;
+  }
+  .gf-form textarea{ height:auto; min-height:110px; padding:12px 14px; resize:vertical; }
+  .gf-form input:focus, .gf-form textarea:focus{ outline:2px solid rgba(224,123,42,.35); border-color:#e07b2a; }
+  .gf-check{ display:flex; align-items:center; gap:8px; min-height:44px; }
+  .gf-check input{ width:18px; height:18px; }
+  .gf-check label{ margin:0; font-weight:700; }
+  .gf-actions{ display:flex; justify-content:flex-end; margin-top:16px; }
+  .gf-actions button, .gf-row a, .gf-row button{
+    display:inline-flex; align-items:center; justify-content:center; height:38px; padding:0 14px; border-radius:10px; border:1px solid #e8edf3; background:#fff; color:#122033; font-weight:700; font-size:13px; text-decoration:none; cursor:pointer;
+  }
+  .gf-actions button{ height:44px; padding:0 16px; border-radius:12px; background:#e07b2a; border-color:#e07b2a; color:#fff; }
+  .gf-actions button:hover{ background:#c96416; }
+  .gf-list{ display:flex; flex-direction:column; gap:12px; }
+  .gf-card{ display:grid; grid-template-columns:minmax(0, 1fr) auto; gap:16px; align-items:center; padding:16px 18px; }
+  .gf-card h3{ margin:0; font-size:18px; }
+  .gf-card p{ margin:8px 0 0; color:#5b6b7c; font-size:14px; line-height:1.45; }
+  .gf-meta{ display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+  .gf-meta span{ padding:4px 10px; border-radius:999px; background:#f4f7fb; border:1px solid #e8edf3; color:#5b6b7c; font-size:12.5px; font-weight:700; }
+  .gf-meta .on{ color:#166534; background:rgba(22,163,74,.1); border-color:transparent; }
+  .gf-meta .off{ color:#b42318; background:#fff5f5; border-color:transparent; }
+  .gf-row{ display:flex; gap:8px; }
+  .gf-row form{ margin:0; display:flex; }
+  .gf-row a:hover{ border-color:#e07b2a; color:#c96416; }
+  .gf-row .danger{ color:#b42318; }
+  .gf-empty{ padding:28px 16px; text-align:center; background:#fff; border:1px dashed #d7dee7; border-radius:18px; color:#5b6b7c; }
+  @media (max-width: 700px){ .gf-grid, .gf-card{ grid-template-columns:1fr; } }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-section">
+  <a class="gf-back" href="{% url 'admin_global_forums' %}"><i class="fas fa-arrow-left"></i> Global forums</a>
+  <div class="gf-head">
+    <h1>{{ forum.name }}</h1>
+    <p>These statements appear when someone selects this forum, newest date first.</p>
+  </div>
+
+  <form class="gf-form" method="post">
+    {% csrf_token %}
+    <h2>Add a position</h2>
+    <div class="gf-grid">
+      <div>
+        <label for="pos-date">Date</label>
+        <input id="pos-date" type="date" name="statement_date" required>
+      </div>
+      <div>
+        <label for="pos-title">Title</label>
+        <input id="pos-title" type="text" name="title" required>
+      </div>
+      <div class="gf-span">
+        <label for="pos-sum">Summary</label>
+        <textarea id="pos-sum" name="summary" rows="4" required></textarea>
+      </div>
+      <div>
+        <label for="pos-src">Source</label>
+        <input id="pos-src" type="text" name="source_label">
+      </div>
+      <div class="gf-check">
+        <input id="pos-pub" type="checkbox" name="is_published" checked>
+        <label for="pos-pub">Show on the public page</label>
+      </div>
+    </div>
+    <div class="gf-actions">
+      <button type="submit">Add position</button>
+    </div>
+  </form>
+
+  <div class="gf-list">
+    {% for item in positions %}
+    <article class="gf-card">
+      <div>
+        <h3>{{ item.title }}</h3>
+        <div class="gf-meta">
+          <span>{{ item.statement_date|date:"d M Y" }}</span>
+          {% if item.source_label %}<span>{{ item.source_label }}</span>{% endif %}
+          <span class="{% if item.is_published %}on{% else %}off{% endif %}">{% if item.is_published %}Published{% else %}Hidden{% endif %}</span>
+        </div>
+        <p>{{ item.summary|truncatewords:28 }}</p>
+      </div>
+      <div class="gf-row">
+        <a href="{% url 'admin_global_forum_position_edit' item.pk %}">Edit</a>
+        <form method="post" onsubmit="return confirm('Remove this position?');">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="delete">
+          <input type="hidden" name="position_id" value="{{ item.pk }}">
+          <button type="submit" class="danger">Delete</button>
+        </form>
+      </div>
+    </article>
+    {% empty %}
+    <div class="gf-empty">No positions yet.</div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

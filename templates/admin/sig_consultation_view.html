@@ -1,0 +1,86 @@
+{% extends "admin/base.html" %}
+{% block title %}{{ consultation.title }} | Admin{% endblock %}
+
+{% block admin_css %}
+<style>
+  .ef-back{
+    display:inline-flex; align-items:center; gap:8px; margin-bottom:14px;
+    color:#122033; font-weight:700; font-size:14px; text-decoration:none;
+  }
+  .ef-back:hover{ color:#c96416; }
+  .sv-card{
+    background:#fff; border:1px solid #e8edf3; border-radius:18px; padding:22px;
+    box-shadow:0 10px 24px rgba(15,23,42,.05);
+  }
+  .sv-top{ display:flex; justify-content:space-between; gap:12px; align-items:flex-start; }
+  .sv-card h1, .sv-card h2{ margin:0; font-family:"Playfair Display", Georgia, serif; }
+  .sv-card h2{ font-size:26px; }
+  .sv-meta{ display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
+  .sv-meta span, .sv-meta a{
+    padding:4px 10px; border-radius:999px; background:#f4f7fb; border:1px solid #e8edf3; color:#5b6b7c; font-size:12.5px; font-weight:700; text-decoration:none;
+  }
+  .sv-meta a:hover{ border-color:#e07b2a; color:#c96416; }
+  .sv-meta .open{ color:#166534; background:rgba(22,163,74,.1); border-color:transparent; }
+  .sv-meta .closed{ color:#b42318; background:#fff5f5; border-color:transparent; }
+  .sv-block{ margin-top:16px; }
+  .sv-block p{ margin:0; color:#334155; line-height:1.5; }
+  .sv-edit{
+    display:inline-flex; align-items:center; justify-content:center; height:38px; padding:0 14px;
+    border-radius:10px; background:#e07b2a; color:#fff; font-weight:700; font-size:13px; text-decoration:none;
+  }
+  .sv-edit:hover{ background:#c96416; color:#fff; }
+  .sv-list{ display:flex; flex-direction:column; gap:12px; margin-top:12px; }
+  .sv-comment{
+    background:#fff; border:1px solid #e8edf3; border-radius:18px; padding:16px 18px;
+    box-shadow:0 10px 24px rgba(15,23,42,.05);
+  }
+  .sv-comment h3{ margin:0; font-size:16px; }
+  .sv-comment .sub{ margin:4px 0 0; color:#5b6b7c; font-size:13.5px; }
+  .sv-comment p{ margin:10px 0 0; color:#334155; line-height:1.5; }
+  .sv-empty{ padding:28px 16px; text-align:center; background:#fff; border:1px dashed #d7dee7; border-radius:18px; color:#5b6b7c; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-section">
+  <a class="ef-back" href="{% url 'admin_sig_consultations' %}"><i class="fas fa-arrow-left"></i> SIG consultations</a>
+
+  <article class="sv-card">
+    <div class="sv-top">
+      <div>
+        <h1>{{ consultation.title }}</h1>
+        <div class="sv-meta">
+          <span>{{ consultation.get_sig_type_display }}</span>
+          <span class="{{ consultation.status }}">{{ consultation.get_status_display }}</span>
+          <span>Deadline {{ consultation.deadline|date:"d M Y, h:i A" }}</span>
+          {% if consultation.brief_document %}
+          <a href="{{ consultation.brief_document.url }}" target="_blank" rel="noopener">Brief</a>
+          {% endif %}
+        </div>
+      </div>
+      <a class="sv-edit" href="{% url 'admin_sig_consultation_edit' consultation.id %}">Edit</a>
+    </div>
+    <div class="sv-block">
+      <p>{{ consultation.description|linebreaksbr }}</p>
+    </div>
+  </article>
+
+  <section class="sv-card">
+    <h2>Responses · {{ responses|length }}</h2>
+    <div class="sv-list">
+      {% for r in responses %}
+      <article class="sv-comment">
+        <h3>{{ r.member.email|default:r.member.username }}</h3>
+        <p class="sub">{{ r.designation }} · {{ r.organization }} · {{ r.created_at|date:"d M Y, h:i A" }}</p>
+        <p>{{ r.response|linebreaksbr }}</p>
+        {% if r.document %}
+        <div class="sv-meta"><a href="{{ r.document.url }}" target="_blank" rel="noopener">File</a></div>
+        {% endif %}
+      </article>
+      {% empty %}
+      <div class="sv-empty">No responses yet.</div>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends "admin/base.html" %}
+{% load static %}
+{% block title %}{{ action }} SIG event | Admin{% endblock %}
+
+{% block admin_css %}
+<style>
+  .ef-back{
+    display:inline-flex; align-items:center; gap:8px; margin-bottom:14px;
+    color:#122033; font-weight:700; font-size:14px; text-decoration:none;
+  }
+  .ef-back:hover{ color:#c96416; }
+  .ef-card{
+    background:#fff; border:1px solid #e8edf3; border-radius:18px; padding:22px;
+    box-shadow:0 10px 24px rgba(15,23,42,.05);
+  }
+  .ef-card h1{ margin:0 0 16px; font-family:"Playfair Display", Georgia, serif; font-size:32px; }
+  .ef-grid{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .ef-span{ grid-column:1 / -1; }
+  .ef-card label{ display:block; margin:0 0 6px; font-size:14px; font-weight:700; }
+  .ef-card input, .ef-card textarea, .ef-card select{
+    box-sizing:border-box; width:100%; height:44px; padding:0 14px; border:1px solid #e8edf3; border-radius:12px;
+    background:#fff; color:#122033; font:inherit; font-size:14px; line-height:1.2;
+  }
+  .ef-card textarea{ height:auto; min-height:120px; padding:12px 14px; resize:vertical; }
+  .ef-card input:focus, .ef-card textarea:focus, .ef-card select:focus{
+    outline:2px solid rgba(224,123,42,.35); border-color:#e07b2a;
+  }
+  .ef-actions{ display:flex; justify-content:flex-end; gap:8px; margin-top:16px; }
+  .ef-actions button, .ef-actions a{
+    display:inline-flex; align-items:center; justify-content:center; height:44px; padding:0 16px;
+    border-radius:12px; border:1px solid #e8edf3; background:#fff; color:#122033; font-weight:700; font-size:14px; line-height:1; text-decoration:none; cursor:pointer;
+  }
+  .ef-actions button{ background:#e07b2a; border-color:#e07b2a; color:#fff; }
+  .ef-actions button:hover{ background:#c96416; }
+  .ef-actions a:hover{ border-color:#122033; }
+  @media (max-width: 700px){
+    .ef-grid{ grid-template-columns:1fr; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-section">
+  <a class="ef-back" href="{% url 'admin_sig_events' %}"><i class="fas fa-arrow-left"></i> SIG events</a>
+  <form class="ef-card" method="post">
+    {% csrf_token %}
+    <h1>{{ action }} SIG event</h1>
+    <div class="ef-grid">
+      <div class="ef-span">
+        <label for="se-title">Title</label>
+        <input id="se-title" type="text" name="title" value="{% if sig_event %}{{ sig_event.title }}{% endif %}" required>
+      </div>
+      <div>
+        <label for="se-scope">SIG scope</label>
+        <select id="se-scope" name="sig_scope">
+          <option value="All" {% if not sig_event or sig_event.sig_scope == "All" %}selected{% endif %}>All SIGs</option>
+          <option value="FI" {% if sig_event and sig_event.sig_scope == "FI" %}selected{% endif %}>Future of Internet</option>
+          <option value="TPS" {% if sig_event and sig_event.sig_scope == "TPS" %}selected{% endif %}>Internet Protocols &amp; Standards</option>
+          <option value="DNN" {% if sig_event and sig_event.sig_scope == "DNN" %}selected{% endif %}>Domain Names &amp; Related Issues</option>
+          <option value="Joint" {% if sig_event and sig_event.sig_scope == "Joint" %}selected{% endif %}>SIG Joint</option>
+        </select>
+      </div>
+      <div>
+        <label for="se-type">Type</label>
+        <select id="se-type" name="type" required>
+          <option value="workshop" {% if sig_event and sig_event.type == "workshop" %}selected{% endif %}>Workshop</option>
+          <option value="meeting" {% if not sig_event or sig_event.type == "meeting" %}selected{% endif %}>Meeting</option>
+          <option value="conference" {% if sig_event and sig_event.type == "conference" %}selected{% endif %}>Conference</option>
+        </select>
+      </div>
+      <div>
+        <label for="se-when">Date and time</label>
+        <input id="se-when" type="datetime-local" name="event_datetime" value="{% if sig_event %}{{ sig_event.event_datetime|date:'Y-m-d\\TH:i' }}{% endif %}" required>
+      </div>
+      <div>
+        <label for="se-join">Join link</label>
+        <input id="se-join" type="url" name="join" value="{% if sig_event and sig_event.join %}{{ sig_event.join }}{% endif %}" placeholder="https://">
+      </div>
+      <div class="ef-span">
+        <label for="se-desc">Description</label>
+        <textarea id="se-desc" name="desc" rows="4">{% if sig_event %}{{ sig_event.desc }}{% endif %}</textarea>
+      </div>
+    </div>
+    <div class="ef-actions">
+      <a href="{% url 'admin_sig_events' %}">Cancel</a>
+      <button type="submit">{{ action }} event</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

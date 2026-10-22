@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Capacity-building — IG Portal{% endblock %}
+
+{% block content %}
+
+<!-- ================= HERO IMAGE SLIDER ================= -->
+<section class="hero-slider" style="max-width:1200px;margin:auto;padding:24px;">
+  <div class="slider">
+    <div class="slide active" style="background-image: url('{% static "img/Internship.jpeg" %}')"></div>
+    <div class="slide" style="background-image: url('{% static "img/img3.jpeg" %}')"></div>
+    <div class="slide" style="background-image: url('{% static "img/img2.jpeg" %}')"></div>
+  </div>
+</section>
+
+<!-- ================= PAGE CONTENT ================= -->
+<div class="ig-main" style="max-width:1200px;margin:auto;padding:24px;">
+
+  <!-- Capacity-Building Intro -->
+  <div class="card"
+       style="padding:24px;border-radius:12px;box-shadow:0 6px 16px rgba(0,0,0,0.08);
+              background:#f8fafc;margin-bottom:32px;">
+
+    <h2 style="color:#004aad;margin-bottom:12px;">Capacity-building</h2>
+
+    <p class="small" style="color:#374151;font-size:15px;line-height:1.6;">
+      Capacity-building strengthens skills and knowledge across India’s Internet ecosystem.
+      Through structured learning, mentorship and hands-on projects, we enable practitioners,
+      students and stakeholders to contribute effectively to Internet governance and digital
+      public infrastructure.
+    </p>
+
+    <!-- Initiatives -->
+    <div class="card"
+         style="margin-top:20px;padding:16px;border-left:4px solid #00b140;background:#ffffff;">
+      <h4 style="color:#004aad;margin-bottom:12px;">NIXI Initiatives</h4>
+
+      <ul class="small" style="list-style:none;padding-left:0;">
+        <li style="margin-bottom:10px;display:flex;">
+          <span style="color:#00b140;font-weight:700;margin-right:10px;">•</span>
+          Training programmes and workshops on DNS, routing security and Internet standards
+        </li>
+        <li style="margin-bottom:10px;display:flex;">
+          <span style="color:#00b140;font-weight:700;margin-right:10px;">•</span>
+          Fellowships and internships for students and early-career professionals
+        </li>
+        <li style="margin-bottom:10px;display:flex;">
+          <span style="color:#00b140;font-weight:700;margin-right:10px;">•</span>
+          Thematic SIG engagements and contributor pathways to public consultations
+        </li>
+        <li style="margin-bottom:10px;display:flex;">
+          <span style="color:#00b140;font-weight:700;margin-right:10px;">•</span>
+          Knowledge resources, playbooks and community meetups across regions
+        </li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- ================= FELLOWS GRID (DYNAMIC) ================= -->
+<section class="fellows-section">
+
+  <h2>All Cohort – {{ cohort }}</h2>
+
+  <div class="fellows-grid">
+
+    {% for f in fellows %}
+    <a href="{% url 'chortdtl' f.id %}" class="fellow-card tile-card">
+
+      <div class="tile-image">
+        {% if f.photo %}
+          <img src="{{ MEDIA_URL }}{{ f.photo }}" alt="{{ f.name }}">
+        {% else %}
+          <img src="https://ui-avatars.com/api/?name={{ f.name|urlencode }}&background=0b3c6d&color=ffffff&size=300"
+               alt="{{ f.name }}">
+        {% endif %}
+      </div>
+
+      <div class="fellow-info">
+        <h4>{{ f.name }}</h4>
+        <p>{{ f.about|truncatewords:16 }}</p>
+        <span class="read-more">View Profile →</span>
+      </div>
+
+    </a>
+    {% empty %}
+      <p class="text-muted">No fellows found for this cohort.</p>
+    {% endfor %}
+
+  </div>
+
+</section>
+
+{% endblock %}

@@ -1,0 +1,24 @@
+[
+  {
+    "model": "core.event",
+    "pk": 1,
+    "fields": {
+      "title": "Annual SIG Summit",
+      "desc": "A multi-stakeholder summit on Internet governance workstreams.",
+      "date": "2025-12-02T09:00:00+05:30",
+      "type": "meeting",
+      "join": "https://example.org/igsummit",
+      "flyer": ""
+    }
+  },
+  {
+    "model": "core.consultation",
+    "pk": 1,
+    "fields": {
+      "title": "ICP-2 V2 Consultation",
+      "desc": "Open for comments until 2025-12-15",
+      "status": "open",
+      "closes_on": "2025-12-15"
+    }
+  }
+]

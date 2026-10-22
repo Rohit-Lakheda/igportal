@@ -1,0 +1,19 @@
+<a class="pc-row" href="{% url 'Proceedingsdtl' c.id %}" data-bucket="{{ bucket }}" data-org="{{ c.organization|default:'' }}">
+  <div class="pc-rail pc-rail-{{ bucket }}">
+    <span>{{ badge }}</span>
+    {% if bucket == "open" and c.days_left is not None and c.days_left >= 0 %}
+    <small>{% if c.days_left == 0 %}Today{% else %}{{ c.days_left }}d left{% endif %}</small>
+    {% endif %}
+  </div>
+  <div class="pc-main">
+    <h3>{{ c.title|default:"Proceeding" }}</h3>
+    {% if c.description %}
+    <p>{{ c.description|truncatechars:180 }}</p>
+    {% endif %}
+  </div>
+  <div class="pc-side">
+    <span><i class="fa-solid fa-building" aria-hidden="true"></i> {{ c.organization|default:"Not listed" }}</span>
+    <span><i class="fa-regular fa-calendar" aria-hidden="true"></i> {% if c.open_date %}{{ c.open_date|date:"d M Y" }}{% else %}Opens later{% endif %}{% if c.close_date %} – {{ c.close_date|date:"d M Y" }}{% endif %}</span>
+    <strong>View proceeding <span aria-hidden="true">→</span></strong>
+  </div>
+</a>

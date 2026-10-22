@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Capacity Building — Bharat IG Sphere{% endblock %}
+{% block body_class %}lp-page{% endblock %}
+
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'UI-CSS/landing.css' %}">
+<link rel="stylesheet" href="{% static 'UI-CSS/capacity.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<section class="events-header">
+  <div class="events-header-bg"></div>
+  <div class="events-header-content">
+    <h1>Capacity Building</h1>
+    <p>Strengthening skills, leadership, and participation across India’s Internet Governance ecosystem.</p>
+  </div>
+</section>
+
+<section class="cap-page">
+  <div class="cap-wrap">
+    <article class="cap-intro">
+      <h2>Building knowledge and leadership</h2>
+      <p>Capacity building is a cornerstone of India’s engagement in Internet Governance. Through structured learning, mentorship, and practical exposure, we aim to empower students, professionals, and stakeholders to contribute to <strong>policy and technical discussions</strong>.</p>
+      <p>These initiatives strengthen domestic expertise, promote awareness of global processes, and support India’s leadership in regional and international forums.</p>
+    </article>
+
+    <div class="cap-grid">
+      <article class="cap-card">
+        <span class="cap-ico" aria-hidden="true"><i class="fa-solid fa-user-graduate"></i></span>
+        <h3>Internships and Fellowships</h3>
+        <p>Programmes for students and early-career professionals to gain hands-on exposure to Internet Governance, policy research, and technical coordination.</p>
+        <a href="https://internship.nixi.in" target="_blank" rel="noopener noreferrer">Visit the website <span aria-hidden="true">→</span></a>
+      </article>
+      <article class="cap-card">
+        <span class="cap-ico" aria-hidden="true"><i class="fa-solid fa-diagram-project"></i></span>
+        <h3>AIORI Portal</h3>
+        <p>Research, collaboration, and capacity-building resources for Internet Governance and the wider digital ecosystem.</p>
+        <a href="https://portal.aiori.in/" target="_blank" rel="noopener noreferrer">Visit AIORI Portal <span aria-hidden="true">→</span></a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<footer class="lp-footer">
+  <div class="lp-footer-grid">
+    <div class="lp-footer-brand">
+      <img src="{% static 'img/ig-logo3.jpeg' %}" alt="Bharat IG">
+      <div>
+        <strong>Bharat Internet Governance Sphere</strong>
+        <p>Connection, policy, people and participation in India's digital governance.</p>
+      </div>
+    </div>
+    <div>
+      <h4>Explore</h4>
+      <a href="{% url 'home' %}">Home</a>
+      <a href="{% url 'events' %}">Events</a>
+      <a href="{% url 'research_hub' %}">Research</a>
+      <a href="{% url 'blogs' %}">Blogs</a>
+    </div>
+    <div>
+      <h4>Participate</h4>
+      <a href="{% url 'consultations' %}">Stakeholder Engagement</a>
+      <a href="{% url 'capacity' %}">Capacity Building</a>
+      <a href="{% url 'global' %}">India at Global Forums</a>
+      <a href="{% url 'sig' %}">SIG</a>
+    </div>
+    <div>
+      <h4>Connect</h4>
+      <p>Stay connected with India's internet governance community.</p>
+      <div class="lp-social">
+        <a href="https://x.com" target="_blank" rel="noopener" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
+        <a href="https://www.linkedin.com" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+        <a href="https://www.youtube.com" target="_blank" rel="noopener" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+      </div>
+    </div>
+  </div>
+  <div class="lp-footer-bar">
+    <span>© {% now "Y" %} Bharat Internet Governance Sphere (BIG-S). All rights reserved.</span>
+    <span>Privacy Policy · Terms of Use · Contact Us</span>
+  </div>
+</footer>
+
+{% endblock %}

@@ -1,0 +1,278 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}Members | Admin{% endblock %}
+
+{% block admin_css %}
+<style>
+  .mm-head{ display:flex; justify-content:space-between; align-items:flex-end; gap:16px; flex-wrap:wrap; }
+  .mm-head h1{ margin:0; }
+  .mm-head p{ margin:6px 0 0; color:#5b6b7c; }
+  .mm-count{ padding:8px 12px; border-radius:999px; background:#fff; border:1px solid #e8edf3; font-weight:700; font-size:14px; }
+  .mm-bar{ display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; align-items:center; }
+  .mm-search{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .mm-tools{ display:flex; align-items:center; gap:8px; flex:0 0 auto; }
+  .mm-search input, .mm-search select, .mm-form input, .mm-form select{
+    box-sizing:border-box; height:44px; min-height:44px; padding:0 14px; border:1px solid #e8edf3; border-radius:12px; background:#fff; color:#122033; font:inherit; font-size:14px; line-height:1.2;
+  }
+  .mm-search input{ width:min(280px, 100%); }
+  .mm-search button{
+    display:inline-flex; align-items:center; justify-content:center; height:44px; padding:0 16px; line-height:1; white-space:nowrap;
+  }
+  .mm-search input:focus, .mm-search select:focus, .mm-form input:focus, .mm-form select:focus{
+    outline:2px solid rgba(224,123,42,.35); border-color:#e07b2a;
+  }
+  .mm-add, .mm-search button, .mm-form button[type=submit]{
+    min-height:44px; padding:0 16px; border:0; border-radius:12px; background:#e07b2a; color:#fff; font-weight:700; cursor:pointer;
+  }
+  .mm-add:hover, .mm-search button:hover, .mm-form button[type=submit]:hover{ background:#c96416; }
+  .mm-list{ display:flex; flex-direction:column; gap:12px; }
+  .mm-card{
+    display:grid; grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) auto; gap:16px; align-items:center;
+    padding:16px 18px; background:#fff; border:1px solid #e8edf3; border-radius:18px; box-shadow:0 10px 24px rgba(15,23,42,.05);
+  }
+  .mm-card h2{ margin:0; font-size:16px; color:#122033; word-break:break-word; }
+  .mm-card p{ margin:4px 0 0; color:#5b6b7c; font-size:13.5px; }
+  .mm-tags{ display:flex; flex-wrap:wrap; gap:6px; }
+  .mm-tags span{ padding:4px 10px; border-radius:999px; background:#f4f7fb; border:1px solid #e8edf3; color:#5b6b7c; font-size:12.5px; font-weight:700; }
+  .mm-actions{ display:flex; align-items:center; gap:8px; }
+  .mm-actions form{ margin:0; display:flex; }
+  .mm-actions button{
+    display:inline-flex; align-items:center; justify-content:center; height:38px; padding:0 12px;
+    border-radius:10px; border:1px solid #e8edf3; background:#fff; color:#122033; font-weight:700; font-size:13px; line-height:1; cursor:pointer;
+  }
+  .mm-actions .edit:hover{ border-color:#e07b2a; color:#c96416; }
+  .mm-actions .danger{ color:#b42318; }
+  .mm-actions .danger:hover{ border-color:#b42318; background:#fff5f5; }
+  .mm-empty{ padding:36px 16px; text-align:center; background:#fff; border:1px dashed #d7dee7; border-radius:18px; color:#5b6b7c; }
+  .mm-form{
+    display:none; background:#fff; border:1px solid #e8edf3; border-radius:18px; padding:22px; box-shadow:0 10px 24px rgba(15,23,42,.05);
+  }
+  .mm-form.is-on{ display:block; }
+  .mm-form h2{ margin:0 0 16px; font-family:"Playfair Display", Georgia, serif; font-size:26px; }
+  .mm-grid{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .mm-span{ grid-column:1 / -1; }
+  .mm-form label{ display:block; margin:0 0 6px; font-size:14px; font-weight:700; }
+  .mm-form input, .mm-form select{ width:100%; }
+  .mm-form-actions{ display:flex; justify-content:flex-end; gap:8px; margin-top:16px; }
+  .mm-form-actions .cancel{
+    min-height:44px; padding:0 16px; border-radius:12px; border:1px solid #e8edf3; background:#fff; font-weight:700; cursor:pointer;
+  }
+  .mm-pages{ display:flex; flex-wrap:wrap; gap:6px; }
+  .mm-pages a{
+    min-width:36px; min-height:36px; padding:0 10px; display:inline-flex; align-items:center; justify-content:center;
+    border-radius:10px; border:1px solid #e8edf3; background:#fff; color:#122033; text-decoration:none; font-weight:700; font-size:13px;
+  }
+  .mm-pages a.is-on{ background:#e07b2a; border-color:#e07b2a; color:#fff; }
+  @media (max-width: 800px){
+    .mm-card, .mm-grid{ grid-template-columns:1fr; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-section">
+  <div class="mm-head">
+    <div>
+      <h1>Members</h1>
+      <p>Search a member, update their details, or remove the account.</p>
+    </div>
+    <div class="mm-count">{{ total_records }} member{{ total_records|pluralize }}</div>
+  </div>
+
+  <div class="mm-bar">
+    <form method="get" class="mm-search">
+      <input type="text" name="search" value="{{ search }}" placeholder="Search email, mobile, or organization">
+      <input type="hidden" name="sort" value="{{ sort }}">
+      <input type="hidden" name="direction" value="{{ direction }}">
+      <div class="mm-tools">
+        <select name="per_page" onchange="this.form.submit()" aria-label="Members per page">
+          {% for option in per_page_options %}
+          <option value="{{ option }}" {% if per_page == option %}selected{% endif %}>{{ option }} per page</option>
+          {% endfor %}
+        </select>
+        <button type="submit">Search</button>
+      </div>
+    </form>
+    <button type="button" class="mm-add" id="showAdd">Add member</button>
+  </div>
+
+  <form method="post" class="mm-form" id="addForm">
+    {% csrf_token %}
+    <input type="hidden" name="add_member" value="1">
+    <h2>Add member</h2>
+    <div class="mm-grid">
+      <div>
+        <label for="add-email">Email</label>
+        <input id="add-email" type="email" name="email" required>
+      </div>
+      <div>
+        <label for="add-mobile">Mobile</label>
+        <input id="add-mobile" type="text" name="mobile" inputmode="numeric" maxlength="10" pattern="[0-9]{10}" title="Enter a 10-digit mobile number." required>
+      </div>
+      <div class="mm-span">
+        <label for="add-org">Organization</label>
+        <input id="add-org" type="text" name="company_name" required>
+      </div>
+      <div>
+        <label for="add-sig">SIG group</label>
+        <select id="add-sig" name="member_grp" required>
+          <option value="">Select a group</option>
+          <option>SIG-1</option>
+          <option>SIG-2</option>
+          <option>SIG-3</option>
+        </select>
+      </div>
+      <div>
+        <label for="add-type">Member type</label>
+        <select id="add-type" name="member_type" required>
+          <option value="">Select a type</option>
+          <option>IPS</option>
+          <option>FI</option>
+          <option>DNN</option>
+        </select>
+      </div>
+    </div>
+    <div class="mm-form-actions">
+      <button type="button" class="cancel" id="hideAdd">Cancel</button>
+      <button type="submit">Save member</button>
+    </div>
+  </form>
+
+  <form method="post" class="mm-form" id="editForm">
+    {% csrf_token %}
+    <input type="hidden" name="edit_member" value="1">
+    <input type="hidden" name="member_id" id="edit-id">
+    <h2>Edit member</h2>
+    <div class="mm-grid">
+      <div>
+        <label for="edit-email">Email</label>
+        <input id="edit-email" type="email" name="email" required>
+      </div>
+      <div>
+        <label for="edit-mobile">Mobile</label>
+        <input id="edit-mobile" type="text" name="mobile" required>
+      </div>
+      <div class="mm-span">
+        <label for="edit-org">Organization</label>
+        <input id="edit-org" type="text" name="company_name" required>
+      </div>
+      <div>
+        <label for="edit-sig">SIG group</label>
+        <select id="edit-sig" name="member_grp">
+          <option value="">None</option>
+          <option>SIG-1</option>
+          <option>SIG-2</option>
+          <option>SIG-3</option>
+        </select>
+      </div>
+      <div>
+        <label for="edit-type">Member type</label>
+        <select id="edit-type" name="member_type">
+          <option value="">None</option>
+          <option>IPS</option>
+          <option>FI</option>
+          <option>DNN</option>
+        </select>
+      </div>
+    </div>
+    <div class="mm-form-actions">
+      <button type="button" class="cancel" id="hideEdit">Cancel</button>
+      <button type="submit">Update member</button>
+    </div>
+  </form>
+
+  <div class="mm-list">
+    {% for m in members %}
+    <article class="mm-card">
+      <div>
+        <h2>{{ m.1 }}</h2>
+        <p>{{ m.3|default:"No organization" }}</p>
+      </div>
+      <div class="mm-tags">
+        <span>{{ m.2|default:"No mobile" }}</span>
+        <span>{{ m.4|default:"No SIG group" }}</span>
+        <span>{{ m.5|default:"No type" }}</span>
+      </div>
+      <div class="mm-actions">
+        <button type="button" class="edit"
+          data-id="{{ m.0 }}"
+          data-email="{{ m.1 }}"
+          data-mobile="{{ m.2 }}"
+          data-company="{{ m.3 }}"
+          data-group="{{ m.4 }}"
+          data-type="{{ m.5 }}">Edit</button>
+        <form method="post" onsubmit="return confirm('Delete this member account?');">
+          {% csrf_token %}
+          <input type="hidden" name="delete_member" value="{{ m.0 }}">
+          <button type="submit" class="danger">Delete</button>
+        </form>
+      </div>
+    </article>
+    {% empty %}
+    <div class="mm-empty">{% if search %}No members match that search.{% else %}No members yet.{% endif %}</div>
+    {% endfor %}
+  </div>
+
+  {% if page_range|length > 1 %}
+  <div class="mm-pages">
+    {% if current_page > 1 %}
+    <a href="?page={{ current_page|add:'-1' }}&search={{ search }}&per_page={{ per_page }}&sort={{ sort }}&direction={{ direction }}">Prev</a>
+    {% endif %}
+    {% for p in page_range %}
+    <a class="{% if p == current_page %}is-on{% endif %}" href="?page={{ p }}&search={{ search }}&per_page={{ per_page }}&sort={{ sort }}&direction={{ direction }}">{{ p }}</a>
+    {% endfor %}
+    {% if current_page < page_range|length %}
+    <a href="?page={{ current_page|add:'1' }}&search={{ search }}&per_page={{ per_page }}&sort={{ sort }}&direction={{ direction }}">Next</a>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>
+
+<script>
+(function () {
+  var addForm = document.getElementById("addForm");
+  var editForm = document.getElementById("editForm");
+
+  function setSelect(select, value) {
+    var found = false;
+    Array.prototype.forEach.call(select.options, function (option) {
+      if (option.value === value) found = true;
+    });
+    if (value && !found) {
+      var extra = document.createElement("option");
+      extra.value = value;
+      extra.textContent = value;
+      select.appendChild(extra);
+    }
+    select.value = value || "";
+  }
+
+  document.getElementById("showAdd").addEventListener("click", function () {
+    editForm.classList.remove("is-on");
+    addForm.classList.add("is-on");
+    addForm.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  });
+  document.getElementById("hideAdd").addEventListener("click", function () {
+    addForm.classList.remove("is-on");
+  });
+  document.getElementById("hideEdit").addEventListener("click", function () {
+    editForm.classList.remove("is-on");
+  });
+
+  document.querySelectorAll(".mm-actions .edit").forEach(function (button) {
+    button.addEventListener("click", function () {
+      addForm.classList.remove("is-on");
+      document.getElementById("edit-id").value = button.dataset.id || "";
+      document.getElementById("edit-email").value = button.dataset.email || "";
+      document.getElementById("edit-mobile").value = button.dataset.mobile || "";
+      document.getElementById("edit-org").value = button.dataset.company || "";
+      setSelect(document.getElementById("edit-sig"), button.dataset.group || "");
+      setSelect(document.getElementById("edit-type"), button.dataset.type || "");
+      editForm.classList.add("is-on");
+      editForm.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
+  });
+})();
+</script>
+{% endblock %}

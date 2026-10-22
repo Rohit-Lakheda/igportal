@@ -1,0 +1,65 @@
+{% extends "admin/base.html" %}
+{% block title %}Edit position | Admin{% endblock %}
+
+{% block admin_css %}
+<style>
+  .gf-back{ display:inline-flex; align-items:center; gap:8px; margin-bottom:14px; color:#122033; font-weight:700; font-size:14px; text-decoration:none; }
+  .gf-back:hover{ color:#c96416; }
+  .gf-form{ background:#fff; border:1px solid #e8edf3; border-radius:18px; padding:22px; box-shadow:0 10px 24px rgba(15,23,42,.05); }
+  .gf-form h1{ margin:0 0 16px; font-family:"Playfair Display", Georgia, serif; font-size:32px; }
+  .gf-grid{ display:grid; grid-template-columns:180px 1fr; gap:16px; }
+  .gf-span{ grid-column:1 / -1; }
+  .gf-form label{ display:block; margin:0 0 6px; font-size:14px; font-weight:700; }
+  .gf-form input, .gf-form textarea{
+    box-sizing:border-box; width:100%; height:44px; padding:0 14px; border:1px solid #e8edf3; border-radius:12px; background:#fff; color:#122033; font:inherit; font-size:14px;
+  }
+  .gf-form textarea{ height:auto; min-height:140px; padding:12px 14px; resize:vertical; }
+  .gf-form input:focus, .gf-form textarea:focus{ outline:2px solid rgba(224,123,42,.35); border-color:#e07b2a; }
+  .gf-check{ display:flex; align-items:center; gap:8px; min-height:44px; }
+  .gf-check input{ width:18px; height:18px; }
+  .gf-check label{ margin:0; }
+  .gf-actions{ display:flex; justify-content:flex-end; gap:8px; margin-top:16px; }
+  .gf-actions button, .gf-actions a{
+    display:inline-flex; align-items:center; justify-content:center; height:44px; padding:0 16px; border-radius:12px; border:1px solid #e8edf3; background:#fff; color:#122033; font-weight:700; text-decoration:none; cursor:pointer;
+  }
+  .gf-actions button{ background:#e07b2a; border-color:#e07b2a; color:#fff; }
+  .gf-actions button:hover{ background:#c96416; }
+  @media (max-width: 700px){ .gf-grid{ grid-template-columns:1fr; } }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-section">
+  <a class="gf-back" href="{% url 'admin_global_forum_positions' position.forum_id %}"><i class="fas fa-arrow-left"></i> {{ position.forum.name }}</a>
+  <form class="gf-form" method="post">
+    {% csrf_token %}
+    <h1>Edit position</h1>
+    <div class="gf-grid">
+      <div>
+        <label for="pos-date">Date</label>
+        <input id="pos-date" type="date" name="statement_date" required value="{% if position.statement_date|date:'Y-m-d' %}{{ position.statement_date|date:'Y-m-d' }}{% else %}{{ position.statement_date|slice:':10' }}{% endif %}">
+      </div>
+      <div>
+        <label for="pos-title">Title</label>
+        <input id="pos-title" type="text" name="title" value="{{ position.title }}" required>
+      </div>
+      <div class="gf-span">
+        <label for="pos-sum">Summary</label>
+        <textarea id="pos-sum" name="summary" rows="5" required>{{ position.summary }}</textarea>
+      </div>
+      <div>
+        <label for="pos-src">Source</label>
+        <input id="pos-src" type="text" name="source_label" value="{{ position.source_label }}">
+      </div>
+      <div class="gf-check">
+        <input id="pos-pub" type="checkbox" name="is_published" {% if position.is_published %}checked{% endif %}>
+        <label for="pos-pub">Show on the public page</label>
+      </div>
+    </div>
+    <div class="gf-actions">
+      <a href="{% url 'admin_global_forum_positions' position.forum_id %}">Cancel</a>
+      <button type="submit">Save position</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

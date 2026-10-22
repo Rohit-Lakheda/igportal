@@ -1,0 +1,149 @@
+{% extends "core/admin1_dashboard.html" %}
+{% block content %}
+
+<section id="events" class="mt-4">
+
+  <!-- ================= HEADER ================= -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h3 class="fw-bold mb-1">Event Management</h3>
+      <p class="text-muted small mb-0">Create, update and manage public events</p>
+    </div>
+    <button class="btn btn-primary d-flex align-items-center gap-2"
+            data-bs-toggle="modal" data-bs-target="#addEventModal">
+      <i class="bi bi-plus-circle"></i> Add Event
+    </button>
+  </div>
+
+  <!-- ================= EVENT CARDS ================= -->
+  <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4 mb-5">
+
+    <!-- EVENT CARD -->
+    <div class="col">
+      <div class="card h-100 shadow-sm border-0 rounded-4">
+        <img src="https://via.placeholder.com/600x400?text=Annual+Conference+2026"
+             class="card-img-top rounded-top-4"
+             style="height:180px; object-fit:cover;">
+
+        <div class="card-body d-flex flex-column">
+          <span class="badge bg-primary-subtle text-primary mb-2">Conference</span>
+
+          <h5 class="fw-semibold mb-1">Annual Board Conference</h5>
+          <p class="text-muted small mb-2">
+            <i class="bi bi-calendar-event me-1"></i> 15 January 2026
+          </p>
+
+          <p class="small flex-grow-1">
+            High-level discussions on Internet governance policy and strategic priorities.
+          </p>
+
+          <div class="d-flex justify-content-between align-items-center mt-3">
+            <a href="#" class="btn btn-sm btn-outline-primary">
+              <i class="bi bi-link-45deg"></i> Details
+            </a>
+
+            <div class="btn-group">
+              <button class="btn btn-sm btn-outline-secondary" title="Edit">
+                <i class="bi bi-pencil"></i>
+              </button>
+              <button class="btn btn-sm btn-outline-danger" title="Delete">
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DUPLICATE CARD FOR DEMO -->
+    <div class="col">
+      <div class="card h-100 shadow-sm border-0 rounded-4">
+        <img src="https://via.placeholder.com/600x400?text=Workshop"
+             class="card-img-top rounded-top-4"
+             style="height:180px; object-fit:cover;">
+        <div class="card-body d-flex flex-column">
+          <span class="badge bg-success-subtle text-success mb-2">Workshop</span>
+          <h5 class="fw-semibold mb-1">Digital Governance Workshop</h5>
+          <p class="text-muted small mb-2">
+            <i class="bi bi-calendar-event me-1"></i> 22 January 2026
+          </p>
+          <p class="small flex-grow-1">
+            Hands-on training for government officials and technical staff.
+          </p>
+          <div class="d-flex justify-content-between align-items-center mt-3">
+            <a href="#" class="btn btn-sm btn-outline-primary">Register</a>
+            <div class="btn-group">
+              <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></button>
+              <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ================= TABLE VIEW ================= -->
+  <div class="card shadow-sm border-0 rounded-4">
+    <div class="card-header bg-white fw-semibold">
+      All Events (Table View)
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>Event</th>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Link</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+
+
+
+          <tr>
+            <td>
+              <strong>Annual Board Conference</strong>
+              <div class="small text-muted">Policy & strategy discussions</div>
+            </td>
+            <td>15 Jan 2026</td>
+            <td><span class="badge bg-primary">Conference</span></td>
+            <td><a href="#">View</a></td>
+            <td class="text-end">
+              <button class="btn btn-sm btn-outline-secondary me-1">
+                <i class="bi bi-pencil"></i>
+              </button>
+              <button class="btn btn-sm btn-outline-danger">
+                <i class="bi bi-trash"></i>
+              </button>
+            </td>
+          </tr>
+          
+          <tr>
+            <td>
+              <strong>Digital Governance Workshop</strong>
+              <div class="small text-muted">Capacity-building session</div>
+            </td>
+            <td>22 Jan 2026</td>
+            <td><span class="badge bg-success">Workshop</span></td>
+            <td><a href="#">Register</a></td>
+            <td class="text-end">
+              <button class="btn btn-sm btn-outline-secondary me-1">
+                <i class="bi bi-pencil"></i>
+              </button>
+              <button class="btn btn-sm btn-outline-danger">
+                <i class="bi bi-trash"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</section>
+
+{% endblock %}

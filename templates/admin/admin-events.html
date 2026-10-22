@@ -1,0 +1,271 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}Events | Admin{% endblock %}
+
+{% block admin_css %}
+<link rel="stylesheet" href="{% static 'css/admin/admin-table.css' %}">
+<style>
+  .ev-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+  .ev-head h1{ margin:0; }
+  .ev-head p{ margin:6px 0 0; color:#5b6b7c; }
+  .ev-count{
+    padding:8px 12px;
+    border-radius:999px;
+    background:#fff;
+    border:1px solid #e8edf3;
+    color:#122033;
+    font-weight:700;
+    font-size:14px;
+  }
+  .ev-bar{
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+    flex-wrap:wrap;
+    align-items:center;
+  }
+  .ev-search{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    align-items:center;
+  }
+  .ev-search input,
+  .ev-search select{
+    min-height:44px;
+    padding:0 14px;
+    border:1px solid #e8edf3;
+    border-radius:12px;
+    background:#fff;
+    color:#122033;
+    font:inherit;
+    font-size:14px;
+  }
+  .ev-search input{ width:min(320px, 100%); }
+  .ev-search input:focus,
+  .ev-search select:focus{
+    outline:2px solid rgba(224,123,42,.35);
+    border-color:#e07b2a;
+  }
+  .ev-add, .ev-search button{
+    min-height:44px;
+    padding:0 16px;
+    border:0;
+    border-radius:12px;
+    background:#e07b2a;
+    color:#fff;
+    font-weight:700;
+    text-decoration:none;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    cursor:pointer;
+  }
+  .ev-add:hover, .ev-search button:hover{ background:#c96416; color:#fff; }
+  .ev-list{ display:flex; flex-direction:column; gap:12px; }
+  .ev-card{
+    display:grid;
+    grid-template-columns:168px minmax(0, 1fr) auto;
+    gap:16px;
+    align-items:center;
+    padding:14px;
+    background:#fff;
+    border:1px solid #e8edf3;
+    border-radius:18px;
+    box-shadow:0 10px 24px rgba(15,23,42,.05);
+  }
+  .ev-photo{
+    width:168px;
+    height:96px;
+    border-radius:12px;
+    object-fit:cover;
+    background:#eef1f5;
+  }
+  .ev-photo-empty{
+    display:grid;
+    place-items:center;
+    color:#8a97a6;
+    font-size:12px;
+    font-weight:700;
+    border:1px dashed #d7dee7;
+  }
+  .ev-card h2{
+    margin:0;
+    font-size:18px;
+    color:#122033;
+  }
+  .ev-meta{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    margin-top:8px;
+  }
+  .ev-meta span{
+    padding:4px 10px;
+    border-radius:999px;
+    background:#f4f7fb;
+    border:1px solid #e8edf3;
+    color:#5b6b7c;
+    font-size:12.5px;
+    font-weight:700;
+  }
+  .ev-card p{
+    margin:8px 0 0;
+    color:#5b6b7c;
+    font-size:14px;
+    line-height:1.45;
+  }
+  .ev-actions{
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .ev-actions form{ margin:0; display:flex; }
+  .ev-actions a, .ev-actions button{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    height:38px;
+    padding:0 12px;
+    border-radius:10px;
+    border:1px solid #e8edf3;
+    background:#fff;
+    color:#122033;
+    font-weight:700;
+    font-size:13px;
+    line-height:1;
+    text-decoration:none;
+    cursor:pointer;
+  }
+  .ev-actions a:hover{ border-color:#e07b2a; color:#c96416; }
+  .ev-actions .danger{ color:#b42318; }
+  .ev-actions .danger:hover{ border-color:#b42318; background:#fff5f5; }
+  .ev-empty{
+    padding:36px 16px;
+    text-align:center;
+    background:#fff;
+    border:1px dashed #d7dee7;
+    border-radius:18px;
+    color:#5b6b7c;
+  }
+  .ev-pages{ display:flex; flex-wrap:wrap; gap:6px; }
+  .ev-pages a{
+    min-width:36px;
+    min-height:36px;
+    padding:0 10px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:10px;
+    border:1px solid #e8edf3;
+    background:#fff;
+    color:#122033;
+    text-decoration:none;
+    font-weight:700;
+    font-size:13px;
+  }
+  .ev-pages a.is-on{ background:#e07b2a; border-color:#e07b2a; color:#fff; }
+  @media (max-width: 800px){
+    .ev-card{ grid-template-columns:1fr; }
+    .ev-photo{ width:100%; height:160px; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-section">
+  <div class="ev-head">
+    <div>
+      <h1>Events</h1>
+      <p>Add a public event, or open one to change its dates, photo, and link.</p>
+    </div>
+    <div class="ev-count">{{ total_records }} event{{ total_records|pluralize }}</div>
+  </div>
+
+  <div class="ev-bar">
+    <form method="get" class="ev-search">
+      <input type="text" name="search" value="{{ search }}" placeholder="Search title or description">
+      <input type="hidden" name="sort" value="{{ request.GET.sort|default:'event_date' }}">
+      <input type="hidden" name="direction" value="{{ request.GET.direction|default:'desc' }}">
+      <select name="per_page" onchange="this.form.submit()" aria-label="Events per page">
+        {% for option in per_page_options %}
+        <option value="{{ option }}" {% if per_page == option %}selected{% endif %}>{{ option }} per page</option>
+        {% endfor %}
+      </select>
+      <button type="submit">Search</button>
+    </form>
+    <a class="ev-add" href="{% url 'admin_event_add' %}"><i class="fas fa-plus"></i> Add event</a>
+  </div>
+
+  <div class="ev-list">
+    {% for event in events %}
+    <article class="ev-card">
+      {% if event.4 %}
+      <img class="ev-photo" src="/media/{{ event.4 }}" alt="">
+      {% else %}
+      <div class="ev-photo ev-photo-empty">No photo</div>
+      {% endif %}
+      <div>
+        <h2>{{ event.1|default:"Untitled event" }}</h2>
+        <div class="ev-meta">
+          {% if event.7 %}<span>{{ event.7 }}</span>{% endif %}
+          <span>{{ event.5|date:"d M Y" }}{% if event.6 %} – {{ event.6|date:"d M Y" }}{% endif %}</span>
+        </div>
+        <p>{{ event.2|truncatewords:22 }}</p>
+      </div>
+      <div class="ev-actions">
+        <a href="{% url 'admin_event_edit' event.0 %}">Edit</a>
+        <form method="post" action="{% url 'admin_event_delete' event.0 %}" onsubmit="return confirmDelete(event);">
+          {% csrf_token %}
+          <button type="submit" class="danger">Delete</button>
+        </form>
+      </div>
+    </article>
+    {% empty %}
+    <div class="ev-empty">
+      {% if search %}No events match that search.{% else %}No events yet. Add the first one.{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+
+  {% if page_range|length > 1 %}
+  <div class="ev-pages">
+    {% if current_page > 1 %}
+    <a href="?page={{ current_page|add:'-1' }}&search={{ search }}&per_page={{ per_page }}&sort={{ request.GET.sort|default:'event_date' }}&direction={{ request.GET.direction|default:'desc' }}">Prev</a>
+    {% endif %}
+    {% for p in page_range %}
+    <a href="?page={{ p }}&search={{ search }}&per_page={{ per_page }}&sort={{ request.GET.sort|default:'event_date' }}&direction={{ request.GET.direction|default:'desc' }}" class="{% if p == current_page %}is-on{% endif %}">{{ p }}</a>
+    {% endfor %}
+    {% if current_page < page_range|length %}
+    <a href="?page={{ current_page|add:'1' }}&search={{ search }}&per_page={{ per_page }}&sort={{ request.GET.sort|default:'event_date' }}&direction={{ request.GET.direction|default:'desc' }}">Next</a>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+function confirmDelete(e){
+  e.preventDefault();
+  const form = e.target;
+  Swal.fire({
+    title: "Delete this event?",
+    text: "It will be removed from the public events page.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#e07b2a",
+    confirmButtonText: "Delete"
+  }).then(function(result){
+    if(result.isConfirmed) form.submit();
+  });
+  return false;
+}
+</script>
+{% endblock %}

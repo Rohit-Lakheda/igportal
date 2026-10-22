@@ -1,0 +1,380 @@
+/* =========================================================
+   GLOBAL THEME VARIABLES
+========================================================= */
+:root{
+  --bg-main:#f8fafc;
+  --glass-bg:rgba(255,255,255,0.55);
+  --glass-border:rgba(255,255,255,0.35);
+  --blur:14px;
+
+  --primary:#2563eb;      /* soft blue */
+  --secondary:#0f766e;    /* teal */
+  --accent:#6366f1;       /* indigo */
+
+  --text-dark:#0f172a;
+  --text-mid:#334155;
+  --text-light:#64748b;
+
+  --radius-xl:22px;
+  --radius-lg:16px;
+  --radius-md:12px;
+
+  --shadow-soft:0 8px 30px rgba(15,23,42,0.08);
+  --shadow-glass:0 8px 40px rgba(15,23,42,0.12);
+}
+
+/* =========================================================
+   BASE RESET
+========================================================= */
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--bg-main);
+  color:var(--text-dark);
+}
+
+/* =========================================================
+   GLASS HEADER
+========================================================= */
+.glass-header{
+  position:fixed;
+  top:0;
+  width:100%;
+  z-index:1000;
+  padding:16px 0;
+  transition:all .35s ease;
+}
+
+/* scroll morph */
+body.scrolled .glass-header{
+  padding:8px 0;
+  background:rgba(255,255,255,0.75);
+  backdrop-filter:blur(12px);
+  box-shadow:var(--shadow-soft);
+}
+
+/* =========================================================
+   WRAPPER
+========================================================= */
+.glass-wrapper{
+  max-width:1400px;
+  margin:auto;
+  padding:0 24px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+}
+
+/* =========================================================
+   BRAND
+========================================================= */
+.glass-brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.glass-logo{
+  width:65px;
+  height:65px;
+  border-radius:50%;
+  object-fit:cover;
+  box-shadow:0 4px 12px rgba(0,0,0,.15);
+}
+
+.glass-text{
+  display:flex;
+  flex-direction:column;
+}
+
+.glass-title{
+  font-weight:700;
+  font-size:15px;
+  line-height:1.1;
+}
+.glass-sub{
+  font-size:11px;
+  color:var(--text-light);
+}
+
+/* =========================================================
+   NAV CAPSULE
+========================================================= */
+.glass-nav-box{
+  flex:1;
+  display:flex;
+  justify-content:center;
+}
+
+.glass-nav{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:8px;
+  background:var(--glass-bg);
+  border:1px solid var(--glass-border);
+  backdrop-filter:blur(var(--blur));
+  border-radius:999px;
+  box-shadow:var(--shadow-glass);
+  transition:all .3s ease;
+}
+
+/* =========================================================
+   LINKS
+========================================================= */
+.glass-link{
+  padding:10px 16px;
+  border-radius:999px;
+  font-size:14px;
+  font-weight:500;
+  color:var(--text-mid);
+  text-decoration:none;
+  transition:all .25s ease;
+  position:relative;
+  white-space:nowrap;
+}
+
+.glass-link:hover{
+  background:rgba(37,99,235,0.08);
+  color:var(--primary);
+  transform:translateY(-1px);
+}
+
+.glass-link.active{
+  background:linear-gradient(135deg,var(--primary),var(--accent));
+  color:#fff;
+  box-shadow:0 6px 16px rgba(37,99,235,.35);
+}
+
+/* =========================================================
+   DROPDOWN
+========================================================= */
+.glass-dropdown{
+  position:relative;
+}
+
+/* Invisible bridge so the menu stays open while the pointer moves down to a link. */
+.glass-dropdown::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  top:100%;
+  height:16px;
+}
+
+.glass-dropdown-menu{
+  position:absolute;
+  top:100%;
+  left:0;
+  min-width:230px;
+  margin-top:8px;
+  padding:8px;
+  background:#fff;
+  border:1px solid #e8edf3;
+  border-radius:14px;
+  box-shadow:0 16px 40px rgba(15, 23, 42, 0.14);
+  opacity:0;
+  transform:translateY(6px);
+  pointer-events:none;
+  transition:opacity .16s ease, transform .16s ease;
+  transition-delay:.2s;
+  z-index:40;
+}
+
+.glass-dropdown-menu a{
+  display:block;
+  padding:10px 12px;
+  border-radius:10px;
+  font-size:13.5px;
+  font-weight:600;
+  color:#122033;
+  text-decoration:none;
+  background:transparent;
+  box-shadow:none;
+}
+
+.glass-dropdown-menu a:hover{
+  background:rgba(224, 123, 42, 0.12);
+  color:#c96416;
+}
+
+.glass-dropdown-divider{
+  display:block;
+  height:1px;
+  margin:8px 14px;
+  background:rgba(0,0,0,.08);
+}
+
+.glass-dropdown:hover .glass-dropdown-menu,
+.glass-dropdown:focus-within .glass-dropdown-menu{
+  opacity:1;
+  transform:translateY(0);
+  pointer-events:auto;
+  transition-delay:0s;
+}
+
+/* =========================================================
+   USER MENU
+========================================================= */
+.glass-user{
+  position:relative;
+}
+
+.user-icon{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--glass-bg);
+  border:1px solid var(--glass-border);
+  backdrop-filter:blur(var(--blur));
+  cursor:pointer;
+  transition:.3s;
+}
+
+.user-icon:hover{
+  background:rgba(37,99,235,.12);
+  color:var(--primary);
+}
+
+.user-menu{
+  position:absolute;
+  right:0;
+  top:120%;
+  min-width:280px;
+  background:rgba(255,255,255,.95);
+  backdrop-filter:blur(12px);
+  border-radius:14px;
+  box-shadow:0 12px 30px rgba(0,0,0,.15);
+  padding:8px;
+  display:none;
+  animation:fadeUp .25s ease;
+}
+
+.user-menu a{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 12px;
+  font-size:14px;
+  border-radius:10px;
+  color:var(--text-mid);
+  text-decoration:none;
+  transition:.2s;
+  white-space:nowrap;
+}
+
+.user-menu a:hover{
+  background:rgba(37,99,235,.08);
+  color:var(--primary);
+}
+
+.user-menu .divider{
+  height:1px;
+  background:#e5e7eb;
+  margin:6px 0;
+}
+
+.user-menu .danger{
+  color:#dc2626;
+}
+
+/* =========================================================
+   MOBILE TOGGLE
+========================================================= */
+.glass-toggle{
+  display:none;
+  flex-direction:column;
+  gap:5px;
+  cursor:pointer;
+}
+
+.glass-toggle span{
+  width:24px;
+  height:2px;
+  background:#0f172a;
+  border-radius:2px;
+}
+
+/* =========================================================
+   MAIN
+========================================================= */
+.site-main{
+  flex:1 0 auto;
+  padding-top:92px;
+}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+.site-footer{
+  flex-shrink:0;
+  margin-top:auto;
+  background:#0f172a;
+  color:#fff;
+  padding:24px 16px;
+  text-align:center;
+}
+
+.site-footer p{
+  font-size:13px;
+  opacity:.85;
+}
+
+/* =========================================================
+   ANIMATIONS
+========================================================= */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(10px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+@media(max-width:1024px){
+
+  .glass-nav{
+    position:absolute;
+    top:100%;
+    left:50%;
+    transform:translateX(-50%);
+    flex-direction:column;
+    width:90%;
+    background:rgba(255,255,255,.95);
+    border-radius:20px;
+    padding:14px;
+    display:none;
+  }
+
+  .glass-nav.open{
+    display:flex;
+    animation:fadeUp .3s ease;
+  }
+
+  .glass-nav-box{
+    justify-content:flex-end;
+  }
+
+  .glass-toggle{
+    display:flex;
+  }
+}
+
+@media(max-width:600px){
+
+  .glass-text{display:none;}
+
+  .glass-nav{
+    width:94%;
+  }
+
+  .glass-link{
+    width:100%;
+    text-align:center;
+  }
+}

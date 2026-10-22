@@ -1,0 +1,25 @@
+{% extends "admin/base.html" %}
+{% block title %}Edit OSS contribution version{% endblock %}
+{% block content %}
+<div class="admin-section">
+  <h2 class="mb-3">Edit OSS contribution (v{{ contribution.version }})</h2>
+  {% include "admin/research/_messages.html" %}
+  <form method="post" enctype="multipart/form-data" class="card card-body">
+    {% csrf_token %}
+    <div class="row g-3">
+      <div class="col-md-8"><label class="form-label">Title</label><input class="form-control" name="title" value="{{ contribution.title }}" required></div>
+      <div class="col-md-4"><label class="form-label">Status</label><select class="form-select" name="status"><option value="pending" {% if contribution.status == 'pending' %}selected{% endif %}>Pending</option><option value="approved" {% if contribution.status == 'approved' %}selected{% endif %}>Approved</option><option value="rejected" {% if contribution.status == 'rejected' %}selected{% endif %}>Rejected</option></select></div>
+      <div class="col-md-6"><label class="form-label">Project</label><select class="form-select" name="project">{% for p in projects %}<option value="{{ p.pk }}" {% if p.pk == contribution.project_id %}selected{% endif %}>{{ p.broad_topic.name }} - {{ p.name }}</option>{% endfor %}</select></div>
+      <div class="col-md-3"><label class="form-label">Contributor</label><input class="form-control" name="contributor_display_name" value="{{ contribution.contributor_display_name }}"></div>
+      <div class="col-md-3"><label class="form-label">Email</label><input class="form-control" name="contributor_email" value="{{ contribution.contributor_email }}"></div>
+      <div class="col-12"><label class="form-label">Summary</label><textarea class="form-control" name="summary" rows="4">{{ contribution.summary }}</textarea></div>
+      <div class="col-md-6"><label class="form-label">External URL</label><input class="form-control" name="external_url" value="{{ contribution.external_url }}"></div>
+      <div class="col-md-6"><label class="form-label">Replace file (optional)</label><input class="form-control" type="file" name="contribution_file"></div>
+    </div>
+    <div class="mt-3 d-flex gap-2">
+      <button class="btn btn-primary" type="submit">Save</button>
+      <a class="btn btn-outline-secondary" href="{% url 'admin_research_broad_topic_submissions' contribution.project.broad_topic_id %}">Back</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

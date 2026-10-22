@@ -1,0 +1,72 @@
+<h2>{{ tab_title }}</h2>
+<div class="sd-list">
+  {% for meeting in meetings %}
+  <article class="sd-card">
+    <h3>{{ meeting.title }}</h3>
+    <div class="sd-tags">
+      <span class="sd-tag">{{ meeting.date|date:"d M Y, h:i A" }}</span>
+      {% if meeting.agenda %}
+      <a class="sd-link" href="{{ meeting.agenda.url }}" target="_blank">Agenda</a>
+      {% else %}
+      <span class="sd-tag">Agenda not uploaded</span>
+      {% endif %}
+      {% if meeting.minutes %}
+      <a class="sd-link" href="{{ meeting.minutes.url }}" target="_blank">Minutes</a>
+      {% else %}
+      <span class="sd-tag">Minutes not uploaded</span>
+      {% endif %}
+      {% if meeting.supporting_document %}
+      <a class="sd-link" href="{{ meeting.supporting_document.url }}" target="_blank">Supporting document</a>
+      {% endif %}
+      {% if meeting.meeting_link %}
+      <a class="sd-link" href="{{ meeting.meeting_link }}" target="_blank" rel="noopener noreferrer">Join meeting</a>
+      {% endif %}
+    </div>
+
+    <div class="sd-docs">
+      <h4>Member uploads</h4>
+      {% for doc in meeting.documents.all %}
+        {% if doc.status == 'approved' or doc.uploader == request.user %}
+        <div class="sd-doc">
+          <div>
+            <a href="{{ doc.document.url }}" target="_blank">{{ doc.title }}</a>
+            {% if doc.uploader == request.user and doc.status == 'pending' %}
+            <span class="sd-wait">Pending approval</span>
+            {% endif %}
+            {% if doc.is_admin %}
+            <span class="sd-wait">Official</span>
+            {% endif %}
+          </div>
+          <span>{% if doc.is_admin %}Secretariat{% else %}{{ doc.uploader.first_name|default:doc.uploader.username }}{% endif %}</span>
+        </div>
+        {% endif %}
+      {% empty %}
+      <p class="sd-empty">No documents have been published for this meeting.</p>
+      {% endfor %}
+    </div>
+
+    <details class="sd-upload">
+      <summary>Upload a contribution</summary>
+      <form method="post" enctype="multipart/form-data" class="sd-form">
+        {% csrf_token %}
+        <input type="hidden" name="form_type" value="meeting_upload">
+        <input type="hidden" name="meeting_id" value="{{ meeting.id }}">
+        <input type="hidden" name="return_section" value="{{ section_key }}">
+        <div>
+          <label for="title-{{ meeting.id }}">Document title</label>
+          <input id="title-{{ meeting.id }}" type="text" name="title" required>
+        </div>
+        <div>
+          <label for="file-{{ meeting.id }}">File</label>
+          <input id="file-{{ meeting.id }}" type="file" name="document" required>
+        </div>
+        <div>
+          <button type="submit" class="sd-btn">Submit for review</button>
+        </div>
+      </form>
+    </details>
+  </article>
+  {% empty %}
+  <p class="sd-empty">Nothing is listed here yet.</p>
+  {% endfor %}
+</div>

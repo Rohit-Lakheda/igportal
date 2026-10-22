@@ -1,0 +1,254 @@
+{% extends "core/research/base_research.html" %}
+{% load static %}
+{% block title %}Submit open source — Bharat IG Sphere{% endblock %}
+{% block body_class %}lp-page{% endblock %}
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'UI-CSS/landing.css' %}">
+<link rel="stylesheet" href="{% static 'UI-CSS/research.css' %}">
+{% endblock %}
+{% block research_body %}
+<section class="events-header">
+  <div class="events-header-bg"></div>
+  <div class="events-header-content">
+    <h1>Submit open source</h1>
+    <p>Add a contribution to an approved project, or propose a new project for review.</p>
+  </div>
+</section>
+
+<section class="rr-page">
+  <div class="rs-wrap">
+    <a href="{% url 'open_source_index' %}" class="rr-back"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Open source</a>
+
+    <div class="rs-choices rs-switch" role="tablist" aria-label="Submission type">
+      <button type="button" class="rs-choice {% if approved_projects %}is-on{% endif %}" id="tab_contribute" role="tab" aria-selected="{{ approved_projects|yesno:'true,false' }}" {% if not approved_projects %}disabled{% endif %}>
+        <strong>Contribute to a project</strong>
+        <span>Add a file or link to a project that is already approved.</span>
+      </button>
+      <button type="button" class="rs-choice {% if not approved_projects %}is-on{% endif %}" id="tab_new" role="tab" aria-selected="{{ approved_projects|yesno:'false,true' }}">
+        <strong>Propose a new project</strong>
+        <span>The project and its first contribution stay pending until approved.</span>
+      </button>
+    </div>
+
+    {% if not approved_projects %}
+    <p class="rs-note">There are no approved projects yet. Propose a new project to submit the first listing.</p>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data" class="rs-form" id="form_contribute" {% if not approved_projects %}hidden{% endif %}>
+      {% csrf_token %}
+      <input type="hidden" name="mode" value="contribute">
+
+      <section class="rs-block">
+        <header class="rs-block-head">
+          <span>1</span>
+          <div>
+            <h2>Project</h2>
+            <p>Pick the approved project this contribution belongs to.</p>
+          </div>
+        </header>
+        <label class="rs-label" for="project_id">Approved project</label>
+        <select name="project_id" id="project_id" class="rs-input" {% if approved_projects %}required{% endif %}>
+          <option value="">Select a project</option>
+          {% for p in approved_projects %}
+          <option value="{{ p.id }}">{{ p.broad_topic.name }} — {{ p.name }}</option>
+          {% endfor %}
+        </select>
+      </section>
+
+      <section class="rs-block">
+        <header class="rs-block-head">
+          <span>2</span>
+          <div>
+            <h2>Contribution</h2>
+            <p>A file, a link, or both.</p>
+          </div>
+        </header>
+        <label class="rs-label" for="c_title">Title</label>
+        <input type="text" name="contribution_title" id="c_title" class="rs-input" maxlength="300" required placeholder="What you are adding">
+
+        <label class="rs-label" for="c_summary">Summary <em>optional</em></label>
+        <textarea name="summary" id="c_summary" class="rs-input rs-area" rows="4" placeholder="A short note about this contribution."></textarea>
+
+        <label class="rs-label" for="c_file">File</label>
+        <label class="rs-file" for="c_file">
+          <i class="fa-solid fa-file-arrow-up" aria-hidden="true"></i>
+          <strong data-file-label>Choose a file</strong>
+          <span>PDF, DOC, DOCX, ZIP, TXT, or MD. Optional if you add a link.</span>
+        </label>
+        <input type="file" name="contribution_file" id="c_file" class="rs-file-input" accept=".pdf,.doc,.docx,.zip,.txt,.md">
+
+        <label class="rs-label" for="c_url">Link <em>optional if a file is attached</em></label>
+        <input type="url" name="external_url" id="c_url" class="rs-input" maxlength="500" placeholder="https://">
+      </section>
+
+      <section class="rs-block">
+        <header class="rs-block-head">
+          <span>3</span>
+          <div>
+            <h2>Author</h2>
+            <p>How your name appears on this contribution.</p>
+          </div>
+        </header>
+        <label class="rs-label" for="c_display">Display name</label>
+        <input type="text" name="display_name" id="c_display" class="rs-input" maxlength="200" placeholder="{{ member.email }}">
+        <p class="rs-hint">Leave this blank to use your account email.</p>
+      </section>
+
+      <div class="rs-actions">
+        <p>An administrator reviews the contribution before it appears.</p>
+        <button type="submit" class="rs-submit">Submit for review</button>
+      </div>
+    </form>
+
+    <form method="post" enctype="multipart/form-data" class="rs-form" id="form_new_project" {% if approved_projects %}hidden{% endif %}>
+      {% csrf_token %}
+      <input type="hidden" name="mode" value="new_project">
+
+      <section class="rs-block">
+        <header class="rs-block-head">
+          <span>1</span>
+          <div>
+            <h2>Project</h2>
+            <p>The listing that will hold this work.</p>
+          </div>
+        </header>
+        <label class="rs-label" for="np_broad">Broad topic</label>
+        <select name="broad_topic" id="np_broad" class="rs-input" required>
+          <option value="">Select a broad topic</option>
+          {% for bt in broad_topics %}
+          <option value="{{ bt.id }}">{{ bt.name }}</option>
+          {% endfor %}
+        </select>
+
+        <label class="rs-label" for="project_name">Project name</label>
+        <input type="text" name="project_name" id="project_name" class="rs-input" maxlength="255" required placeholder="Name of the project">
+
+        <label class="rs-label" for="project_description">Description</label>
+        <textarea name="project_description" id="project_description" class="rs-input rs-area" rows="4" required placeholder="What the project does and who it is for."></textarea>
+      </section>
+
+      <section class="rs-block">
+        <header class="rs-block-head">
+          <span>2</span>
+          <div>
+            <h2>First contribution</h2>
+            <p>A file, a link, or both.</p>
+          </div>
+        </header>
+        <label class="rs-label" for="np_title">Title</label>
+        <input type="text" name="contribution_title" id="np_title" class="rs-input" maxlength="300" required placeholder="What you are adding">
+
+        <label class="rs-label" for="np_summary">Summary <em>optional</em></label>
+        <textarea name="summary" id="np_summary" class="rs-input rs-area" rows="4" placeholder="A short note about this contribution."></textarea>
+
+        <label class="rs-label" for="np_file">File</label>
+        <label class="rs-file" for="np_file">
+          <i class="fa-solid fa-file-arrow-up" aria-hidden="true"></i>
+          <strong data-file-label>Choose a file</strong>
+          <span>PDF, DOC, DOCX, ZIP, TXT, or MD. Optional if you add a link.</span>
+        </label>
+        <input type="file" name="contribution_file" id="np_file" class="rs-file-input" accept=".pdf,.doc,.docx,.zip,.txt,.md">
+
+        <label class="rs-label" for="np_url">Link <em>optional if a file is attached</em></label>
+        <input type="url" name="external_url" id="np_url" class="rs-input" maxlength="500" placeholder="https://">
+      </section>
+
+      <section class="rs-block">
+        <header class="rs-block-head">
+          <span>3</span>
+          <div>
+            <h2>Author</h2>
+            <p>How your name appears on this contribution.</p>
+          </div>
+        </header>
+        <label class="rs-label" for="np_display">Display name</label>
+        <input type="text" name="display_name" id="np_display" class="rs-input" maxlength="200" placeholder="{{ member.email }}">
+        <p class="rs-hint">Leave this blank to use your account email.</p>
+      </section>
+
+      <div class="rs-actions">
+        <p>An administrator reviews the project before it appears.</p>
+        <button type="submit" class="rs-submit">Submit for review</button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<footer class="lp-footer">
+  <div class="lp-footer-grid">
+    <div class="lp-footer-brand">
+      <img src="{% static 'img/ig-logo3.jpeg' %}" alt="Bharat IG">
+      <div>
+        <strong>Bharat Internet Governance Sphere</strong>
+        <p>Connection, policy, people and participation in India's digital governance.</p>
+      </div>
+    </div>
+    <div>
+      <h4>Explore</h4>
+      <a href="{% url 'home' %}">Home</a>
+      <a href="{% url 'events' %}">Events</a>
+      <a href="{% url 'research_hub' %}">Research</a>
+      <a href="{% url 'blogs' %}">Blogs</a>
+    </div>
+    <div>
+      <h4>Participate</h4>
+      <a href="{% url 'consultations' %}">Stakeholder Engagement</a>
+      <a href="{% url 'capacity' %}">Capacity Building</a>
+      <a href="{% url 'global' %}">India at Global Forums</a>
+      <a href="{% url 'sig' %}">SIG</a>
+    </div>
+    <div>
+      <h4>Connect</h4>
+      <p>Stay connected with India's internet governance community.</p>
+      <div class="lp-social">
+        <a href="https://x.com" target="_blank" rel="noopener" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
+        <a href="https://www.linkedin.com" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+        <a href="https://www.youtube.com" target="_blank" rel="noopener" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+      </div>
+    </div>
+  </div>
+  <div class="lp-footer-bar">
+    <span>© {% now "Y" %} Bharat Internet Governance Sphere (BIG-S). All rights reserved.</span>
+    <span>Privacy Policy · Terms of Use · Contact Us</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  const tabContribute = document.getElementById("tab_contribute");
+  const tabNew = document.getElementById("tab_new");
+  const formC = document.getElementById("form_contribute");
+  const formN = document.getElementById("form_new_project");
+
+  function showForm(which) {
+    const isNew = which === "new";
+    formC.hidden = isNew;
+    formN.hidden = !isNew;
+    tabContribute.classList.toggle("is-on", !isNew);
+    tabNew.classList.toggle("is-on", isNew);
+    tabContribute.setAttribute("aria-selected", (!isNew).toString());
+    tabNew.setAttribute("aria-selected", isNew.toString());
+  }
+
+  tabContribute.addEventListener("click", function() {
+    if (!tabContribute.disabled) showForm("contribute");
+  });
+  tabNew.addEventListener("click", function() { showForm("new"); });
+
+  document.querySelectorAll(".rs-file-input").forEach(function(input) {
+    input.addEventListener("change", function() {
+      const box = document.querySelector('label.rs-file[for="' + input.id + '"]');
+      const label = box.querySelector("[data-file-label]");
+      const picked = input.files && input.files[0];
+      label.textContent = picked ? picked.name : "Choose a file";
+      box.classList.toggle("is-on", !!picked);
+    });
+  });
+
+  {% if mode == 'new_project' or not approved_projects %}
+  showForm("new");
+  {% endif %}
+})();
+</script>
+{% endblock %}

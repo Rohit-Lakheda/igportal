@@ -1,0 +1,75 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SIG account — Bharat IG Sphere</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'UI-CSS/login.css' %}?v=5">
+</head>
+<body>
+  <main class="lg-page">
+    <div class="lg-card">
+      <img src="{% static 'img/ig-logo3.jpeg' %}" alt="Bharat IG">
+      <h1>SIG account</h1>
+
+      {% if messages %}
+      {% for message in messages %}
+      <div class="lg-alert lg-alert-{{ message.tags }}">{{ message }}</div>
+      {% endfor %}
+      {% endif %}
+
+      <form method="post">
+        {% csrf_token %}
+
+        <label for="rg-first">First Name</label>
+        <input id="rg-first" type="text" name="first_name" autocomplete="given-name" required maxlength="80" pattern="[A-Za-z][A-Za-z.'\-]*(?: [A-Za-z][A-Za-z.'\-]*)?" title="Use letters only. One space is allowed between the first and middle name. A hyphen, apostrophe, or full stop is allowed.">
+
+        <label for="rg-last">Last Name</label>
+        <input id="rg-last" type="text" name="last_name" autocomplete="family-name" maxlength="80" pattern="[A-Za-z][A-Za-z.'\-]*" title="Use letters only, with no spaces. A hyphen, apostrophe, or full stop is allowed.">
+
+        <label for="rg-email">Email Address</label>
+        <input id="rg-email" type="email" name="email" autocomplete="email" required>
+
+        <label for="rg-org">Organization / Institution</label>
+        <input id="rg-org" type="text" name="organization" autocomplete="organization">
+
+        <label for="rg-password">Password</label>
+        <div class="lg-pass">
+          <input id="rg-password" type="password" name="password" autocomplete="new-password" required minlength="6">
+          <button type="button" class="lg-toggle" aria-label="Show password" aria-controls="rg-password">
+            <svg class="lg-eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg class="lg-eye-shut" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 3l18 18"/><path d="M10.6 10.6a3 3 0 004.2 4.2"/><path d="M9.9 5.2A10.8 10.8 0 0112 5c6.5 0 10 7 10 7a18.5 18.5 0 01-3.2 4.4"/><path d="M6.1 6.1C3.8 7.8 2 12 2 12s3.5 7 10 7a10.7 10.7 0 004.2-.8"/></svg>
+          </button>
+        </div>
+
+        <label for="rg-confirm">Confirm password</label>
+        <div class="lg-pass">
+          <input id="rg-confirm" type="password" name="confirm_password" autocomplete="new-password" required minlength="6">
+          <button type="button" class="lg-toggle" aria-label="Show password" aria-controls="rg-confirm">
+            <svg class="lg-eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg class="lg-eye-shut" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 3l18 18"/><path d="M10.6 10.6a3 3 0 004.2 4.2"/><path d="M9.9 5.2A10.8 10.8 0 0112 5c6.5 0 10 7 10 7a18.5 18.5 0 01-3.2 4.4"/><path d="M6.1 6.1C3.8 7.8 2 12 2 12s3.5 7 10 7a10.7 10.7 0 004.2-.8"/></svg>
+          </button>
+        </div>
+
+        <button type="submit">Create account</button>
+      </form>
+
+      <p class="lg-alt">Already have an account? <a href="{% url 'siglogin' %}">Sign in</a></p>
+      <a class="lg-home" href="{% url 'home' %}">Back to home</a>
+    </div>
+  </main>
+  <script>
+    document.querySelectorAll(".lg-toggle").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var input = document.getElementById(btn.getAttribute("aria-controls"));
+        var hidden = input.type === "password";
+        input.type = hidden ? "text" : "password";
+        btn.classList.toggle("is-on", hidden);
+        btn.setAttribute("aria-label", hidden ? "Hide password" : "Show password");
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,171 @@
+/* ==========================================================
+   UI CORE SYSTEM — Bharat Internet Governance Sphere
+   Inspired by CyberPeace Design Language
+   SAFE UI LAYER (Audit Safe)
+========================================================== */
+
+/* ===============================
+   DESIGN TOKENS
+=============================== */
+:root {
+  --c-primary: #0b3c6d;
+  --c-secondary: #0f9d58;
+  --c-accent: #6c63ff;
+  --c-soft-accent: #8b85ff;
+
+  --bg-main: #f7f9fc;
+  --bg-white: #ffffff;
+  --bg-glass: rgba(255,255,255,0.75);
+  --bg-gradient: linear-gradient(135deg, #eef2ff, #f8fafc);
+
+  --text-main: #1f2937;
+  --text-soft: #6b7280;
+  --text-light: #94a3b8;
+
+  --border-soft: rgba(0,0,0,0.06);
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-xl: 32px;
+
+  --shadow-sm: 0 6px 16px rgba(0,0,0,0.06);
+  --shadow-md: 0 12px 28px rgba(0,0,0,0.10);
+  --shadow-lg: 0 24px 48px rgba(0,0,0,0.14);
+
+  --blur-glass: blur(14px);
+}
+
+/* ===============================
+   GLOBAL BEAUTY RESET
+=============================== */
+body {
+  background: var(--bg-gradient);
+  color: var(--text-main);
+}
+
+/* ===============================
+   TYPOGRAPHY
+=============================== */
+.ui-h1 {
+  font-size: 48px;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -1px;
+}
+
+.ui-h2 {
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.ui-h3 {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.ui-text {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--text-soft);
+}
+
+/* ===============================
+   CONTAINERS
+=============================== */
+.ui-container {
+  max-width: 1280px;
+  margin: auto;
+  padding: 0 24px;
+}
+
+/* ===============================
+   SECTIONS
+=============================== */
+.ui-section {
+  padding: 90px 0;
+  position: relative;
+}
+
+.ui-section-soft {
+  background: var(--bg-white);
+}
+
+.ui-section-glass {
+  background: var(--bg-glass);
+  backdrop-filter: var(--blur-glass);
+}
+
+/* ===============================
+   GLASS PANELS
+=============================== */
+.ui-glass-card {
+  background: var(--bg-glass);
+  backdrop-filter: var(--blur-glass);
+  border: 1px solid rgba(255,255,255,0.4);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+/* ===============================
+   PREMIUM CARDS
+=============================== */
+.ui-card {
+  background: var(--bg-white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.35s ease;
+}
+
+.ui-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* ===============================
+   BUTTONS
+=============================== */
+.ui-btn {
+  padding: 12px 26px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.ui-btn-primary {
+  background: linear-gradient(135deg, var(--c-accent), var(--c-soft-accent));
+  color: #fff;
+  box-shadow: var(--shadow-sm);
+}
+
+.ui-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* ===============================
+   GRID SYSTEM
+=============================== */
+.ui-grid-2 { display:grid; grid-template-columns:repeat(2,1fr); gap:32px; }
+.ui-grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:32px; }
+.ui-grid-4 { display:grid; grid-template-columns:repeat(4,1fr); gap:32px; }
+
+/* ===============================
+   ANIMATIONS
+=============================== */
+.ui-fade {
+  animation: uiFade 1s ease both;
+}
+
+@keyframes uiFade {
+  from {opacity:0; transform:translateY(30px);}
+  to {opacity:1; transform:translateY(0);}
+}

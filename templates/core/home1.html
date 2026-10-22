@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+{% block title %}Home — Bharat IG Sphere{% endblock %}
+
+{% block content %}
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div class="hero-bg"></div>
+
+  <div class="hero-content animate">
+    <h1>Bharat Internet Governance Sphere</h1>
+    <p class="hero-sub">
+      India’s unified digital governance platform for Internet policy,
+      participation, collaboration, and global engagement.
+    </p>
+
+    <div class="hero-actions">
+      <a href="{% url 'consultations' %}" class="btn-primary">Join the Network</a>
+      <a href="{% url 'events' %}" class="btn-outline">View Events</a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ABOUT (SINGLE STRONG BLOCK) ================= -->
+
+
+  <section class="section about-split">
+  <div class="about-grid">
+
+    <!-- LEFT: ABOUT CONTENT -->
+    <div class="about-box animate">
+      <p>
+        Bharat Internet Governance Sphere ‘BIG-S’ Portal is envisaged as a unified digital platform to support public engagement, information dissemination, and consultations related to India’s participation in various Internet Governance processes at both national and international levels.
+      </p>
+
+      <p>
+        The portal serves as a national interface connecting citizens, experts, institutions, and stakeholders with India’s participation in Internet Governance processes at both national and international levels.
+      </p>
+
+      <p>
+        By bringing together policy discussions, consultations, resources, and updates in one place, BIG-S portal supports India’s vision of a secure, open, inclusive, and trusted Internet aligned with national priorities and global responsibilities.
+      </p>
+    </div>
+
+    <!-- RIGHT: PUBLIC UPDATES (DUMMY, INTERACTIVE) -->
+    <div class="updates-panel animate delay-1">
+      <h3>Public Updates</h3>
+
+      <div class="update-item">
+        <span class="tag">Consultation</span>
+        <p>Public consultation on global Internet Governance frameworks is now open.</p>
+      </div>
+
+      <div class="update-item">
+        <span class="tag">Update</span>
+        <p>India’s participation timeline for upcoming international IG meetings published.</p>
+      </div>
+
+      <div class="update-item">
+        <span class="tag">Notice</span>
+        <p>New background resources added to the Knowledge Repository.</p>
+      </div>
+
+      <!-- you can later convert this to a dynamic list -->
+      <a href="#" class="updates-link">View all updates →</a>
+    </div>
+
+  </div>
+</section>
+  
+
+
+
+</section>
+
+<!-- ================= BIG-S AIMS (CLEAN GRID, NOT STEPS) ================= -->
+<section class="section aims-section">
+  <h2 class="section-title animate">BIG-S aims to</h2>
+
+  <div class="aims-grid">
+    <div class="aim-card animate">
+      <!-- <span>01</span> -->
+      <p>Provide authoritative and accessible information on internet governance developments.</p>
+    </div>
+
+    <div class="aim-card animate delay-1">
+      <!-- <span>02</span> -->
+      <p>Provide authoritative and accessible information on internet governance developments.</p>
+    </div>
+
+    <div class="aim-card animate delay-2">
+      <!-- <span>03</span> -->
+      <p>Provide authoritative and accessible information on internet governance developments.</p>
+    </div>
+
+    <div class="aim-card animate delay-3">
+      <!-- <span>04</span> -->
+      <p>Provide authoritative and accessible information on internet governance developments.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= VISION ================= -->
+<section class="section vision-section">
+  <div class="vision-card animate">
+    <h2>India’s Internet Governance Vision</h2>
+    <p>
+      A secure, resilient, inclusive, and trusted Internet ecosystem that supports innovation,
+      safeguards national interests, and contributes constructively to global digital cooperation.
+    </p>
+  </div>
+</section>
+
+<!-- ================= LANDSCAPE ================= -->
+<section class="section flow-section">
+  <h2 class="section-title animate">Internet Governance Landscape in India</h2>
+
+  <div class="flow">
+    <div class="flow-item animate">
+      <div class="dot"></div>
+      <p>
+        Internet Governance in India is guided by a policy-led and institution-driven framework, with the Government of India playing a central role in steering the development, management, and use of the Internet in alignment with national priorities, constitutional values, and international commitments.
+      </p>
+    </div>
+
+    <div class="flow-item animate delay-1">
+      <div class="dot"></div>
+      <p>
+        The Government of India is responsible for setting the policy, legal, and regulatory direction for the Internet and digital ecosystem, while engaging with relevant stakeholders as required for informed decision-making.
+      </p>
+    </div>
+
+    <div class="flow-item animate delay-2">
+      <div class="dot"></div>
+      <p>
+        India participates actively in regional and international Internet Governance processes, contributing to discussions on norms, standards, and frameworks that shape the global Internet.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= AREAS OF FOCUS ================= -->
+<section class="section focus-section">
+  <h2 class="section-title animate">Areas of Focus</h2>
+
+  <div class="focus-grid">
+    <div class="focus-card animate">
+      <h4>Policy & Regulation</h4>
+      <p>Tracking and sharing updates on national and international Internet-related policies, laws, and regulatory discussions impacting India.</p>
+    </div>
+
+    <div class="focus-card animate delay-1">
+      <h4>Multi-Stakeholder Consultations</h4>
+      <p>Facilitating structured consultations to gather inputs from diverse stakeholders on Internet Governance issues and global discussion tracks.</p>
+    </div>
+
+    <div class="focus-card animate delay-2">
+      <h4>Global & Regional Engagement</h4>
+      <p>Supporting India’s engagement in international Internet Governance forums by disseminating information, timelines, and participation opportunities.</p>
+    </div>
+
+
+    <div class="focus-card animate delay-3">
+      <h4>Capacity Building & Awareness</h4>
+      <p>Promoting understanding of Internet Governance concepts, institutions, and processes through resources, explainers, and knowledge materials.</p>
+    </div>
+
+
+    <div class="focus-card animate delay-4">
+      <h4>Emerging Technologies</h4>
+      <p>Addressing governance challenges related to digital public infrastructure, artificial intelligence, cybersecurity, data governance, and inclusion.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CTA ================= -->
+<section class="section cta-section">
+  <div class="cta-box animate">
+    <h2>Participate in India’s Digital Governance Ecosystem</h2>
+    <p>Join a national platform shaping the future of the Internet in India.</p>
+
+    <div class="hero-actions">
+      <a href="{% url 'sigregister' %}" class="btn-primary">Create Account</a>
+      <a href="{% url 'sig' %}" class="btn-outline">Join SIG</a>
+    </div>
+  </div>
+</section>
+
+<script>
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>e.isIntersecting && e.target.classList.add("show"))
+},{threshold:0.2});
+document.querySelectorAll(".animate").forEach(el=>observer.observe(el));
+</script>
+
+{% endblock %}

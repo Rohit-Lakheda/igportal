@@ -1,0 +1,262 @@
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Inter, sans-serif;
+  background: #eef1f5;
+}
+
+.lg-page {
+  min-height: 100vh;
+  padding: 32px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lg-card img {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto 18px;
+}
+
+.lg-card {
+  width: min(440px, 100%);
+  background: #fff;
+  border: 1px solid #e8edf3;
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+  padding: 32px 28px 28px;
+}
+
+.lg-card h1 {
+  margin: 0;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 36px;
+  color: #122033;
+}
+
+.lg-lead {
+  margin: 10px 0 22px;
+  color: #5b6b7c;
+  line-height: 1.55;
+  font-size: 15.5px;
+}
+
+.lg-card label {
+  display: block;
+  margin: 14px 0 6px;
+  color: #122033;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.lg-card input {
+  width: 100%;
+  min-height: 46px;
+  padding: 0 14px;
+  border: 1px solid #e8edf3;
+  border-radius: 12px;
+  font-size: 15px;
+  color: #122033;
+  background: #fff;
+}
+
+.lg-card input:focus {
+  outline: 2px solid rgba(224, 123, 42, 0.35);
+  border-color: #e07b2a;
+}
+
+.lg-pass {
+  position: relative;
+}
+
+.lg-pass input {
+  padding-right: 46px;
+}
+
+.lg-toggle {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #8a97a6;
+  cursor: pointer;
+}
+
+.lg-toggle svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+.lg-toggle .lg-eye-shut {
+  display: none;
+}
+
+.lg-toggle.is-on .lg-eye-open {
+  display: none;
+}
+
+.lg-toggle.is-on .lg-eye-shut {
+  display: block;
+}
+
+.lg-toggle:hover {
+  color: #c96416;
+}
+
+.lg-card button[type="submit"] {
+  width: 100%;
+  margin-top: 20px;
+  min-height: 46px;
+  border: 0;
+  border-radius: 12px;
+  background: #e07b2a;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.lg-card button[type="submit"]:hover {
+  background: #c96416;
+}
+
+.lg-home {
+  display: block;
+  margin-top: 14px;
+  text-align: center;
+  color: #c96416;
+  font-size: 14.5px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.lg-home:hover {
+  text-decoration: underline;
+}
+
+.lg-alt {
+  margin: 18px 0 0;
+  text-align: center;
+  color: #5b6b7c;
+  font-size: 14.5px;
+}
+
+.lg-alt a {
+  color: #c96416;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.lg-alt a:hover {
+  text-decoration: underline;
+}
+
+.lg-alert {
+  margin-bottom: 14px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.lg-alert-error {
+  background: #fff4f2;
+  color: #9b2c2c;
+  border: 1px solid #f3d0cb;
+}
+
+.lg-alert-success {
+  background: #f3faf4;
+  color: #1f6b3a;
+  border: 1px solid #cfe8d4;
+}
+
+.lg-page-form {
+  align-items: flex-start;
+  padding: 40px 20px 56px;
+}
+
+.lg-card-wide {
+  width: min(760px, 100%);
+}
+
+.lg-card-wide h1 {
+  text-align: center;
+  margin-bottom: 22px;
+}
+
+.lg-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 16px;
+}
+
+.lg-grid .full {
+  grid-column: 1 / -1;
+}
+
+.lg-card select,
+.lg-card textarea {
+  width: 100%;
+  border: 1px solid #e8edf3;
+  border-radius: 12px;
+  font-size: 15px;
+  color: #122033;
+  background: #fff;
+  font-family: inherit;
+}
+
+.lg-card select {
+  min-height: 46px;
+  padding: 0 14px;
+}
+
+.lg-card textarea {
+  padding: 12px 14px;
+  resize: vertical;
+}
+
+.lg-card select:focus,
+.lg-card textarea:focus {
+  outline: 2px solid rgba(224, 123, 42, 0.35);
+  border-color: #e07b2a;
+}
+
+.lg-help {
+  margin-top: 4px;
+  color: #8a97a6;
+  font-size: 12.5px;
+}
+
+.lg-error {
+  margin-top: 4px;
+  color: #9b2c2c;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.lg-star {
+  color: #c96416;
+}
+
+@media (max-width: 700px) {
+  .lg-grid {
+    grid-template-columns: 1fr;
+  }
+}

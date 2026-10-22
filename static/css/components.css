@@ -1,0 +1,22 @@
+.glass{
+  background:var(--glass);
+  backdrop-filter:blur(12px);
+  border-radius:20px;
+  padding:30px;
+  box-shadow:0 20px 60px rgba(0,0,0,.4);
+  transition:.4s;
+}
+
+.glass:hover{
+  transform:translateY(-10px);
+}
+
+.grid-3{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:30px;
+}
+
+@media(max-width:900px){
+  .grid-3{grid-template-columns:1fr;}
+}

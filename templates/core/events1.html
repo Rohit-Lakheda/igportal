@@ -1,0 +1,224 @@
+{% block title %}Events — IG Portal{% endblock %}
+
+{% block content %}
+<style>
+  /* General Layout Styling */
+  .card {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .header h2 {
+    font-weight: bold;
+    color: #333;
+    font-size: 24px;
+  }
+
+  .tabs a {
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #007bff;
+    background-color: #f0f0f0;
+    margin-right: 10px;
+    transition: all 0.3s ease;
+  }
+
+  .tabs a:hover {
+    background-color: #d9e3f0;
+  }
+
+  .tabs a.selected {
+    background-color: #0056b3;
+    color: white;
+  }
+
+  /* Event Card Styling */
+  .event-card {
+    display: flex;
+    flex-direction: row;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    align-items: flex-start;
+    transition: all 0.3s ease;
+  }
+
+  .event-card:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .event-card .event-info {
+    margin-right: 20px;
+    flex: 1;
+  }
+
+  .event-card .event-info strong {
+    font-size: 18px;
+    color: #333;
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .event-card .meta {
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 10px;
+  }
+
+  .event-card .description {
+    font-size: 14px;
+    color: #555;
+  }
+
+  .event-actions {
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .details-btn {
+    padding: 8px 15px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    display: inline-block;
+    margin-top: 10px;
+  }
+
+  .details-btn:hover {
+    background-color: #0056b3;
+  }
+
+  .event-card .small {
+    font-size: 12px;
+    color: #777;
+    margin-top: 10px;
+  }
+
+  /* Flyer Image Styling */
+  .flyer img {
+    width: 100%;
+    max-height: 160px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+
+  /* Empty State Styling */
+  .empty-state {
+    text-align: center;
+    font-size: 16px;
+    color: #888;
+    margin-top: 40px;
+  }
+
+  /* Button Styling (for "Upcoming", "Past", "All") */
+  .btn.primary {
+    padding: 8px 20px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+
+  .btn.primary:hover {
+    background-color: #0056b3;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .tabs {
+      display: block;
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    .tabs a {
+      display: block;
+      margin: 10px 0;
+    }
+
+    .event-card {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .event-card .event-info {
+      margin-right: 0;
+      margin-bottom: 20px;
+    }
+
+    .event-card .meta,
+    .event-card .details-btn {
+      text-align: center;
+      width: 100%;
+    }
+
+    .event-actions {
+      text-align: center;
+    }
+  }
+</style>
+
+<div class="card">
+  <!-- Header Section -->
+  <div class="header">
+    <h2>Events</h2>
+    <!-- Tabs for Filters -->
+    <div class="tabs">
+      <a href="?filter=upcoming" class="btn primary">Upcoming</a>
+      <a href="?filter=past" class="btn primary">Past</a>
+      <a href="?filter=all" class="btn primary">All</a>
+    </div>
+  </div>
+  
+  {% if request.user.is_authenticated and request.user.is_staff %}
+  <a href="{% url 'add_event' %}" class="btn primary">+ Add Event</a>
+  {% endif %}
+
+  <!-- Events List Section -->
+  <div class="events-list">
+    {% for e in events %}
+    <div class="event-card">
+      <div class="event-info">
+        <!-- Event Flyer Image (if available) -->
+        {% if e.flyer %}
+        <div class="flyer">
+          <img src="{{ e.flyer }}" alt="{{ e.title }}" />
+        </div>
+        {% endif %}
+
+        <strong>{{ e.title }}</strong>
+        <div class="meta">{{ e.date|date:"F j, Y" }}</div>
+        <div class="description">{{ e.desc }}</div>
+      </div>
+
+      <div class="event-actions">
+        {% if e.join %}
+        <a href="{{ e.join }}" target="_blank" class="details-btn">Details</a>
+        {% endif %}
+        <div class="small">Type: {{ e.get_type_display }}</div>
+      </div>
+    </div>
+    {% empty %}
+    <p class="empty-state">No events to show.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

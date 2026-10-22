@@ -1,0 +1,249 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Bharat Internet Governance Sphere{% endblock %}
+{% block body_class %}lp-page{% endblock %}
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'UI-CSS/landing.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<section class="lp-hero">
+  <div class="lp-hero-bg"></div>
+  <div class="lp-wrap lp-hero-inner">
+    <h1>Bharat Internet<br>Governance Sphere</h1>
+    <p class="lp-hero-sub"><span class="lp-em">Connection, policy, people and participation</span> in India's digital governance.</p>
+    <div class="lp-hero-actions">
+      <a href="{% url 'login' %}" class="lp-btn lp-btn-orange">Join the Network</a>
+      <a href="{% url 'events' %}" class="lp-btn lp-btn-ghost">View Events</a>
+    </div>
+  </div>
+</section>
+
+<section class="lp-band lp-bg-grey" id="about">
+  <div class="lp-wrap lp-split">
+    <article class="lp-card lp-about">
+      <p class="lp-kicker">About BIG-S</p>
+      <p><span class="lp-em">Bharat Internet Governance Sphere ‘BIG-S’ Portal</span> is a digital platform that brings together information, discussions, and opportunities for engagement in India’s Internet governance ecosystem.</p>
+      <p>It serves as a national interface where citizens, researchers, industry, and civil society can:</p>
+      <ul class="lp-about-points">
+        <li>Track policy developments.</li>
+        <li>Access consultations and resources.</li>
+        <li>Participate in shaping India’s digital future.</li>
+      </ul>
+      <p>By consolidating policy updates, stakeholder inputs, and global engagements in one place, BIG-S makes Internet governance in India more <span class="lp-em">accessible, transparent, and participatory</span>.</p>
+      <p>The platform supports India’s vision of a <span class="lp-em">secure, open, inclusive, and trusted Internet</span> while strengthening its role in global digital governance.</p>
+    </article>
+
+    <aside class="lp-card lp-updates">
+      <div class="lp-updates-head">
+        <h3>Public Updates</h3>
+        <a href="{% url 'events' %}">View all</a>
+      </div>
+      <div class="lp-updates-list">
+        {% if events %}
+          {% for event in events|slice:":5" %}
+          <a class="lp-update" href="{% url 'event_detail' event.id %}">
+            <div class="lp-update-date">
+              <strong>{{ event.event_date|date:"d" }}</strong>
+              <span>{{ event.event_date|date:"M" }}</span>
+            </div>
+            <div>
+              <em>Event</em>
+              <p>{{ event.title }}</p>
+            </div>
+          </a>
+          {% endfor %}
+        {% else %}
+          <a class="lp-update" href="{% url 'events' %}">
+            <div class="lp-update-date"><strong>15</strong><span>Oct</span></div>
+            <div>
+              <em>India at IGF 2025</em>
+              <p>Preparatory consultation on India's priorities for the Internet Governance Forum 2025.</p>
+            </div>
+          </a>
+          <a class="lp-update" href="{% url 'consultations' %}">
+            <div class="lp-update-date"><strong>02</strong><span>Oct</span></div>
+            <div>
+              <em>Consultation</em>
+              <p>Strengthening India's Digital Public Infrastructure — reflections on opportunities and challenges for a trusted internet.</p>
+            </div>
+          </a>
+        {% endif %}
+      </div>
+    </aside>
+  </div>
+</section>
+
+<section class="lp-vision lp-bg-white">
+  <div class="lp-wrap">
+    <h2>India's Internet Governance Vision</h2>
+    <p>An <span class="lp-em">open, secure, inclusive and trusted Internet</span> that drives <span class="lp-em">innovation, economic growth and social development</span> for all in India and beyond.</p>
+  </div>
+</section>
+
+<section class="lp-band lp-bg-grey">
+  <div class="lp-wrap">
+    <h2 class="lp-center">BIG-S enables you to</h2>
+    <div class="lp-enable">
+      <article class="lp-card lp-enable-card">
+        <span class="lp-ico"><i class="fa-solid fa-people-group"></i></span>
+        <div>
+          <h3>Connect with a Multi-Stakeholder Community</h3>
+          <p>Engage with government, industry, academia, technical and civil society stakeholders.</p>
+        </div>
+      </article>
+      <article class="lp-card lp-enable-card">
+        <span class="lp-ico"><i class="fa-solid fa-comments"></i></span>
+        <div>
+          <h3>Contribute to Policy Discussions</h3>
+          <p>Share perspectives and ideas through an open, structured and inclusive forum.</p>
+        </div>
+      </article>
+      <article class="lp-card lp-enable-card">
+        <span class="lp-ico"><i class="fa-solid fa-graduation-cap"></i></span>
+        <div>
+          <h3>Build Knowledge and Capacity</h3>
+          <p>Access research, resources and learning opportunities on Internet governance.</p>
+        </div>
+      </article>
+      <article class="lp-card lp-enable-card">
+        <span class="lp-ico"><i class="fa-solid fa-earth-americas"></i></span>
+        <div>
+          <h3>Engage in Global Forums</h3>
+          <p>Strengthen India's voice through collective participation in international internet governance platforms.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="lp-band lp-bg-white">
+  <div class="lp-wrap lp-narrow">
+    <h2 class="lp-center">Internet Governance Landscape in India</h2>
+    <ul class="lp-list">
+      <li>India's <span class="lp-em">digital transformation</span> has created new opportunities and challenges for Internet governance, from expanding connectivity and digital public infrastructure to ensuring a <span class="lp-em">safe, secure and inclusive</span> online ecosystem.</li>
+      <li>The Internet and digital technologies are now central to India's <span class="lp-em">social, economic and political life</span>, making collaborative and forward-looking governance essential.</li>
+      <li>BIG-S provides a platform to bring together <span class="lp-em">diverse stakeholders</span>, foster dialogue, generate research and contribute to India's engagement in <span class="lp-em">global internet governance</span> processes.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="lp-band lp-bg-grey">
+  <div class="lp-wrap">
+    <h2 class="lp-center">Areas of Focus</h2>
+    <div class="lp-focus">
+      <article class="lp-card lp-focus-card">
+        <span class="lp-ico"><i class="fa-solid fa-scale-balanced"></i></span>
+        <div>
+          <h3>Policy and Regulation</h3>
+          <p>Supporting informed, inclusive and evidence-based discussions for a free, open and secure internet in India.</p>
+        </div>
+      </article>
+      <article class="lp-card lp-focus-card">
+        <span class="lp-ico"><i class="fa-solid fa-people-arrows"></i></span>
+        <div>
+          <h3>Multi-Stakeholder Consultations</h3>
+          <p>Creating spaces for dialogue between government, industry, academia, technical community and civil society.</p>
+        </div>
+      </article>
+      <article class="lp-card lp-focus-card">
+        <span class="lp-ico"><i class="fa-solid fa-earth-asia"></i></span>
+        <div>
+          <h3>Global and Regional Engagement</h3>
+          <p>Contributing to India's participation in global and regional internet governance processes.</p>
+        </div>
+      </article>
+      <article class="lp-card lp-focus-card">
+        <span class="lp-ico"><i class="fa-solid fa-lightbulb"></i></span>
+        <div>
+          <h3>Capacity Building and Awareness</h3>
+          <p>Growing knowledge, skills and awareness across the internet governance community.</p>
+        </div>
+      </article>
+      <article class="lp-card lp-focus-card">
+        <span class="lp-ico"><i class="fa-solid fa-microchip"></i></span>
+        <div>
+          <h3>Emerging Technologies</h3>
+          <p>Exploring governance implications of new and emerging technologies such as AI, IoT, data governance and cybersecurity.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="lp-cta">
+  <div class="lp-hero-bg"></div>
+  <div class="lp-wrap">
+    <h2>Participate in India's Digital Governance Ecosystem</h2>
+    <p>Be a part of the dialogue, contribute your perspective and help shape a <span class="lp-em">stronger, open and safe Internet</span> for India and beyond.</p>
+    <div class="lp-hero-actions">
+      <a href="{% url 'sigregister' %}" class="lp-btn lp-btn-orange">Create Account</a>
+      <a href="{% url 'sig' %}" class="lp-btn lp-btn-ghost">Join a SIG</a>
+    </div>
+  </div>
+</section>
+
+<footer class="lp-footer">
+  <div class="lp-footer-grid">
+    <div class="lp-footer-brand">
+      <img src="{% static 'img/ig-logo3.jpeg' %}" alt="Bharat IG">
+      <div>
+        <strong>Bharat Internet Governance Sphere</strong>
+        <p>Connection, policy, people and participation in India's digital governance.</p>
+      </div>
+    </div>
+    <div>
+      <h4>Explore</h4>
+      <a href="{% url 'home' %}">Home</a>
+      <a href="{% url 'events' %}">Events</a>
+      <a href="{% url 'research_hub' %}">Research</a>
+      <a href="{% url 'blogs' %}">Blogs</a>
+    </div>
+    <div>
+      <h4>Participate</h4>
+      <a href="{% url 'consultations' %}">Stakeholder Engagement</a>
+      <a href="{% url 'capacity' %}">Capacity Building</a>
+      <a href="{% url 'global' %}">India at Global Forums</a>
+      <a href="{% url 'sig' %}">SIG</a>
+    </div>
+    <div>
+      <h4>Connect</h4>
+      <p>Stay connected with India's internet governance community.</p>
+      <div class="lp-social">
+        <a href="https://x.com" target="_blank" rel="noopener" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
+        <a href="https://www.linkedin.com" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+        <a href="https://www.youtube.com" target="_blank" rel="noopener" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+      </div>
+    </div>
+  </div>
+  <div class="lp-footer-bar">
+    <span>© {% now "Y" %} Bharat Internet Governance Sphere (BIG-S). All rights reserved.</span>
+    <span>Privacy Policy · Terms of Use · Contact Us</span>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    const about = document.querySelector(".lp-about");
+    const panel = document.querySelector(".lp-updates");
+    if (!about || !panel) return;
+    function match() {
+      if (window.innerWidth <= 900) {
+        about.style.height = "";
+        panel.style.height = "";
+        return;
+      }
+      about.style.height = "auto";
+      panel.style.height = "auto";
+      const height = Math.ceil(about.getBoundingClientRect().height);
+      about.style.height = height + "px";
+      panel.style.height = height + "px";
+    }
+    match();
+    window.addEventListener("resize", match);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(match);
+  })();
+</script>
+{% endblock %}

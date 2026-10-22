@@ -1,0 +1,126 @@
+{% extends "admin/base.html" %}
+{% block title %}{{ action }} consultation | Admin{% endblock %}
+
+{% block admin_css %}
+<style>
+  .ef-back{
+    display:inline-flex; align-items:center; gap:8px; margin-bottom:14px;
+    color:#122033; font-weight:700; font-size:14px; text-decoration:none;
+  }
+  .ef-back:hover{ color:#c96416; }
+  .ef-card{
+    background:#fff; border:1px solid #e8edf3; border-radius:18px; padding:22px;
+    box-shadow:0 10px 24px rgba(15,23,42,.05);
+  }
+  .ef-card h1{ margin:0 0 16px; font-family:"Playfair Display", Georgia, serif; font-size:32px; }
+  .ef-grid{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .ef-span{ grid-column:1 / -1; }
+  .ef-card label{ display:block; margin:0 0 6px; font-size:14px; font-weight:700; }
+  .ef-card input, .ef-card textarea, .ef-card select{
+    box-sizing:border-box; width:100%; height:44px; padding:0 14px; border:1px solid #e8edf3; border-radius:12px;
+    background:#fff; color:#122033; font:inherit; font-size:14px;
+  }
+  .ef-card textarea{ height:auto; min-height:110px; padding:12px 14px; resize:vertical; }
+  .ef-card input[type=file]{ height:auto; padding:10px 14px; }
+  .ef-card input:focus, .ef-card textarea:focus, .ef-card select:focus{
+    outline:2px solid rgba(224,123,42,.35); border-color:#e07b2a;
+  }
+  .ef-note{ margin:6px 0 0; color:#5b6b7c; font-size:13px; }
+  .ef-files{ display:flex; flex-wrap:wrap; gap:8px; }
+  .ef-files a{
+    display:inline-flex; align-items:center; height:36px; padding:0 12px; border-radius:999px;
+    border:1px solid #e8edf3; background:#f4f7fb; color:#c96416; font-weight:700; font-size:13px; text-decoration:none;
+  }
+  .ef-files a:hover{ border-color:#e07b2a; }
+  .ef-actions{ display:flex; justify-content:flex-end; gap:8px; margin-top:16px; }
+  .ef-actions button, .ef-actions a{
+    display:inline-flex; align-items:center; justify-content:center; height:44px; padding:0 16px;
+    border-radius:12px; border:1px solid #e8edf3; background:#fff; color:#122033; font-weight:700; font-size:14px; line-height:1; text-decoration:none; cursor:pointer;
+  }
+  .ef-actions button{ background:#e07b2a; border-color:#e07b2a; color:#fff; }
+  .ef-actions button:hover{ background:#c96416; }
+  @media (max-width: 700px){ .ef-grid{ grid-template-columns:1fr; } }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-section">
+  <a class="ef-back" href="{% url 'stakeholder_consultation' %}"><i class="fas fa-arrow-left"></i> Stakeholder consultations</a>
+  <form class="ef-card" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <h1>{{ action }} consultation</h1>
+    <div class="ef-grid">
+      <div>
+        <label for="sc-title">Title</label>
+        <input id="sc-title" type="text" name="title" value="{{ c.title|default:'' }}" required>
+      </div>
+      <div>
+        <label for="sc-org">Organization</label>
+        <input id="sc-org" type="text" name="organization" value="{{ c.organization|default:'' }}" required>
+      </div>
+      <div class="ef-span">
+        <label for="sc-desc">Description</label>
+        <textarea id="sc-desc" name="description" rows="4">{{ c.description|default:'' }}</textarea>
+      </div>
+      <div>
+        <label for="sc-open">Open date</label>
+        <input id="sc-open" type="date" name="open_date" value="{% if c.open_date %}{% if c.open_date|date:'Y-m-d' %}{{ c.open_date|date:'Y-m-d' }}{% else %}{{ c.open_date|slice:':10' }}{% endif %}{% endif %}">
+      </div>
+      <div>
+        <label for="sc-close">Close date</label>
+        <input id="sc-close" type="date" name="close_date" value="{% if c.close_date %}{% if c.close_date|date:'Y-m-d' %}{{ c.close_date|date:'Y-m-d' }}{% else %}{{ c.close_date|slice:':10' }}{% endif %}{% endif %}">
+      </div>
+      <div>
+        <label for="sc-cat">Category</label>
+        <select id="sc-cat" name="category">
+          <option value="">Choose a category</option>
+          <option value="Policy" {% if c.category == 'Policy' %}selected{% endif %}>Policy</option>
+          <option value="Regulation" {% if c.category == 'Regulation' %}selected{% endif %}>Regulation</option>
+          <option value="Standard" {% if c.category == 'Standard' %}selected{% endif %}>Standard</option>
+          <option value="Other" {% if c.category == 'Other' %}selected{% endif %}>Other</option>
+        </select>
+      </div>
+      <div>
+        <label for="sc-status">Status</label>
+        <select id="sc-status" name="status">
+          <option value="Open" {% if c.status == 'Open' or not c.status %}selected{% endif %}>Open</option>
+          <option value="Closed" {% if c.status == 'Closed' %}selected{% endif %}>Closed</option>
+          <option value="Upcoming" {% if c.status == 'Upcoming' %}selected{% endif %}>Upcoming</option>
+        </select>
+      </div>
+      <div class="ef-span">
+        <label for="sc-focus">Input focus</label>
+        <textarea id="sc-focus" name="input_focus" rows="2">{{ c.input_focus|default:'' }}</textarea>
+      </div>
+      <div class="ef-span">
+        <label for="sc-proposals">Proposals</label>
+        <textarea id="sc-proposals" name="proposals" rows="2">{{ c.proposals|default:'' }}</textarea>
+      </div>
+      <div>
+        <label for="sc-email">Contact email</label>
+        <input id="sc-email" type="email" name="contact_email" value="{{ c.contact_email|default:'' }}">
+      </div>
+      <div>
+        <label for="sc-req">Requester</label>
+        <input id="sc-req" type="text" name="requester" value="{{ c.requester|default:'' }}">
+      </div>
+      <div class="ef-span">
+        <label for="sc-file">Attachment</label>
+        {% if documents %}
+        <div class="ef-files">
+          {% for doc in documents %}
+          <a href="{{ doc.document_path }}" target="_blank" rel="noopener">{{ doc.document_name }}</a>
+          {% endfor %}
+        </div>
+        {% endif %}
+        <input id="sc-file" type="file" name="attachment" accept=".pdf,.doc,.docx">
+        <p class="ef-note">PDF, DOC, or DOCX, up to 10 MB. Leave this empty to keep the files already saved.</p>
+      </div>
+    </div>
+    <div class="ef-actions">
+      <a href="{% url 'stakeholder_consultation' %}">Cancel</a>
+      <button type="submit">Save consultation</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

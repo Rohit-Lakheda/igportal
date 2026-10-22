@@ -1,0 +1,96 @@
+{% extends "admin/base.html" %}
+{% block title %}Research and open source | Admin{% endblock %}
+
+{% block admin_css %}
+<style>
+  .rh-head{ display:flex; justify-content:space-between; align-items:flex-end; gap:16px; flex-wrap:wrap; }
+  .rh-head h1, .rh-section h2{ margin:0; font-family:"Playfair Display", Georgia, serif; }
+  .rh-head p, .rh-section p{ margin:6px 0 0; color:#5b6b7c; }
+  .rh-count{ padding:8px 12px; border-radius:999px; background:#fff; border:1px solid #e8edf3; font-weight:700; font-size:14px; }
+  .rh-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:12px; }
+  .rh-card{
+    display:block; background:#fff; border:1px solid #e8edf3; border-radius:18px; padding:18px;
+    box-shadow:0 10px 24px rgba(15,23,42,.05); text-decoration:none; color:#122033;
+  }
+  .rh-card:hover{ border-color:#e07b2a; color:#122033; }
+  .rh-card h3{ margin:0; font-size:16px; }
+  .rh-card .count{ margin-top:10px; font-family:"Playfair Display", Georgia, serif; font-size:36px; line-height:1; color:#c96416; }
+  .rh-card .sub{ margin-top:6px; color:#5b6b7c; font-size:13.5px; }
+  .rh-section{ display:flex; flex-direction:column; gap:12px; }
+  .rh-section-head{ display:flex; justify-content:space-between; align-items:flex-end; gap:12px; flex-wrap:wrap; }
+  .rh-manage{
+    display:inline-flex; align-items:center; justify-content:center; height:40px; padding:0 14px;
+    border-radius:12px; background:#e07b2a; color:#fff; font-weight:700; font-size:14px; text-decoration:none; white-space:nowrap;
+  }
+  .rh-manage:hover{ background:#c96416; color:#fff; }
+  .rh-topic{
+    display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;
+    background:#fff; border:1px solid #e8edf3; border-radius:18px; padding:16px 18px;
+    box-shadow:0 10px 24px rgba(15,23,42,.05);
+  }
+  .rh-topic h3{ margin:0; font-size:18px; color:#122033; }
+  .rh-topic p{ margin:4px 0 0; color:#5b6b7c; font-size:13.5px; }
+  .rh-topic a.open{
+    display:inline-flex; align-items:center; justify-content:center; height:38px; padding:0 14px;
+    border-radius:10px; border:1px solid #e8edf3; background:#fff; color:#122033; font-weight:700; font-size:13px; text-decoration:none;
+  }
+  .rh-topic a.open:hover{ border-color:#e07b2a; color:#c96416; }
+  .rh-empty{ padding:28px 16px; text-align:center; background:#fff; border:1px dashed #d7dee7; border-radius:18px; color:#5b6b7c; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-section">
+  <div class="rh-head">
+    <div>
+      <h1>Research and open source</h1>
+      <p>Approve member submissions. Only approved items appear on the public pages.</p>
+    </div>
+    <div class="rh-count">{{ pending_total }} waiting</div>
+  </div>
+
+  <div class="rh-grid">
+    <a class="rh-card" href="{% url 'admin_research_topics' %}">
+      <h3>Specific topics</h3>
+      <div class="count">{{ pending_topics }}</div>
+      <div class="sub">New topic proposals waiting</div>
+    </a>
+    <a class="rh-card" href="{% url 'admin_research_papers' %}">
+      <h3>Research papers</h3>
+      <div class="count">{{ pending_papers }}</div>
+      <div class="sub">Paper uploads waiting</div>
+    </a>
+    <a class="rh-card" href="{% url 'admin_research_oss_projects' %}">
+      <h3>Open source projects</h3>
+      <div class="count">{{ pending_oss_projects }}</div>
+      <div class="sub">New projects waiting</div>
+    </a>
+    <a class="rh-card" href="{% url 'admin_research_oss_contributions' %}">
+      <h3>Open source contributions</h3>
+      <div class="count">{{ pending_oss_contributions }}</div>
+      <div class="sub">Contribution uploads waiting</div>
+    </a>
+  </div>
+
+  <section class="rh-section">
+    <div class="rh-section-head">
+      <div>
+        <h2>Broad topics</h2>
+        <p>These group the public research repository and open source pages.</p>
+      </div>
+      <a class="rh-manage" href="{% url 'admin_research_broad_topics' %}">Manage topics</a>
+    </div>
+    {% for bt in broad_topics %}
+    <article class="rh-topic">
+      <div>
+        <h3>{{ bt.name }}</h3>
+        {% if bt.description %}<p>{{ bt.description|truncatewords:18 }}</p>{% endif %}
+      </div>
+      <a class="open" href="{% url 'admin_research_broad_topic_submissions' bt.pk %}">Submissions</a>
+    </article>
+    {% empty %}
+    <div class="rh-empty">No broad topics yet.</div>
+    {% endfor %}
+  </section>
+</div>
+{% endblock %}

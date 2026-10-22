@@ -1,0 +1,232 @@
+/* =========================================================
+   FINAL NAVIGATION LAYOUT FIX
+   Logo Left | Nav Center | Auth Right
+========================================================= */
+
+/* TOP BAR */
+.gov-topbar{
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  z-index:3000;
+  background:transparent;
+}
+
+.gov-topbar-inner{
+  max-width:1400px;
+  margin:auto;
+  padding:22px 40px;
+  display:grid;
+  grid-template-columns:auto 1fr auto; /* logo | nav | auth */
+  align-items:center;
+  column-gap:24px;
+}
+
+/* LOGO */
+.gov-identity{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.gov-logo{
+  height:48px;
+  filter:drop-shadow(0 4px 12px rgba(0,0,0,.4));
+}
+
+.gov-title{
+  font-family:'Poppins',sans-serif;
+  font-size:20px;
+  font-weight:800;
+  color:#ffffff;
+}
+
+/* ================= NAV ================= */
+
+.gov-nav{
+  position:relative;
+  background:transparent;
+}
+
+/* NAV LINKS CENTERED */
+.gov-nav-links{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:10px;
+}
+
+/* NAV BUTTONS */
+.gov-nav-links a{
+  padding:10px 16px;
+  border-radius:8px;
+  font-family:'Poppins',sans-serif;
+  font-size:14px;
+  font-weight:600;
+  color:#ffffff;
+  text-decoration:none;
+  transition:all .3s ease;
+  white-space:nowrap;
+}
+
+/* HOVER */
+.gov-nav-links a:hover{
+  background:rgba(255,255,255,.12);
+  box-shadow:0 8px 24px rgba(0,0,0,.35);
+  transform:translateY(-2px);
+}
+
+/* ACTIVE */
+.gov-nav-links a.active{
+  background:linear-gradient(135deg,#2563eb,#6366f1);
+  color:#ffffff;
+  box-shadow:0 10px 28px rgba(37,99,235,.6);
+}
+
+/* ================= AUTH ================= */
+
+.gov-auth{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+/* LOGIN */
+.btn-login{
+  padding:8px 18px;
+  border-radius:8px;
+  border:1px solid rgba(255,255,255,.5);
+  background:transparent;
+  color:#ffffff;
+  font-family:'Poppins',sans-serif;
+  font-size:14px;
+  font-weight:600;
+  text-decoration:none;
+  transition:.3s;
+}
+
+.btn-login:hover{
+  background:rgba(255,255,255,.12);
+  box-shadow:0 6px 18px rgba(0,0,0,.3);
+}
+
+/* SIGNUP */
+.btn-signup{
+  padding:9px 20px;
+  border-radius:8px;
+  background:linear-gradient(135deg,#22c55e,#16a34a);
+  color:#ffffff;
+  font-family:'Poppins',sans-serif;
+  font-size:14px;
+  font-weight:700;
+  text-decoration:none;
+  transition:.3s;
+  box-shadow:0 8px 24px rgba(34,197,94,.45);
+  border:none;
+}
+
+.btn-signup:hover{
+  transform:translateY(-2px);
+  box-shadow:0 14px 34px rgba(34,197,94,.55);
+}
+
+/* ================= DROPDOWN ================= */
+
+.gov-dropdown{
+  position:relative;
+}
+
+.gov-dropdown-menu{
+  position:absolute;
+  top:120%;
+  left:0;
+  min-width:220px;
+  background:#0f172a;
+  border-radius:10px;
+  box-shadow:0 20px 40px rgba(0,0,0,.6);
+  padding:8px 0;
+  display:none;
+  z-index:4000;
+}
+
+.gov-dropdown:hover .gov-dropdown-menu{
+  display:block;
+}
+
+.gov-dropdown-menu a{
+  display:block;
+  padding:10px 16px;
+  color:#ffffff;
+  font-size:14px;
+  text-decoration:none;
+  transition:.3s;
+}
+
+.gov-dropdown-menu a:hover{
+  background:rgba(255,255,255,.12);
+}
+
+/* ================= MOBILE ================= */
+
+.nav-toggle{
+  display:none;
+}
+
+@media(max-width:1024px){
+  .gov-topbar-inner{
+    grid-template-columns:auto 1fr auto;
+    padding:18px 24px;
+  }
+
+  .gov-nav-links{
+    gap:6px;
+    flex-wrap:wrap;
+  }
+}
+
+@media(max-width:900px){
+
+  .nav-toggle{
+    display:flex;
+    justify-self:end;
+    cursor:pointer;
+  }
+
+  .gov-topbar-inner{
+    grid-template-columns:auto auto;
+  }
+
+  .gov-nav{
+    grid-column:1/-1;
+  }
+
+  .gov-nav-links{
+    display:none;
+    flex-direction:column;
+    background:#0f172a;
+    margin:16px 0 0;
+    padding:20px;
+    border-radius:14px;
+    box-shadow:0 20px 40px rgba(0,0,0,.6);
+  }
+
+  .gov-nav-links.open{
+    display:flex;
+  }
+
+  .gov-nav-links a{
+    width:100%;
+    text-align:left;
+  }
+
+  .gov-auth{
+    width:100%;
+    margin-top:10px;
+  }
+
+  .btn-login,.btn-signup{
+    width:100%;
+    text-align:center;
+  }
+}

@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Manage Meetings | Admin Portal{% endblock %}
+{% block content %}
+<div class="container mt-5 mb-5">
+    <div class="bg-white border shadow-sm p-4" style="border-radius: 12px;">
+    <h2 class="mb-2">SIG Meeting Management</h2>
+    <p class="text-muted mb-4">
+        Configure official SIG meetings. For each date, upload agenda, minutes/record, and supporting document.
+        These become visible in the member dashboard tabs (FI, IPS, DNN, Joint).
+    </p>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+    
+    <div class="card mb-5 border-primary shadow-sm">
+        <div class="card-header bg-primary text-white fw-bold">Create New Meeting Entry</div>
+        <div class="card-body">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="create">
+                <div class="row">
+                    <div class="col-md-5 mb-3">
+                        <label class="fw-bold">Meeting Topic / Title <span class="text-danger">*</span></label>
+                        <input type="text" name="title" class="form-control" placeholder="E.g., SIG-IPS Monthly Review" required>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label class="fw-bold">Meeting Date & Time <span class="text-danger">*</span></label>
+                        <input type="datetime-local" name="date" class="form-control" required>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="fw-bold">SIG Section <span class="text-danger">*</span></label>
+                        <select name="sig_type" class="form-select" required>
+                            <option value="">Select SIG Association...</option>
+                            <option value="FI">Future of Internet (FI)</option>
+                            <option value="TPS">Internet Protocols & Standards (IPS)</option>
+                            <option value="DNN">Domain Names & Related Issues (DNN)</option>
+                            <option value="Joint">Joint SIG (All members)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="fw-bold">Meeting Link (optional)</label>
+                        <input type="url" name="meeting_link" class="form-control" placeholder="https://...">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="fw-bold">Agenda Document <span class="text-danger">*</span></label>
+                        <input type="file" name="agenda" class="form-control" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="fw-bold">Minutes / Record of Meeting <span class="text-danger">*</span></label>
+                        <input type="file" name="minutes" class="form-control" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="fw-bold">Supporting Document <span class="text-danger">*</span></label>
+                        <input type="file" name="supporting_document" class="form-control" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary px-4 mt-2">Publish Meeting</button>
+            </form>
+        </div>
+    </div>
+
+    <h4 class="fw-bold">Published Meetings</h4>
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped table-hover mt-2 align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Title & Activity</th>
+                    <th>Sub-Group Designation</th>
+                    <th>Scheduled Date</th>
+                    <th>Assets</th>
+                    <th class="text-end">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for m in meetings %}
+                <tr>
+                    <td class="fw-bold text-dark">{{ m.title }}</td>
+                    <td><span class="badge bg-secondary px-2 py-1">{{ m.get_sig_type_display }}</span></td>
+                    <td>{{ m.date|date:"F d, Y, h:i a" }}</td>
+                    <td>
+                        {% if m.agenda %}<a class="badge text-bg-light border text-decoration-none" href="{{ m.agenda.url }}" target="_blank">Agenda</a>{% endif %}
+                        {% if m.minutes %}<a class="badge text-bg-light border text-decoration-none" href="{{ m.minutes.url }}" target="_blank">Minutes</a>{% endif %}
+                        {% if m.supporting_document %}<a class="badge text-bg-light border text-decoration-none" href="{{ m.supporting_document.url }}" target="_blank">Supporting</a>{% endif %}
+                        {% if m.meeting_link %}<a class="badge bg-success text-decoration-none" href="{{ m.meeting_link }}" target="_blank">Meeting Link</a>{% endif %}
+                        {% if not m.agenda and not m.minutes and not m.supporting_document and not m.meeting_link %}
+                            <span class="text-muted">No assets</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-end">
+                        <form method="post" class="d-inline" onsubmit="return confirm('Delete this meeting entry?');">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="delete">
+                            <input type="hidden" name="meeting_id" value="{{ m.id }}">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5" class="text-center text-muted py-4">No meetings configured in the system. Use the form above to publish one.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+</div>
+{% endblock %}

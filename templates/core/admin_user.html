@@ -1,0 +1,86 @@
+
+{% block title %}Admin Users{% endblock %}
+
+{% block content %}
+
+<style>
+  .table-container {
+    max-width: 1100px;
+    margin: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  th, td {
+    padding: 12px 14px;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 0.9rem;
+  }
+
+  th {
+    background: #f9fafb;
+    font-weight: 600;
+    color: #374151;
+  }
+
+  tr:hover {
+    background: #f3f4f6;
+  }
+
+  .page-title {
+    max-width: 1100px;
+    margin: 0 auto 16px;
+    font-size: 1.5rem;
+    color: #111827;
+  }
+</style>
+
+<h2 class="page-title">Admin Dashboard Users</h2>
+
+<div class="table-container">
+  <table>
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Created By</th>
+        <th>Created On</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for p in users %}
+      <tr>
+        <td>{{ p.user.username }}</td>
+        <td>{{ p.user.first_name }} {{ p.user.last_name }}</td>
+        <td>{{ p.user.email }}</td>
+        <td>
+          {% if p.created_by %}
+            {{ p.created_by.username }}
+          {% else %}
+            System
+          {% endif %}
+        </td>
+        <td>{{ p.created_at|date:"d M Y, H:i" }}</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="5" style="text-align:center;">
+          No users created yet
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

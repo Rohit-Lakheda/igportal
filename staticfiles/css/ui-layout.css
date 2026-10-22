@@ -1,0 +1,287 @@
+/* ==========================================================
+   UI LAYOUT SYSTEM — Bharat IG Sphere
+   Structural Engine (Audit Safe)
+========================================================== */
+
+/* ===============================
+   PAGE SHELL
+=============================== */
+.ui-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===============================
+   HERO SECTION
+=============================== */
+.ui-hero {
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  background: linear-gradient(135deg, #eef2ff, #f8fafc);
+  position: relative;
+  overflow: hidden;
+}
+
+.ui-hero-inner {
+  max-width: 1280px;
+  margin: auto;
+  padding: 80px 24px;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+/* Text side */
+.ui-hero-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Visual side */
+.ui-hero-visual {
+  position: relative;
+}
+
+/* ===============================
+   SECTION FLOW
+=============================== */
+.ui-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 120px;
+}
+
+/* ===============================
+   SPLIT SECTIONS
+=============================== */
+.ui-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+/* ===============================
+   CENTERED CONTENT
+=============================== */
+.ui-center {
+  text-align: center;
+  max-width: 900px;
+  margin: auto;
+}
+
+/* ===============================
+   INNER PAGE LAYOUT
+=============================== */
+.ui-inner-layout {
+  max-width: 1400px;
+  margin: auto;
+  padding: 60px 24px;
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 60px;
+}
+
+/* ===============================
+   LEFT NAV (STORY STYLE)
+=============================== */
+.ui-left-nav {
+  position: sticky;
+  top: 120px;
+  align-self: flex-start;
+  background: rgba(255,255,255,0.8);
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
+  box-shadow: var(--shadow-md);
+  padding: 22px;
+}
+
+.ui-left-nav h4 {
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-soft);
+  margin-bottom: 14px;
+}
+
+.ui-left-nav a {
+  display: block;
+  padding: 10px 14px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text-main);
+  margin-bottom: 6px;
+  transition: all 0.25s ease;
+}
+
+.ui-left-nav a:hover {
+  background: rgba(108,99,255,0.12);
+  color: var(--c-accent);
+}
+
+.ui-left-nav a.active {
+  background: linear-gradient(135deg, var(--c-accent), var(--c-soft-accent));
+  color: #fff;
+}
+
+/* ===============================
+   CONTENT AREA
+=============================== */
+.ui-content {
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+}
+
+/* ===============================
+   CONTENT BLOCK
+=============================== */
+.ui-block {
+  background: var(--bg-white);
+  border-radius: var(--radius-lg);
+  padding: 50px;
+  box-shadow: var(--shadow-sm);
+}
+
+.ui-block-soft {
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: blur(12px);
+}
+
+/* ===============================
+   STORY BLOCK
+=============================== */
+.ui-story {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+  align-items: center;
+}
+
+.ui-story.reverse {
+  grid-template-columns: 1fr 1fr;
+  direction: rtl;
+}
+
+.ui-story.reverse > * {
+  direction: ltr;
+}
+
+/* ===============================
+   MEDIA BLOCK
+=============================== */
+.ui-media {
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+/* ===============================
+   INFO GRID
+=============================== */
+.ui-info-grid {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 40px;
+}
+
+/* ===============================
+   SECTION HEADERS
+=============================== */
+.ui-section-header {
+  max-width: 900px;
+}
+
+.ui-section-header h2 {
+  font-size: 38px;
+  font-weight: 800;
+  letter-spacing: -0.8px;
+  margin-bottom: 14px;
+}
+
+.ui-section-header p {
+  font-size: 16px;
+  color: var(--text-soft);
+  line-height: 1.8;
+}
+
+/* ===============================
+   TIMELINE
+=============================== */
+.ui-timeline {
+  position: relative;
+  padding-left: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.ui-timeline::before {
+  content: "";
+  position: absolute;
+  left: 10px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(var(--c-accent), transparent);
+}
+
+.ui-timeline-item {
+  position: relative;
+  padding-left: 40px;
+}
+
+.ui-timeline-item::before {
+  content: "";
+  position: absolute;
+  left: -3px;
+  top: 6px;
+  width: 14px;
+  height: 14px;
+  background: var(--c-accent);
+  border-radius: 50%;
+  box-shadow: 0 0 0 6px rgba(108,99,255,0.15);
+}
+
+/* ===============================
+   RESPONSIVE
+=============================== */
+@media (max-width: 1024px) {
+  .ui-hero-inner {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .ui-inner-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .ui-left-nav {
+    position: relative;
+    top: 0;
+  }
+
+  .ui-story {
+    grid-template-columns: 1fr;
+  }
+
+  .ui-info-grid {
+    grid-template-columns: repeat(2,1fr);
+  }
+}
+
+@media (max-width: 576px) {
+  .ui-info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ui-block {
+    padding: 30px;
+  }
+}

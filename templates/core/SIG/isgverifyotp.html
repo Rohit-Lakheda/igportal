@@ -1,0 +1,192 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Verify OTP — IG Portal</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+  :root {
+    --navy: #0b3c6d;
+    --navy-dark: #082f54;
+    --green: #0f9d58;
+    --border: #e5e7eb;
+    --text-main: #1f2937;
+    --text-muted: #6b7280;
+    --bg-light: #f8fafc;
+    --white: #ffffff;
+    --shadow: rgba(0, 0, 0, 0.08);
+  }
+
+  * {
+    box-sizing: border-box;
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  }
+
+  body {
+    min-height: 100vh;
+    background: var(--bg-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .otp-card {
+    width: 100%;
+    max-width: 420px;
+    background: var(--white);
+    border-radius: 16px;
+    box-shadow: 0 14px 36px var(--shadow);
+    padding: 36px 32px;
+    border-top: 6px solid var(--navy);
+    text-align: center;
+  }
+
+  .otp-logo img {
+    height: 60px;
+    margin-bottom: 12px;
+  }
+
+  .otp-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 6px;
+  }
+
+  .otp-subtitle {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+  }
+
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-main);
+    text-align: left;
+    margin-bottom: 6px;
+  }
+
+  .otp-input {
+    width: 100%;
+    padding: 14px;
+    font-size: 20px;
+    letter-spacing: 8px;
+    text-align: center;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--bg-light);
+    margin-bottom: 20px;
+  }
+
+  .otp-input:focus {
+    outline: none;
+    border-color: var(--navy);
+    background: var(--white);
+    box-shadow: 0 0 0 3px rgba(11, 60, 109, 0.15);
+  }
+
+  .btn-verify {
+    width: 100%;
+    padding: 14px;
+    font-size: 15px;
+    font-weight: 600;
+    background: var(--navy);
+    color: var(--white);
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  .btn-verify:hover {
+    background: var(--navy-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(11, 60, 109, 0.35);
+  }
+
+  .otp-note {
+    margin-top: 16px;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  .dev-otp {
+    margin-top: 14px;
+    padding: 8px;
+    border-radius: 8px;
+    font-size: 13px;
+    background: #fee2e2;
+    color: #991b1b;
+  }
+
+  .footer {
+    margin-top: 24px;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+</style>
+</head>
+
+<body>
+
+<div class="otp-card">
+
+  <div class="otp-logo">
+    <img src="{% static 'img/ig-logo3.jpeg' %}" alt="IG Portal">
+  </div>
+
+  <div class="otp-title">Verify Email OTP</div>
+  <div class="otp-subtitle">
+    Enter the 6-digit OTP sent during registration
+  </div>
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="dev-otp">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+
+  <form method="post">
+    {% csrf_token %}
+
+    <label for="otp">One Time Password (OTP)</label>
+    <input
+      type="text"
+      name="otp"
+      id="otp"
+      maxlength="6"
+      class="otp-input"
+      placeholder="● ● ● ● ● ●"
+      required
+      autocomplete="one-time-code"
+    >
+
+    <button type="submit" class="btn-verify">
+      Verify & Activate Account →
+    </button>
+  </form>
+
+  {% if request.session.dev_otp %}
+    <!-- ⚠️ DEV ONLY – REMOVE IN PROD -->
+    <div class="dev-otp">
+      DEV OTP: {{ request.session.dev_otp }}
+    </div>
+  {% endif %}
+
+  <div class="otp-note">
+    OTP is valid for 10 minutes. Do not share it with anyone.
+  </div>
+
+  <div class="footer">
+    © Bharat Internet Governance — Managed by NIXI, supported by MeitY
+  </div>
+
+</div>
+
+</body>
+</html>

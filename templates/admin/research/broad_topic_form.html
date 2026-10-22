@@ -1,0 +1,73 @@
+{% extends "admin/base.html" %}
+{% block title %}Edit broad topic | Admin{% endblock %}
+
+{% block admin_css %}
+<style>
+  .bt-back{
+    display:inline-flex; align-items:center; gap:8px; margin-bottom:14px;
+    color:#122033; font-weight:700; font-size:14px; text-decoration:none;
+  }
+  .bt-back:hover{ color:#c96416; }
+  .bt-form{
+    background:#fff; border:1px solid #e8edf3; border-radius:18px; padding:22px;
+    box-shadow:0 10px 24px rgba(15,23,42,.05);
+  }
+  .bt-form h1{ margin:0 0 16px; font-family:"Playfair Display", Georgia, serif; font-size:32px; }
+  .bt-grid{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .bt-span{ grid-column:1 / -1; }
+  .bt-form label{ display:block; margin:0 0 6px; font-size:14px; font-weight:700; }
+  .bt-form input, .bt-form textarea{
+    box-sizing:border-box; width:100%; height:44px; padding:0 14px; border:1px solid #e8edf3; border-radius:12px;
+    background:#fff; color:#122033; font:inherit; font-size:14px;
+  }
+  .bt-form textarea{ height:auto; min-height:110px; padding:12px 14px; resize:vertical; }
+  .bt-form input:focus, .bt-form textarea:focus{ outline:2px solid rgba(224,123,42,.35); border-color:#e07b2a; }
+  .bt-check{ display:flex; align-items:center; gap:8px; min-height:44px; }
+  .bt-check input{ width:18px; height:18px; }
+  .bt-check label{ margin:0; }
+  .bt-actions{ display:flex; justify-content:flex-end; gap:8px; margin-top:16px; }
+  .bt-actions button, .bt-actions a{
+    display:inline-flex; align-items:center; justify-content:center; height:44px; padding:0 16px;
+    border-radius:12px; border:1px solid #e8edf3; background:#fff; color:#122033; font-weight:700; font-size:14px; line-height:1; text-decoration:none; cursor:pointer;
+  }
+  .bt-actions button{ background:#e07b2a; border-color:#e07b2a; color:#fff; }
+  .bt-actions button:hover{ background:#c96416; }
+  @media (max-width: 700px){ .bt-grid{ grid-template-columns:1fr; } }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-section">
+  <a class="bt-back" href="{% url 'admin_research_broad_topics' %}"><i class="fas fa-arrow-left"></i> Broad topics</a>
+  <form class="bt-form" method="post">
+    {% csrf_token %}
+    <h1>Edit broad topic</h1>
+    <div class="bt-grid">
+      <div>
+        <label for="bt-name">Name</label>
+        <input id="bt-name" type="text" name="name" value="{{ topic.name }}" required>
+      </div>
+      <div>
+        <label for="bt-slug">Slug</label>
+        <input id="bt-slug" type="text" name="slug" value="{{ topic.slug }}" required>
+      </div>
+      <div>
+        <label for="bt-sort">Sort</label>
+        <input id="bt-sort" type="number" name="sort_order" value="{{ topic.sort_order }}">
+      </div>
+      <div class="bt-check">
+        <input id="bt-active" type="checkbox" name="is_active" {% if topic.is_active %}checked{% endif %}>
+        <label for="bt-active">Active on the public pages</label>
+      </div>
+      <div class="bt-span">
+        <label for="bt-desc">Description</label>
+        <textarea id="bt-desc" name="description" rows="3">{{ topic.description }}</textarea>
+      </div>
+    </div>
+    <div class="bt-actions">
+      <a href="{% url 'admin_research_broad_topics' %}">Cancel</a>
+      <button type="submit">Save topic</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}SIG Moderation Queue | Admin Portal{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>SIG Moderation Queue</h2>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Navigation Tabs -->
+    <ul class="nav nav-tabs mb-4" id="moderationTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active fw-bold" id="members-tab" data-bs-toggle="tab" data-bs-target="#members" type="button" role="tab">
+                Pending SIG Members <span class="badge bg-primary ms-1">{{ member_requests|length }}</span>
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link fw-bold" id="observers-tab" data-bs-toggle="tab" data-bs-target="#observers" type="button" role="tab">
+                Pending Observers <span class="badge bg-secondary ms-1">{{ observer_requests|length }}</span>
+            </button>
+        </li>
+    </ul>
+
+    <!-- Tab Content -->
+    <div class="tab-content" id="moderationTabsContent">
+        
+        <!-- SIG MEMBERS TAB -->
+        <div class="tab-pane fade show active" id="members" role="tabpanel">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0 align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Applicant</th>
+                                    <th>Contact</th>
+                                    <th>Professional Info</th>
+                                    <th>Target SIGs</th>
+                                    <th class="text-end">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for req in member_requests %}
+                                <tr>
+                                    <td>
+                                        <div class="fw-bold">{{ req.first_name }} {{ req.last_name }}</div>
+                                        <small class="text-muted">Applied: {{ req.submitted_at|date:"M d, Y" }}</small>
+                                    </td>
+                                    <td>
+                                        <div><a href="mailto:{{ req.email }}">{{ req.email }}</a></div>
+                                        <small>{{ req.mobile }}</small>
+                                    </td>
+                                    <td>
+                                        <div>{{ req.designation }}</div>
+                                        <small class="text-muted">{{ req.organization }} ({{ req.state }})</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-info text-dark">{{ req.target_sigs }}</span>
+                                    </td>
+                                    <td class="text-end">
+                                        <form method="post" class="d-inline">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="request_type" value="member">
+                                            <input type="hidden" name="request_id" value="{{ req.id }}">
+                                            <input type="hidden" name="action" value="approve">
+                                            <button type="submit" class="btn btn-sm btn-success bg-gradient" onclick="return confirm('Approve this member? A standard user account will be created and emailed to them.')">Approve</button>
+                                        </form>
+                                        
+                                        <form method="post" class="d-inline ms-1">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="request_type" value="member">
+                                            <input type="hidden" name="request_id" value="{{ req.id }}">
+                                            <input type="hidden" name="action" value="reject">
+                                            <button type="submit" class="btn btn-sm btn-danger bg-gradient" onclick="return confirm('Reject this application? An email will be sent.')">Reject</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="5" class="text-center py-4 text-muted">
+                                        <i class="bi bi-inbox fs-2 d-block mb-2"></i>
+                                        No pending SIG Member applications
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- OBSERVERS TAB -->
+        <div class="tab-pane fade" id="observers" role="tabpanel">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0 align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Applicant</th>
+                                    <th>Contact</th>
+                                    <th>Target SIG</th>
+                                    <th>Reason / Exp</th>
+                                    <th class="text-end">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for req in observer_requests %}
+                                <tr>
+                                    <td>
+                                        <div class="fw-bold">{{ req.first_name }} {{ req.last_name }}</div>
+                                        <small class="text-muted">Applied: {{ req.submitted_at|date:"M d, Y" }}</small>
+                                    </td>
+                                    <td>
+                                        <div><a href="mailto:{{ req.email }}">{{ req.email|default:"N/A" }}</a></div>
+                                        <small>{{ req.mobile }}</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-secondary">{{ req.sig }}</span>
+                                    </td>
+                                    <td>
+                                        <div class="text-truncate" style="max-width: 200px;" title="{{ req.reason }}">{{ req.reason|default:"No reason provided" }}</div>
+                                    </td>
+                                    <td class="text-end">
+                                        <form method="post" class="d-inline">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="request_type" value="observer">
+                                            <input type="hidden" name="request_id" value="{{ req.id }}">
+                                            <input type="hidden" name="action" value="approve">
+                                            <button type="submit" class="btn btn-sm btn-success bg-gradient" onclick="return confirm('Approve this observer?')">Approve</button>
+                                        </form>
+                                        
+                                        <form method="post" class="d-inline ms-1">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="request_type" value="observer">
+                                            <input type="hidden" name="request_id" value="{{ req.id }}">
+                                            <input type="hidden" name="action" value="reject">
+                                            <button type="submit" class="btn btn-sm btn-danger bg-gradient" onclick="return confirm('Reject this observer?')">Reject</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="5" class="text-center py-4 text-muted">
+                                        <i class="bi bi-inbox fs-2 d-block mb-2"></i>
+                                        No pending Observer applications
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

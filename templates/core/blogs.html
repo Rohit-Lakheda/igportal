@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Blogs — Bharat IG Sphere{% endblock %}
+{% block body_class %}lp-page{% endblock %}
+
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'UI-CSS/landing.css' %}">
+<link rel="stylesheet" href="{% static 'UI-CSS/events.css' %}">
+<link rel="stylesheet" href="{% static 'UI-CSS/blogs.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<section class="events-header">
+  <div class="events-header-bg"></div>
+  <div class="events-header-content">
+    <h1>Blogs</h1>
+    <p>Research, policy notes, and writing from India’s Internet Governance community.</p>
+  </div>
+</section>
+
+<section class="bl-page">
+  <div class="bl-wrap">
+    <div class="bl-toolbar">
+      <form class="bl-find" method="get">
+        <h2>Find an article</h2>
+        <div class="bl-find-row">
+          <input type="search" name="search" value="{{ search }}" placeholder="Search by title, author, topic, or any word in the article" aria-label="Search articles">
+          <button type="submit">Search</button>
+        </div>
+      </form>
+      <aside class="bl-write">
+        <span class="bl-write-ico" aria-hidden="true"><i class="fa-solid fa-pen-nib"></i></span>
+        <div>
+          <h2>Share your writing</h2>
+          {% if request.session.member_uuid %}
+          <p>You are signed in. Send a draft for review.</p>
+          <a href="{% url 'submit_blog' %}">Submit an article</a>
+          {% else %}
+          <p>Sign in with your member account to send a draft for review.</p>
+          <a href="{% url 'login' %}?next={% url 'submit_blog' %}">Sign in to submit an article</a>
+          {% endif %}
+        </div>
+      </aside>
+    </div>
+
+    <div class="bl-list">
+      {% for blog in blogs %}
+      <article class="bl-row">
+        {% if blog.image %}
+        <a class="bl-thumb" href="{% url 'blog_detail' blog.id %}" tabindex="-1" aria-hidden="true">
+          <img src="{{ blog.image.url }}" alt="">
+        </a>
+        {% endif %}
+        <div class="bl-body">
+          <div class="bl-meta">
+            {% if blog.article_type %}<span class="bl-type">{{ blog.article_type }}</span>{% endif %}
+            <time datetime="{{ blog.created_at|date:'Y-m-d' }}">{{ blog.created_at|date:"d M Y" }}</time>
+            {% if blog.read_time %}<span>{{ blog.read_time }}</span>{% endif %}
+          </div>
+          <h3><a href="{% url 'blog_detail' blog.id %}">{{ blog.title }}</a></h3>
+          <p>{{ blog.description|truncatechars:180 }}</p>
+          <div class="bl-foot">
+            <span>{% if blog.Contributor %}{{ blog.Contributor }}{% endif %}</span>
+            <a href="{% url 'blog_detail' blog.id %}">Read article</a>
+          </div>
+        </div>
+      </article>
+      {% empty %}
+      <p class="bl-empty">No articles match this search. Try a title, an author name, or a word from the article.</p>
+      {% endfor %}
+    </div>
+
+    {% if page_obj.paginator.num_pages > 1 %}
+    <nav class="bl-pages" aria-label="Articles pages">
+      {% if page_obj.has_previous %}
+      <a href="?page={{ page_obj.previous_page_number }}&search={{ search }}">Previous</a>
+      {% endif %}
+      <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+      {% if page_obj.has_next %}
+      <a href="?page={{ page_obj.next_page_number }}&search={{ search }}">Next</a>
+      {% endif %}
+    </nav>
+    {% endif %}
+  </div>
+</section>
+
+<footer class="lp-footer">
+  <div class="lp-footer-grid">
+    <div class="lp-footer-brand">
+      <img src="{% static 'img/ig-logo3.jpeg' %}" alt="Bharat IG">
+      <div>
+        <strong>Bharat Internet Governance Sphere</strong>
+        <p>Connection, policy, people and participation in India's digital governance.</p>
+      </div>
+    </div>
+    <div>
+      <h4>Explore</h4>
+      <a href="{% url 'home' %}">Home</a>
+      <a href="{% url 'events' %}">Events</a>
+      <a href="{% url 'research_hub' %}">Research</a>
+      <a href="{% url 'blogs' %}">Blogs</a>
+    </div>
+    <div>
+      <h4>Participate</h4>
+      <a href="{% url 'consultations' %}">Stakeholder Engagement</a>
+      <a href="{% url 'capacity' %}">Capacity Building</a>
+      <a href="{% url 'global' %}">India at Global Forums</a>
+      <a href="{% url 'sig' %}">SIG</a>
+    </div>
+    <div>
+      <h4>Connect</h4>
+      <p>Stay connected with India's internet governance community.</p>
+      <div class="lp-social">
+        <a href="https://x.com" target="_blank" rel="noopener" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
+        <a href="https://www.linkedin.com" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+        <a href="https://www.youtube.com" target="_blank" rel="noopener" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+      </div>
+    </div>
+  </div>
+  <div class="lp-footer-bar">
+    <span>© {% now "Y" %} Bharat Internet Governance Sphere (BIG-S). All rights reserved.</span>
+    <span>Privacy Policy · Terms of Use · Contact Us</span>
+  </div>
+</footer>
+
+{% endblock %}

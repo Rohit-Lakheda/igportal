@@ -1,0 +1,92 @@
+{% extends "admin/base.html" %}
+{% block title %}{{ action }} SIG consultation | Admin{% endblock %}
+
+{% block admin_css %}
+<style>
+  .ef-back{
+    display:inline-flex; align-items:center; gap:8px; margin-bottom:14px;
+    color:#122033; font-weight:700; font-size:14px; text-decoration:none;
+  }
+  .ef-back:hover{ color:#c96416; }
+  .ef-card{
+    background:#fff; border:1px solid #e8edf3; border-radius:18px; padding:22px;
+    box-shadow:0 10px 24px rgba(15,23,42,.05);
+  }
+  .ef-card h1{ margin:0 0 16px; font-family:"Playfair Display", Georgia, serif; font-size:32px; }
+  .ef-grid{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .ef-span{ grid-column:1 / -1; }
+  .ef-card label{ display:block; margin:0 0 6px; font-size:14px; font-weight:700; }
+  .ef-card input, .ef-card textarea, .ef-card select{
+    box-sizing:border-box; width:100%; height:44px; padding:0 14px; border:1px solid #e8edf3; border-radius:12px;
+    background:#fff; color:#122033; font:inherit; font-size:14px;
+  }
+  .ef-card textarea{ height:auto; min-height:120px; padding:12px 14px; resize:vertical; }
+  .ef-card input[type=file]{ height:auto; padding:10px 14px; }
+  .ef-card input:focus, .ef-card textarea:focus, .ef-card select:focus{
+    outline:2px solid rgba(224,123,42,.35); border-color:#e07b2a;
+  }
+  .ef-note{ margin:6px 0 0; color:#5b6b7c; font-size:13px; }
+  .ef-note a{ color:#c96416; font-weight:700; text-decoration:none; }
+  .ef-note a:hover{ color:#e07b2a; }
+  .ef-actions{ display:flex; justify-content:flex-end; gap:8px; margin-top:16px; }
+  .ef-actions button, .ef-actions a{
+    display:inline-flex; align-items:center; justify-content:center; height:44px; padding:0 16px;
+    border-radius:12px; border:1px solid #e8edf3; background:#fff; color:#122033; font-weight:700; font-size:14px; line-height:1; text-decoration:none; cursor:pointer;
+  }
+  .ef-actions button{ background:#e07b2a; border-color:#e07b2a; color:#fff; }
+  .ef-actions button:hover{ background:#c96416; }
+  @media (max-width: 700px){ .ef-grid{ grid-template-columns:1fr; } }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-section">
+  <a class="ef-back" href="{% url 'admin_sig_consultations' %}"><i class="fas fa-arrow-left"></i> SIG consultations</a>
+  <form class="ef-card" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <h1>{{ action }} SIG consultation</h1>
+    <div class="ef-grid">
+      <div class="ef-span">
+        <label for="sg-title">Title</label>
+        <input id="sg-title" type="text" name="title" value="{{ consultation.title|default:'' }}" required>
+      </div>
+      <div>
+        <label for="sg-sig">SIG</label>
+        <select id="sg-sig" name="sig_type" required>
+          <option value="FI" {% if consultation.sig_type == "FI" %}selected{% endif %}>Future of Internet</option>
+          <option value="TPS" {% if consultation.sig_type == "TPS" %}selected{% endif %}>Internet Protocols &amp; Standards</option>
+          <option value="DNN" {% if consultation.sig_type == "DNN" %}selected{% endif %}>Domain Names &amp; Related Issues</option>
+        </select>
+      </div>
+      <div>
+        <label for="sg-status">Status</label>
+        <select id="sg-status" name="status">
+          <option value="open" {% if consultation.status == "open" or not consultation %}selected{% endif %}>Open</option>
+          <option value="closed" {% if consultation.status == "closed" %}selected{% endif %}>Closed</option>
+        </select>
+      </div>
+      <div class="ef-span">
+        <label for="sg-desc">Description</label>
+        <textarea id="sg-desc" name="description" rows="4" required>{{ consultation.description|default:'' }}</textarea>
+      </div>
+      <div>
+        <label for="sg-deadline">Deadline</label>
+        <input id="sg-deadline" type="datetime-local" name="deadline" required value="{% if consultation %}{% if consultation.deadline|date:'Y-m-d\\TH:i' %}{{ consultation.deadline|date:'Y-m-d\\TH:i' }}{% else %}{{ consultation.deadline|slice:':16' }}{% endif %}{% endif %}">
+      </div>
+      <div>
+        <label for="sg-brief">Brief</label>
+        <input id="sg-brief" type="file" name="brief_document">
+        {% if consultation and consultation.brief_document %}
+        <p class="ef-note"><a href="{{ consultation.brief_document.url }}" target="_blank" rel="noopener">View the current brief</a>. Leave this empty to keep it.</p>
+        {% else %}
+        <p class="ef-note">Optional. Upload a brief for SIG members.</p>
+        {% endif %}
+      </div>
+    </div>
+    <div class="ef-actions">
+      <a href="{% url 'admin_sig_consultations' %}">Cancel</a>
+      <button type="submit">{{ action }} consultation</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

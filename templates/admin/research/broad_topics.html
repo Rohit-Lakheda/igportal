@@ -1,0 +1,128 @@
+{% extends "admin/base.html" %}
+{% block title %}Broad topics | Admin{% endblock %}
+
+{% block admin_css %}
+<style>
+  .bt-back{
+    display:inline-flex; align-items:center; gap:8px; margin-bottom:14px;
+    color:#122033; font-weight:700; font-size:14px; text-decoration:none;
+  }
+  .bt-back:hover{ color:#c96416; }
+  .bt-head{ display:flex; justify-content:space-between; align-items:flex-end; gap:16px; flex-wrap:wrap; }
+  .bt-head h1, .bt-form h2{ margin:0; font-family:"Playfair Display", Georgia, serif; }
+  .bt-head p{ margin:6px 0 0; color:#5b6b7c; }
+  .bt-count{ padding:8px 12px; border-radius:999px; background:#fff; border:1px solid #e8edf3; font-weight:700; font-size:14px; }
+  .bt-form{
+    background:#fff; border:1px solid #e8edf3; border-radius:18px; padding:22px;
+    box-shadow:0 10px 24px rgba(15,23,42,.05);
+  }
+  .bt-form h2{ font-size:26px; margin-bottom:16px; }
+  .bt-grid{ display:grid; grid-template-columns:1.4fr 1fr 120px; gap:16px; }
+  .bt-span{ grid-column:1 / -1; }
+  .bt-form label{ display:block; margin:0 0 6px; font-size:14px; font-weight:700; }
+  .bt-form input, .bt-form textarea{
+    box-sizing:border-box; width:100%; height:44px; padding:0 14px; border:1px solid #e8edf3; border-radius:12px;
+    background:#fff; color:#122033; font:inherit; font-size:14px;
+  }
+  .bt-form textarea{ height:auto; min-height:90px; padding:12px 14px; resize:vertical; }
+  .bt-form input:focus, .bt-form textarea:focus{ outline:2px solid rgba(224,123,42,.35); border-color:#e07b2a; }
+  .bt-actions{ display:flex; justify-content:flex-end; margin-top:16px; }
+  .bt-actions button, .bt-row a, .bt-row button{
+    display:inline-flex; align-items:center; justify-content:center; height:38px; padding:0 14px;
+    border-radius:10px; border:1px solid #e8edf3; background:#fff; color:#122033; font-weight:700; font-size:13px; line-height:1; text-decoration:none; cursor:pointer;
+  }
+  .bt-actions button{ height:44px; padding:0 16px; border-radius:12px; background:#e07b2a; border-color:#e07b2a; color:#fff; font-size:14px; }
+  .bt-actions button:hover{ background:#c96416; }
+  .bt-list{ display:flex; flex-direction:column; gap:12px; }
+  .bt-card{
+    display:grid; grid-template-columns:minmax(0, 1fr) auto; gap:16px; align-items:center;
+    background:#fff; border:1px solid #e8edf3; border-radius:18px; padding:16px 18px;
+    box-shadow:0 10px 24px rgba(15,23,42,.05);
+  }
+  .bt-card h3{ margin:0; font-size:18px; color:#122033; }
+  .bt-card p{ margin:6px 0 0; color:#5b6b7c; font-size:14px; }
+  .bt-meta{ display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+  .bt-meta span{
+    padding:4px 10px; border-radius:999px; background:#f4f7fb; border:1px solid #e8edf3; color:#5b6b7c; font-size:12.5px; font-weight:700;
+  }
+  .bt-meta .on{ color:#166534; background:rgba(22,163,74,.1); border-color:transparent; }
+  .bt-meta .off{ color:#b42318; background:#fff5f5; border-color:transparent; }
+  .bt-row{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .bt-row form{ margin:0; display:flex; }
+  .bt-row a:hover{ border-color:#e07b2a; color:#c96416; }
+  .bt-row .warn{ color:#c96416; }
+  .bt-row .warn:hover{ border-color:#e07b2a; background:#fff7f0; }
+  .bt-empty{ padding:28px 16px; text-align:center; background:#fff; border:1px dashed #d7dee7; border-radius:18px; color:#5b6b7c; }
+  @media (max-width: 800px){
+    .bt-grid, .bt-card{ grid-template-columns:1fr; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-section">
+  <a class="bt-back" href="{% url 'admin_research_hub' %}"><i class="fas fa-arrow-left"></i> Research and open source</a>
+  <div class="bt-head">
+    <div>
+      <h1>Broad topics</h1>
+      <p>Add a topic or turn one off. Disabled topics stay in the list and are hidden from the public pages.</p>
+    </div>
+    <div class="bt-count">{{ topics|length }} topic{{ topics|length|pluralize }}</div>
+  </div>
+
+  <form class="bt-form" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="add">
+    <h2>Add a topic</h2>
+    <div class="bt-grid">
+      <div>
+        <label for="bt-name">Name</label>
+        <input id="bt-name" type="text" name="name" required>
+      </div>
+      <div>
+        <label for="bt-slug">Slug</label>
+        <input id="bt-slug" type="text" name="slug" placeholder="Filled from the name if left blank">
+      </div>
+      <div>
+        <label for="bt-sort">Sort</label>
+        <input id="bt-sort" type="number" name="sort_order" value="0">
+      </div>
+      <div class="bt-span">
+        <label for="bt-desc">Description</label>
+        <textarea id="bt-desc" name="description" rows="2"></textarea>
+      </div>
+    </div>
+    <div class="bt-actions">
+      <button type="submit">Add topic</button>
+    </div>
+  </form>
+
+  <div class="bt-list">
+    {% for t in topics %}
+    <article class="bt-card">
+      <div>
+        <h3>{{ t.name }}</h3>
+        {% if t.description %}<p>{{ t.description|truncatewords:22 }}</p>{% endif %}
+        <div class="bt-meta">
+          <span>{{ t.slug }}</span>
+          <span>Sort {{ t.sort_order }}</span>
+          <span class="{% if t.is_active %}on{% else %}off{% endif %}">{% if t.is_active %}Active{% else %}Disabled{% endif %}</span>
+        </div>
+      </div>
+      <div class="bt-row">
+        <a href="{% url 'admin_research_broad_topic_edit' t.pk %}">Edit</a>
+        <a href="{% url 'admin_research_broad_topic_submissions' t.pk %}">Submissions</a>
+        <form method="post">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="toggle">
+          <input type="hidden" name="pk" value="{{ t.pk }}">
+          <button type="submit" class="warn">{% if t.is_active %}Disable{% else %}Enable{% endif %}</button>
+        </form>
+      </div>
+    </article>
+    {% empty %}
+    <div class="bt-empty">No broad topics yet.</div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,40 @@
+/* ===================================================
+   UI THEME — Bharat Internet Governance Sphere
+=================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root{
+  --primary:#1e40af;     /* Gov Blue */
+  --secondary:#2563eb;
+  --accent:#0ea5e9;
+  --soft-bg:#f5f9ff;
+  --card-bg:#ffffff;
+  --text-dark:#0f172a;
+  --text-muted:#475569;
+  --border:#e2e8f0;
+  --hover-bg:#eff6ff;
+  --radius:16px;
+  --shadow:0 10px 30px rgba(30,64,175,.08);
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:'Inter',system-ui,sans-serif;
+  background:linear-gradient(180deg,#f8fbff,#eef4ff);
+  color:var(--text-dark);
+  line-height:1.6;
+}
+
+a{ text-decoration:none; color:inherit; }
+
+img{ max-width:100%; display:block; }
+
+.site-main{
+  min-height:80vh;
+}

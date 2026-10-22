@@ -1,0 +1,89 @@
+/* ================= HERO ================= */
+.hero{
+  min-height:100vh;
+  position:relative;
+  background:
+    linear-gradient(
+      rgba(2,6,23,.55),
+      rgba(2,6,23,.75)
+    ),
+    url("/static/img/bg.png") center/cover no-repeat;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  overflow:hidden;
+}
+
+/* TEXT CONTAINER */
+.hero-content{
+  max-width:900px;
+  padding:50px 40px;
+  background:rgba(2,6,23,.45);   /* 🔥 KEY FIX */
+  backdrop-filter:blur(6px);
+  border-radius:26px;
+  animation:fadeUp 1.3s cubic-bezier(.19,1,.22,1);
+}
+
+/* HEADLINE */
+.hero h1{
+  font-size:64px;
+  font-weight:900;
+  color:#ffffff;
+  line-height:1.15;
+}
+
+/* SUBTEXT */
+.hero p{
+  font-size:20px;
+  color:#e5e7eb;
+  margin-top:18px;
+}
+
+/* ACTIONS */
+.hero-actions{
+  margin-top:34px;
+  display:flex;
+  justify-content:center;
+  gap:18px;
+  flex-wrap:wrap;
+}
+
+/* BUTTONS */
+.hero-btn{
+  padding:14px 30px;
+  border-radius:14px;
+  font-weight:700;
+  text-decoration:none;
+  transition:.35s cubic-bezier(.19,1,.22,1);
+}
+
+/* PRIMARY */
+.hero-btn.primary{
+  background:#b87333;   /* copper */
+  color:#fff;
+}
+
+/* SECONDARY */
+.hero-btn.secondary{
+  border:1.5px solid rgba(255,255,255,.8);
+  color:#fff;
+}
+
+/* HOVER */
+.hero-btn:hover{
+  transform:translateY(-4px) scale(1.04);
+  box-shadow:0 18px 40px rgba(0,0,0,.45);
+}
+
+/* ENTRY ANIMATION */
+@keyframes fadeUp{
+  from{opacity:0; transform:translateY(50px);}
+  to{opacity:1; transform:translateY(0);}
+}
+
+/* MOBILE */
+@media(max-width:768px){
+  .hero h1{font-size:42px}
+  .hero-content{padding:40px 26px}
+}

@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ profile.name }} — IG Portal{% endblock %}
+
+{% block content %}
+
+<!-- ================= HERO SECTION ================= -->
+<section class="fellow-hero"
+  style="background-image: url('{% static 'img/rm373batch2-07.jpg' %}');">
+
+  <div class="fellow-hero-overlay">
+
+    <div class="fellow-hero-card">
+
+      <!-- LEFT: PROFILE IMAGE -->
+      <div class="fellow-avatar">
+        {% if profile.photo %}
+          <img src="{{ MEDIA_URL }}{{ profile.photo }}" alt="{{ profile.name }}">
+        {% else %}
+          <img src="https://ui-avatars.com/api/?name={{ profile.name|urlencode }}&background=0b3c6d&color=ffffff&size=300"
+         alt="{{ profile.name }}">
+          
+        {% endif %}
+      </div>
+
+      <!-- RIGHT: NAME AND DETAILS -->
+      <div class="fellow-basic">
+        <h1 class="fellow-name">{{ profile.name }}</h1>
+
+        <p class="fellow-role">
+          {{ profile.programme|default:"Research Fellow — Internet Governance" }}
+        </p>
+
+        <ul class="fellow-meta">
+          <li>
+            <strong>Cohort:</strong> {{ profile.cohort }}
+          </li>
+
+          {% if profile.linkedin_url %}
+          <li>
+            <strong>LinkedIn:</strong>
+            <a href="{{ profile.linkedin_url }}" target="_blank">
+              View Profile
+            </a>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= DETAILS SECTION ================= -->
+<section class="fellow-detail-body">
+  <div class="fellow-container">
+
+    <!-- LEFT PANEL -->
+    <div class="fellow-info-panel">
+
+      <h3>Fields of Work</h3>
+
+      <div class="info-row">
+        <span>Programme</span>
+        <strong>{{ profile.programme|default:"—" }}</strong>
+      </div>
+
+      <div class="info-row">
+        <span>Research Topic</span>
+        <strong>{{ profile.research_topic|default:"—" }}</strong>
+      </div>
+
+      {% if profile.fields_of_work %}
+      <div class="info-row">
+        <span>Fields</span>
+        <strong>{{ profile.fields_of_work }}</strong>
+      </div>
+      {% endif %}
+
+     <!--  {% if profile.report %}
+      <div class="info-row">
+        <span>Report</span>
+        <strong>
+          <a href="{{ MEDIA_URL }}{{ profile.report }}" target="_blank">
+            Download Report
+          </a>
+        </strong>
+      </div>
+      {% endif %} -->
+
+    </div>
+
+    <!-- RIGHT CONTENT -->
+    <div class="fellow-content">
+
+      {% if profile.biography %}
+      <h2>Biography</h2>
+      <p>{{ profile.biography|linebreaks }}</p>
+      {% endif %}
+
+      {% if profile.testimonial %}
+      <h2>Testimonial</h2>
+      <blockquote>
+        <i>{{ profile.testimonial|linebreaks }}</i>
+      </blockquote>
+      {% endif %}
+
+    </div>
+
+  </div>
+
+</section>
+
+{% endblock %}

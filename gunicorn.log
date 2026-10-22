@@ -1,0 +1,29 @@
+nohup: ignoring input
+[2026-06-23 10:08:37 +0530] [45771] [INFO] Starting gunicorn 26.0.0
+[2026-06-23 10:08:37 +0530] [45771] [INFO] Listening at: http://127.0.0.1:8000 (45771)
+[2026-06-23 10:08:37 +0530] [45771] [INFO] Using worker: sync
+[2026-06-23 10:08:37 +0530] [45777] [INFO] Booting worker with pid: 45777
+[2026-06-23 10:08:37 +0530] [45771] [INFO] Control socket listening at /root/.gunicorn/gunicorn.ctl
+[2026-10-05 14:18:22 +0530] [45771] [INFO] Handling signal: term
+[2026-10-05 14:18:22 +0530] [45777] [INFO] Worker exiting (pid: 45777)
+SAVE READ TIME CALLED
+b'{"blog_id":"4","seconds":2}'
+SAVE READ TIME CALLED
+b'{"blog_id":"4","seconds":2}'
+SAVE READ TIME CALLED
+b'{"blog_id":"34","seconds":2}'
+SAVE READ TIME CALLED
+b'{"blog_id":"34","seconds":2}'
+this funtion is calling
+this funtion is calling
+testsigmember@nixi.in
+test@123
+testsigmember@nixi.in
+test@123
+SAVE READ TIME CALLED
+b'{"blog_id":"10","seconds":2}'
+SAVE READ TIME CALLED
+b'{"blog_id":"35","seconds":2}'
+SAVE READ TIME CALLED
+b'{"blog_id":"35","seconds":2}'
+[2026-10-05 14:18:22 +0530] [45771] [INFO] Shutting down: Master

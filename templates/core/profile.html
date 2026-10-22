@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Profile — Bharat IG Sphere{% endblock %}
+{% block body_class %}lp-page{% endblock %}
+
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'UI-CSS/landing.css' %}">
+<link rel="stylesheet" href="{% static 'UI-CSS/events.css' %}">
+<link rel="stylesheet" href="{% static 'UI-CSS/login.css' %}">
+<link rel="stylesheet" href="{% static 'UI-CSS/profile.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<section class="events-header">
+  <div class="events-header-bg"></div>
+  <div class="events-header-content">
+    <h1>Profile</h1>
+    <p>Your registration details and submissions.</p>
+  </div>
+</section>
+
+<section class="pf-page">
+  <div class="pf-wrap">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="lg-alert lg-alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+    {% endif %}
+
+    <article class="pf-card">
+      <h2>Registration details</h2>
+      <form method="post">
+        {% csrf_token %}
+        <div class="pf-grid">
+          <div>
+            <label for="pf-email">Email</label>
+            <input id="pf-email" type="email" value="{{ account.email }}" readonly>
+          </div>
+          <div>
+            <label for="pf-org">Organization</label>
+            <input id="pf-org" type="text" name="company_name" value="{{ account.company_name }}">
+          </div>
+          <div>
+            <label for="pf-mobile">Mobile</label>
+            <input id="pf-mobile" type="text" name="mobile" value="{{ account.mobile }}" inputmode="numeric" maxlength="10" pattern="[0-9]{10}" title="Enter a 10-digit mobile number.">
+          </div>
+          <div>
+            <label for="pf-role">Designation</label>
+            <input id="pf-role" type="text" name="designation" value="{{ account.designation }}">
+          </div>
+          <div class="pf-span">
+            <label for="pf-state">State</label>
+            <input id="pf-state" type="text" name="state" value="{{ account.state }}">
+          </div>
+        </div>
+        <button type="submit">Update details</button>
+      </form>
+    </article>
+
+    <article class="pf-card">
+      <h2>Research papers</h2>
+      {% for paper in papers %}
+      <div class="pf-row">
+        <div>
+          <strong>{{ paper.title }}</strong>
+          <span>{{ paper.uploaded_at|date:"d M Y" }}</span>
+        </div>
+        <em>{{ paper.get_status_display }}</em>
+      </div>
+      {% empty %}
+      <p class="pf-empty">You have not submitted a research paper yet.</p>
+      {% endfor %}
+    </article>
+
+    <article class="pf-card">
+      <h2>Open source</h2>
+      {% for item in contributions %}
+      <div class="pf-row">
+        <div>
+          <strong>{{ item.title }}</strong>
+          <span>{{ item.project.name }} · {{ item.uploaded_at|date:"d M Y" }}</span>
+        </div>
+        <em>{{ item.get_status_display }}</em>
+      </div>
+      {% empty %}
+      <p class="pf-empty">You have not submitted an open source contribution yet.</p>
+      {% endfor %}
+    </article>
+
+    <article class="pf-card">
+      <h2>Blogs</h2>
+      {% for blog in blogs %}
+      <div class="pf-row">
+        <div>
+          <strong>{{ blog.title }}</strong>
+          <span>{{ blog.created_at|date:"d M Y" }}</span>
+        </div>
+        <em>{{ blog.status }}</em>
+      </div>
+      {% empty %}
+      <p class="pf-empty">You have not submitted a blog yet.</p>
+      {% endfor %}
+    </article>
+  </div>
+</section>
+
+<footer class="lp-footer">
+  <div class="lp-footer-grid">
+    <div class="lp-footer-brand">
+      <img src="{% static 'img/ig-logo3.jpeg' %}" alt="Bharat IG">
+      <div>
+        <strong>Bharat Internet Governance Sphere</strong>
+        <p>Connection, policy, people and participation in India's digital governance.</p>
+      </div>
+    </div>
+    <div>
+      <h4>Explore</h4>
+      <a href="{% url 'home' %}">Home</a>
+      <a href="{% url 'events' %}">Events</a>
+      <a href="{% url 'research_hub' %}">Research</a>
+      <a href="{% url 'blogs' %}">Blogs</a>
+    </div>
+    <div>
+      <h4>Participate</h4>
+      <a href="{% url 'consultations' %}">Stakeholder Engagement</a>
+      <a href="{% url 'capacity' %}">Capacity Building</a>
+      <a href="{% url 'global' %}">India at Global Forums</a>
+      <a href="{% url 'sig' %}">SIG</a>
+    </div>
+    <div>
+      <h4>Connect</h4>
+      <p>Stay connected with India's internet governance community.</p>
+      <div class="lp-social">
+        <a href="https://x.com" target="_blank" rel="noopener" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
+        <a href="https://www.linkedin.com" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+        <a href="https://www.youtube.com" target="_blank" rel="noopener" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+      </div>
+    </div>
+  </div>
+  <div class="lp-footer-bar">
+    <span>© {% now "Y" %} Bharat Internet Governance Sphere (BIG-S). All rights reserved.</span>
+    <span>Privacy Policy · Terms of Use · Contact Us</span>
+  </div>
+</footer>
+{% endblock %}

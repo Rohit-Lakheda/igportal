@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  {% load static %}
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>{% block title %}Bharat Internet Governance Sphere{% endblock %}</title>
+
+  <!-- SEO -->
+  <meta name="theme-color" content="#f8fafc">
+  <meta name="description" content="Bharat Internet Governance Sphere — India’s Digital Governance Network">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- Core UI CSS -->
+  <link rel="stylesheet" href="{% static 'UI-CSS/nav.css' %}">
+  <link rel="stylesheet" href="{% static 'UI-CSS/home.css' %}">
+  <!-- <link rel="stylesheet" href="{% static 'UI-CSS/home-advanced.css' %}"> -->
+  <link rel="stylesheet" href="{% static 'UI-CSS/events.css' %}">
+
+  <link rel="stylesheet" href="{% static 'UI-CSS/capacity.css' %}">
+  <link rel="stylesheet" href="{% static 'UI-CSS/blogs.css' %}">
+  <!-- <link rel="stylesheet" href="{% static 'UI-CSS/consultations.css' %}"> -->
+  <!-- <link rel="stylesheet" href="{% static 'UI-CSS/events-advance.css' %}"> -->
+  {% block extra_css %}{% endblock %}
+
+
+  
+  <style>
+
+.focus-card {
+  background: #ffffff;
+  padding: 28px 24px;
+  border-radius: 24px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.12);
+  transition: .45s cubic-bezier(.19,1,.22,1);
+}
+.focus-card p {
+  font-size: 16px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  text-align: left;
+  margin: 0;
+  width: 100%;
+  max-width: 100%;
+  text-wrap: pretty;
+}
+
+..focus-card p {
+  font-size: 16px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  text-align: left;
+  margin: 0;
+  max-width: 300px;
+}
+
+.flow-item p{
+  color:var(--text-muted);
+  font-size:17px;
+  line-height:1.7;
+  text-align:justify;
+  margin:0;
+}
+
+
+
+
+
+
+.about-points p {
+  position: relative;
+  padding-left: 14px;
+  margin-bottom: 4px;
+}
+
+.about-points p::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.65em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+
+    .glass-brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    text-decoration:none;
+    color:inherit;
+}
+
+
+
+
+  </style>
+</head>
+
+<body class="{% block body_class %}{% endblock %}">
+
+  <!-- =========================================================
+     GLASS CAPSULE NAVIGATION SYSTEM
+========================================================= -->
+  <header class="glass-header">
+
+    <div class="glass-wrapper">
+
+      <!-- BRAND -->
+   <a href="{% url 'home' %}" class="glass-brand text-decoration-none">
+    <img src="{% static 'img/ig-logo3.jpeg' %}" class="glass-logo" alt="Bharat IG Logo">
+
+    <div class="glass-text">
+        <div class="glass-title">Bharat Internet Governance Sphere</div>
+        <div class="glass-sub">India’s Digital Governance Network</div>
+    </div>
+
+      <!-- NAVIGATION -->
+      <div class="glass-nav-box">
+        <nav class="glass-nav" id="glassNav">
+
+          <a href="{% url 'home' %}" class="glass-link {% if request.path == '/' %}active{% endif %}">Home</a>
+          <a href="{% url 'events' %}"
+            class="glass-link {% if '/events/' in request.path %}active{% endif %}">Events</a>
+          <a href="{% url 'consultations' %}"
+            class="glass-link {% if '/consultations/' in request.path or '/proceedings/' in request.path %}active{% endif %}">Stakeholder
+            Engagement</a>
+
+          <!-- Research Dropdown -->
+          <!-- <div class="glass-dropdown">
+            <span class="glass-link {% if '/research/' in request.path %}active{% endif %}">Research</span>
+            <div class="glass-dropdown-menu">
+              <a href="{% url 'research_hub' %}">Research overview</a>
+              <a href="{% url 'research_repository_index' %}">Research repository</a>
+              <a href="{% url 'open_source_index' %}">Open source projects</a>
+            </div>
+          </div> -->
+
+
+          <a href="{% url 'research_hub' %}" class="glass-link {% if '/research/' in request.path %}active{% endif %}">Research</a>
+
+<!--  	 <div class="glass-dropdown">
+           <span class="glass-link {% if '/capacity/' in request.path %}active{% endif %}">Capacity Building</span>
+            <div class="glass-dropdown-menu">
+                            <a target="_blank" rel="noopener noreferrer" href="https://portal.aiori.in/">AIORI Portal</a>
+              <a target="_blank" rel="noopener noreferrer" href="https://nixi.in/scheme/">NIXI internship scheme</a>
+            </div>
+          </div> -->
+
+
+<div class="glass-dropdown">
+    <!-- Clickable main menu -->
+    <a href="{% url 'capacity' %}" 
+       class="glass-link {% if '/capacity/' in request.path %}active{% endif %}">
+       Capacity Building
+    </a>
+
+    <!-- Dropdown Menu -->
+    <div class="glass-dropdown-menu">
+        <a target="_blank" rel="noopener noreferrer" href="https://portal.aiori.in/">
+            AIORI Portal
+        </a>
+
+        <a target="_blank" rel="noopener noreferrer" href="https://internship.nixi.in/">
+            NIXI Internship Scheme
+        </a>
+    </div>
+</div>
+
+
+
+
+          <a href="{% url 'global' %}" class="glass-link {% if '/global-forums/' in request.path %}active{% endif %}">India at Global Forums</a>
+          <a href="{% url 'sig' %}" class="glass-link {% if '/sig/' in request.path %}active{% endif %}">SIG</a>
+  <a href="{% url 'blogs' %}" 
+class="glass-link {% if '/blogs/' in request.path %}active{% endif %}">
+Blogs
+</a>
+
+
+        </nav>
+      </div>
+
+      <!-- USER / AUTH -->
+      <div class="glass-user">
+
+        <div class="user-icon" id="userToggle" aria-label="User menu">
+          <i class="fa fa-user"></i>
+        </div>
+
+        <div class="user-menu" id="userMenu">
+
+          {% if request.session.member_uuid and request.session.member_role|default:''|lower == 'member' %}
+          <a href="{% url 'research_repository_submit' %}"><i class="fa fa-file-lines"></i> Submit research paper</a>
+          <a href="{% url 'open_source_submit' %}"><i class="fa fa-code-branch"></i> Submit open source</a>
+          <a href="{% url 'member_profile' %}"><i class="fa fa-user"></i> Profile</a>
+          <div class="divider"></div>
+          <a href="{% url 'sig_logout' %}" class="danger"><i class="fa fa-sign-out"></i> Logout</a>
+          {% else %}
+          <a href="{% url 'login' %}"><i class="fa fa-sign-in"></i> Login</a>
+          <a href="{% url 'sigregister' %}"><i class="fa fa-user-plus"></i> Sign Up</a>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- MOBILE TOGGLE -->
+      <div class="glass-toggle" id="glassToggle" aria-label="Open navigation">
+        <span></span><span></span><span></span>
+      </div>
+
+    </div>
+
+  </header>
+
+  <!-- =========================================================
+     MAIN CONTENT
+========================================================= -->
+  <main class="site-main">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- =========================================================
+     FOOTER
+========================================================= -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p>© Bharat Internet Governance Sphere — Managed by NIXI, Supported by MeitY</p>
+    </div>
+  </footer>
+
+  <!-- =========================================================
+     UI SCRIPTS (SECURE + CLEAN)
+========================================================= -->
+
+  <script>
+    /* Mobile Navigation */
+    const glassToggle = document.getElementById("glassToggle");
+    const glassNav = document.getElementById("glassNav");
+
+    if (glassToggle) {
+      glassToggle.addEventListener("click", () => {
+        glassNav.classList.toggle("open");
+      });
+    }
+
+    /* User Menu */
+    const userToggle = document.getElementById("userToggle");
+    const userMenu = document.getElementById("userMenu");
+
+
+    if (userToggle) {
+      userToggle.addEventListener("click", () => {
+        userMenu.style.display = (userMenu.style.display === "block") ? "none" : "block";
+      });
+    }
+
+    document.addEventListener("click", (e) => {
+      if (userToggle && !userToggle.contains(e.target) && !userMenu.contains(e.target)) {
+        userMenu.style.display = "none";
+      }
+    });
+
+    /* Scroll Effect */
+    window.addEventListener("scroll", () => {
+      document.body.classList.toggle("scrolled", window.scrollY > 40);
+    });
+  </script>
+
+
+  <script>
+    document.querySelectorAll('.ig-toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const desc = btn.closest('.ig-proceeding').querySelector('.ig-proceeding-desc');
+        const open = desc.style.display === 'block';
+        desc.style.display = open ? 'none' : 'block';
+        btn.innerHTML = open ? '▾' : '▴';
+      });
+    });
+  </script>
+
+
+  <script>
+    /* Scroll Reveal Animation */
+    const reveals = document.querySelectorAll(".reveal");
+
+    function revealOnScroll() {
+      for (let i = 0; i < reveals.length; i++) {
+        const winH = window.innerHeight;
+        const top = reveals[i].getBoundingClientRect().top;
+        if (top < winH - 80) {
+          reveals[i].classList.add("active");
+        }
+      }
+    }
+
+    window.addEventListener("scroll", revealOnScroll);
+    revealOnScroll();
+  </script>
+
+
+
+
+
+  <!-- event page -->
+
+  <script>
+    function filterEvents(type, btn) {
+      const cards = document.querySelectorAll(".event-card");
+      const today = new Date().toISOString().split('T')[0];
+
+      document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+
+      cards.forEach(card => {
+        const date = card.getAttribute("data-date");
+
+        if (type === "all") {
+          card.style.display = "block";
+        }
+        if (type === "upcoming") {
+          card.style.display = (date >= today) ? "block" : "none";
+        }
+        if (type === "past") {
+          card.style.display = (date < today) ? "block" : "none";
+        }
+      });
+    }
+  </script>
+
+
+
+</body>
+<!-- ================= GLOBAL ANIMATED BACKGROUND ================= -->
+<div class="global-bg">
+  <div class="bg-layer layer1"></div>
+  <div class="bg-layer layer2"></div>
+  <div class="bg-layer layer3"></div>
+</div>
+
+</html>

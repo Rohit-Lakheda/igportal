@@ -1,0 +1,85 @@
+
+{% block title %}SIG Observers{% endblock %}
+
+{% block content %}
+
+<style>
+  .table-container {
+    max-width: 1100px;
+    margin: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  th, td {
+    padding: 12px 14px;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 0.9rem;
+  }
+
+  th {
+    background: #f9fafb;
+    font-weight: 600;
+    color: #374151;
+  }
+
+  tr:hover {
+    background: #f3f4f6;
+  }
+
+  .page-title {
+    max-width: 1100px;
+    margin: 0 auto 16px;
+    font-size: 1.5rem;
+    color: #111827;
+  }
+</style>
+
+<h2 class="page-title">SIG Observer Applications</h2>
+
+<div class="table-container">
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Mobile</th>
+        <th>SIG</th>
+        <th>Work Experience</th>
+        <th>LinkedIn</th>
+        <th>Submitted On</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for o in observers %}
+      <tr>
+        <td>{{ o.first_name }} {{ o.last_name }}</td>
+        <td>{{ o.mobile }}</td>
+        <td>{{ o.sig }}</td>
+        <td>{{ o.work_experience|default:"—" }}</td>
+        <td>
+          {% if o.linkedin %}
+            <a href="{{ o.linkedin }}" target="_blank">View</a>
+          {% else %}
+            —
+          {% endif %}
+        </td>
+        <td>{{ o.created_at|date:"d M Y, H:i" }}</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="6" style="text-align:center;">No applications yet</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

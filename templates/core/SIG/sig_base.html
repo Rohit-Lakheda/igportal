@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}SIG Dashboard — Bharat IG Sphere{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'UI-CSS/sig-dashboard.css' %}">
+</head>
+<body class="sd-body">
+  <aside class="sd-side">
+    <a class="sd-brand" href="{% url 'home' %}">
+      <img src="{% static 'img/ig-logo3.jpeg' %}" alt="Bharat IG">
+      <div>
+        <strong>Bharat IG Sphere</strong>
+        <span>SIG member area</span>
+      </div>
+    </a>
+    <div class="sd-who">
+      <strong>{{ request.user.get_full_name|default:request.user.username }}</strong>
+      <span>{{ request.user.email }}</span>
+    </div>
+    <nav class="sd-nav">
+      <a href="{% url 'sig_dashboard' %}?section=profile" class="{% if request.GET.section == 'profile' or not request.GET.section %}is-on{% endif %}">My profile</a>
+      <a href="{% url 'sig_dashboard' %}?section=fi" class="{% if request.GET.section == 'fi' %}is-on{% endif %}">SIG-FI meetings</a>
+      <a href="{% url 'sig_dashboard' %}?section=tps" class="{% if request.GET.section == 'tps' %}is-on{% endif %}">SIG-IPS meetings</a>
+      <a href="{% url 'sig_dashboard' %}?section=dnn" class="{% if request.GET.section == 'dnn' %}is-on{% endif %}">SIG-DNN meetings</a>
+      <a href="{% url 'sig_dashboard' %}?section=joint" class="{% if request.GET.section == 'joint' %}is-on{% endif %}">Joint meetings</a>
+      <a href="{% url 'sig_dashboard' %}?section=consultations" class="{% if request.GET.section == 'consultations' %}is-on{% endif %}">Consultations</a>
+      <a href="{% url 'sig_dashboard' %}?section=events" class="{% if request.GET.section == 'events' %}is-on{% endif %}">Events</a>
+    </nav>
+    <a class="sd-logout" href="{% url 'sig_logout' %}">Log out</a>
+  </aside>
+  <main class="sd-main">
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

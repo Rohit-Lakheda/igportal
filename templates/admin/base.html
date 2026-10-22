@@ -1,0 +1,225 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Admin{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/admin/admin-layout.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admin/events.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admin/admin-requests.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    {% block admin_css %}{% endblock %}
+</head>
+
+<body>
+
+    <div class="layout">
+
+        <!-- Mobile Overlay -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- ================= SIDEBAR ================= -->
+        <aside class="sidebar" id="sidebar">
+
+            <div class="sidebar-header">
+                <img src="{% static 'img/ig-logo3.jpeg' %}" class="logo">
+                <h4>IG Portal</h4>
+            </div>
+
+            <nav class="menu" id="sideMenu">
+
+                <a href="{% url 'admin_dashboard' %}"
+                    class="menu-item {% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}">
+                    <i class="fas fa-gauge"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <div class="nav-group {% if request.resolver_match.url_name == 'admin_member' or request.resolver_match.url_name == 'admin_membership_requests' or request.resolver_match.url_name == 'admin_sig_member_requests' %}is-open{% endif %}">
+                    <button type="button" class="nav-group-btn" aria-expanded="false">
+                        <i class="fas fa-users"></i>
+                        <span>People</span>
+                        <i class="fas fa-chevron-down chev"></i>
+                    </button>
+                    <div class="nav-group-list">
+                        <a href="{% url 'admin_member' %}" class="{% if request.resolver_match.url_name == 'admin_member' %}active{% endif %}">Members</a>
+                        <a href="{% url 'admin_membership_requests' %}" class="{% if request.resolver_match.url_name == 'admin_membership_requests' %}active{% endif %}">Member requests</a>
+                        <a href="{% url 'admin_sig_member_requests' %}" class="{% if request.resolver_match.url_name == 'admin_sig_member_requests' %}active{% endif %}">SIG profile requests</a>
+                    </div>
+                </div>
+
+                <div class="nav-group {% if request.resolver_match.url_name == 'admin_events' or request.resolver_match.url_name == 'admin_event_add' or request.resolver_match.url_name == 'admin_event_edit' or request.resolver_match.url_name == 'admin_meetings' or request.resolver_match.url_name == 'admin_sig_events' or request.resolver_match.url_name == 'admin_sig_event_add' or request.resolver_match.url_name == 'admin_sig_event_edit' %}is-open{% endif %}">
+                    <button type="button" class="nav-group-btn" aria-expanded="false">
+                        <i class="fas fa-calendar"></i>
+                        <span>Events</span>
+                        <i class="fas fa-chevron-down chev"></i>
+                    </button>
+                    <div class="nav-group-list">
+                        <a href="{% url 'admin_events' %}" class="{% if request.resolver_match.url_name == 'admin_events' or request.resolver_match.url_name == 'admin_event_add' or request.resolver_match.url_name == 'admin_event_edit' %}active{% endif %}">Public events</a>
+                        <a href="{% url 'admin_sig_events' %}" class="{% if request.resolver_match.url_name == 'admin_sig_events' or request.resolver_match.url_name == 'admin_sig_event_add' or request.resolver_match.url_name == 'admin_sig_event_edit' %}active{% endif %}">SIG events</a>
+                        <a href="{% url 'admin_meetings' %}" class="{% if request.resolver_match.url_name == 'admin_meetings' %}active{% endif %}">Meetings</a>
+                    </div>
+                </div>
+
+                <div class="nav-group {% if 'consultation' in request.resolver_match.url_name %}is-open{% endif %}">
+                    <button type="button" class="nav-group-btn" aria-expanded="false">
+                        <i class="fas fa-comments"></i>
+                        <span>Consultations</span>
+                        <i class="fas fa-chevron-down chev"></i>
+                    </button>
+                    <div class="nav-group-list">
+                        <a href="{% url 'stakeholder_consultation' %}" class="{% if 'stakeholder_consultation' in request.resolver_match.url_name %}active{% endif %}">Stakeholder</a>
+                        <a href="{% url 'admin_sig_consultations' %}" class="{% if 'admin_sig_consultation' in request.resolver_match.url_name %}active{% endif %}">SIG consultations</a>
+                    </div>
+                </div>
+
+                <div class="nav-group {% if request.resolver_match.url_name|slice:':14' == 'admin_research' or request.resolver_match.url_name == 'admin_capacity_building' or request.resolver_match.url_name == 'admin_blogs' or 'admin_global' in request.resolver_match.url_name %}is-open{% endif %}">
+                    <button type="button" class="nav-group-btn" aria-expanded="false">
+                        <i class="fas fa-book-open"></i>
+                        <span>Content</span>
+                        <i class="fas fa-chevron-down chev"></i>
+                    </button>
+                    <div class="nav-group-list">
+                        <a href="{% url 'admin_research_hub' %}" class="{% if request.resolver_match.url_name|slice:':14' == 'admin_research' %}active{% endif %}">Research and open source</a>
+                        <a href="{% url 'admin_capacity_building' %}" class="{% if request.resolver_match.url_name == 'admin_capacity_building' %}active{% endif %}">Capacity building</a>
+                        <a href="{% url 'admin_blogs' %}" class="{% if request.resolver_match.url_name == 'admin_blogs' %}active{% endif %}">Blogs</a>
+                        <a href="{% url 'admin_global_forums' %}" class="{% if 'admin_global' in request.resolver_match.url_name %}active{% endif %}">Global forums</a>
+                    </div>
+                </div>
+
+            </nav>
+
+            <div class="account" id="account">
+                <button type="button" class="account-btn" id="accountBtn" aria-expanded="false" aria-controls="accountMenu">
+                    <i class="fas fa-user-circle" aria-hidden="true"></i>
+                    <span>Account</span>
+                    <i class="fas fa-chevron-up account-caret" aria-hidden="true"></i>
+                </button>
+                <div class="account-menu" id="accountMenu">
+                    <a href="{% url 'admin_profile' %}"><i class="fas fa-user" aria-hidden="true"></i> Profile</a>
+                    <a href="#"><i class="fas fa-question-circle" aria-hidden="true"></i> Help</a>
+                    <a class="logout" href="{% url 'admin_logout' %}"><i class="fas fa-sign-out-alt" aria-hidden="true"></i> Logout</a>
+                </div>
+            </div>
+
+        </aside>
+
+
+        <!-- ================= MAIN AREA ================= -->
+        <div class="main">
+
+            <!-- HEADER -->
+            <header class="topbar">
+                <button class="toggle" type="button" id="navToggle" aria-label="Open pages" aria-expanded="false">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <div class="user">
+                    <i class="fas fa-user-circle"></i>
+                    Admin
+                </div>
+            </header>
+
+            <!-- PAGE CONTENT -->
+            <section class="content">
+                {% if messages %}
+                <div class="mb-3">
+                    {% for message in messages %}
+                    <div class="alert alert-{% if message.tags == 'error' %}danger{% elif message.tags == 'warning' %}warning{% elif message.tags == 'success' %}success{% else %}info{% endif %} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                {% block content %}{% endblock %}
+            </section>
+
+        </div>
+
+    </div>
+
+    <script>
+        (function () {
+            var sidebar = document.getElementById("sidebar");
+            var overlay = document.getElementById("sidebarOverlay");
+            var toggle = document.getElementById("navToggle");
+            var account = document.getElementById("account");
+            var accountBtn = document.getElementById("accountBtn");
+
+            function navOpen() {
+                return sidebar.classList.contains("is-open");
+            }
+
+            function setNav(open) {
+                sidebar.classList.toggle("is-open", open);
+                overlay.classList.toggle("active", open);
+                toggle.setAttribute("aria-expanded", open ? "true" : "false");
+            }
+
+            toggle.addEventListener("click", function () {
+                if (window.innerWidth > 900) return;
+                setNav(!navOpen());
+            });
+
+            overlay.addEventListener("click", function () {
+                setNav(false);
+            });
+
+            sidebar.querySelectorAll(".menu a").forEach(function (link) {
+                link.addEventListener("click", function () {
+                    if (window.innerWidth <= 900) setNav(false);
+                });
+            });
+
+            var groups = sidebar.querySelectorAll(".nav-group");
+
+            function closeMenus(except) {
+                groups.forEach(function (group) {
+                    if (group === except) return;
+                    group.classList.remove("is-open");
+                    group.querySelector(".nav-group-btn").setAttribute("aria-expanded", "false");
+                });
+                if (except !== account) {
+                    account.classList.remove("is-open");
+                    accountBtn.setAttribute("aria-expanded", "false");
+                }
+            }
+
+            groups.forEach(function (group) {
+                var button = group.querySelector(".nav-group-btn");
+                if (group.classList.contains("is-open")) {
+                    button.setAttribute("aria-expanded", "true");
+                }
+                button.addEventListener("click", function () {
+                    var willOpen = !group.classList.contains("is-open");
+                    closeMenus(willOpen ? group : null);
+                    group.classList.toggle("is-open", willOpen);
+                    button.setAttribute("aria-expanded", willOpen ? "true" : "false");
+                });
+            });
+
+            accountBtn.addEventListener("click", function (event) {
+                event.stopPropagation();
+                var willOpen = !account.classList.contains("is-open");
+                closeMenus(willOpen ? account : null);
+                account.classList.toggle("is-open", willOpen);
+                accountBtn.setAttribute("aria-expanded", willOpen ? "true" : "false");
+            });
+
+            window.addEventListener("resize", function () {
+                if (window.innerWidth > 900) setNav(false);
+            });
+        })();
+    </script>
+
+    {% block admin_js %}{% endblock %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

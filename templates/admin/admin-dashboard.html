@@ -1,0 +1,257 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+
+{% block title %}Dashboard | Admin{% endblock %}
+
+{% block admin_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+    .dashboard-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s ease;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-3px);
+    }
+
+    .stat-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+    }
+
+    .stat-icon {
+        border: 2px solid #e07b2a;
+        color: #e07b2a;
+        background: #fff;
+    }
+
+    .stat-info {
+        flex: 1;
+    }
+
+    .stat-value {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #111827;
+    }
+
+    .stat-label {
+        font-size: 0.85rem;
+        color: #6b7280;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .quick-actions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 1rem;
+    }
+
+    .action-card {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        padding: 1.25rem;
+        text-align: center;
+        text-decoration: none;
+        color: #374151;
+        transition: all 0.2s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .action-card:hover {
+        border-color: #e07b2a;
+        background: #fff;
+        color: #c96416;
+        box-shadow: 0 4px 12px rgba(224, 123, 42, 0.12);
+    }
+
+    .action-card i {
+        font-size: 1.75rem;
+    }
+
+    .action-card span {
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    .activity-list {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .activity-item {
+        display: flex;
+        align-items: center;
+        padding: 1.25rem;
+        border-bottom: 1px solid #f3f4f6;
+        text-decoration: none;
+        color: inherit;
+    }
+    a.activity-item:hover {
+        background: #fafbfd;
+    }
+
+    .activity-item:last-child {
+        border-bottom: none;
+    }
+
+    .activity-indicator {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #f3f4f6;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+        font-size: 1rem;
+        color: #6b7280;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-section">
+
+    <div class="admin-header">
+        <div class="admin-header-title">
+            <h1>Dashboard</h1>
+            <p>Choose a section in the menu. Each page is a list you can open, add to, or review. When a form asks for a photo, use the pixel size shown under that field.</p>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="dashboard-stats mt-4">
+        <a href="{% url 'admin_events' %}" class="stat-card primary">
+            <div class="stat-icon"><i class="fas fa-calendar-alt"></i></div>
+            <div class="stat-info">
+                <div class="stat-value">{{ total_events|default:"0" }}</div>
+                <div class="stat-label">Events to publish</div>
+            </div>
+        </a>
+
+        <a href="{% url 'admin_member' %}" class="stat-card success">
+            <div class="stat-icon"><i class="fas fa-users"></i></div>
+            <div class="stat-info">
+                <div class="stat-value">{{ total_members|default:"0" }}</div>
+                <div class="stat-label">Member accounts</div>
+            </div>
+        </a>
+
+        <a href="{% url 'admin_membership_requests' %}" class="stat-card warning">
+            <div class="stat-icon"><i class="fas fa-clock"></i></div>
+            <div class="stat-info">
+                <div class="stat-value">{{ pending_requests|default:"0" }}</div>
+                <div class="stat-label">Requests to review</div>
+            </div>
+        </a>
+
+        <a href="{% url 'stakeholder_consultation' %}" class="stat-card info">
+            <div class="stat-icon"><i class="fas fa-comments"></i></div>
+            <div class="stat-info">
+                <div class="stat-value">{{ total_consultations|default:"0" }}</div>
+                <div class="stat-label">Consultations</div>
+            </div>
+        </a>
+
+        <a href="{% url 'admin_meetings' %}" class="stat-card dark">
+            <div class="stat-icon"><i class="fas fa-handshake"></i></div>
+            <div class="stat-info">
+                <div class="stat-value">{{ total_meetings|default:"0" }}</div>
+                <div class="stat-label">Meetings and files</div>
+            </div>
+        </a>
+
+        <a href="{% url 'admin_research_hub' %}" class="stat-card warning">
+            <div class="stat-icon"><i class="fas fa-book-open"></i></div>
+            <div class="stat-info">
+                <div class="stat-value">{{ research_queue_total|default:"0" }}</div>
+                <div class="stat-label">Papers waiting for approval</div>
+            </div>
+        </a>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="mb-5">
+        <h5 class="fw-bold mb-3">Start here</h5>
+        <div class="quick-actions-grid">
+            <a href="{% url 'admin_event_add' %}" class="action-card">
+                <i class="fas fa-calendar-plus"></i>
+                <span>Add Event</span>
+            </a>
+            <a href="{% url 'stakeholder_consultation_add' %}" class="action-card">
+                <i class="fas fa-comment-medical"></i>
+                <span>Add Consultation</span>
+            </a>
+            <a href="{% url 'admin_profile' %}" class="action-card">
+                <i class="fas fa-user-cog"></i>
+                <span>Profile Settings</span>
+            </a>
+            <a href="{% url 'admin_research_hub' %}" class="action-card">
+                <i class="fas fa-clipboard-check"></i>
+                <span>Research &amp; OSS approvals</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div>
+        <h5 class="fw-bold mb-3 text-secondary">Recent Activity</h5>
+        <div class="activity-list">
+            {% if recent_events %}
+            {% for event in recent_events %}
+            <a class="activity-item" href="{% url 'admin_event_edit' event.id %}">
+                <div class="activity-indicator">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <div>
+                    <div class="fw-semibold text-dark">{{ event.title }}</div>
+                    <div class="small text-muted">
+                        {% if event.event_type %}{{ event.event_type }} · {% endif %}
+                        Added {{ event.created_label }}
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+            {% else %}
+            <div class="activity-item py-4 justify-content-center text-muted">
+                <div class="text-center">
+                    <i class="fas fa-history fa-2x mb-2 opacity-25"></i>
+                    <p class="mb-0">No recent activity detected.</p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}

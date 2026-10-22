@@ -1,0 +1,109 @@
+{% extends "core/SIG/sig_base.html" %}
+{% block title %}SIG dashboard — Bharat IG Sphere{% endblock %}
+{% block content %}
+<div class="sd-top">
+  <div>
+    <h1>SIG dashboard</h1>
+    <p>Welcome back, {{ request.user.first_name|default:request.user.username }}.</p>
+  </div>
+  <span class="sd-mail">{{ request.user.email }}</span>
+</div>
+
+{% if messages %}
+<div class="sd-msgs">
+  {% for message in messages %}
+  <div class="sd-msg sd-msg-{{ message.tags }}">{{ message }}</div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<div class="sd-kpis">
+  <div class="sd-kpi"><span>FI meetings</span><strong>{{ meetings_fi|length }}</strong></div>
+  <div class="sd-kpi"><span>IPS meetings</span><strong>{{ meetings_tps|length }}</strong></div>
+  <div class="sd-kpi"><span>Consultations</span><strong>{{ consultations|length }}</strong></div>
+  <div class="sd-kpi"><span>Upcoming events</span><strong>{{ events|length }}</strong></div>
+</div>
+
+<div class="sd-panel">
+  {% with current=request.GET.section|default:"profile" %}
+    {% if current == "fi" %}
+      {% include "core/SIG/meeting_tab.html" with tab_title="SIG-FI meetings" meetings=meetings_fi section_key="fi" %}
+    {% elif current == "tps" %}
+      {% include "core/SIG/meeting_tab.html" with tab_title="SIG-IPS meetings" meetings=meetings_tps section_key="tps" %}
+    {% elif current == "dnn" %}
+      {% include "core/SIG/meeting_tab.html" with tab_title="SIG-DNN meetings" meetings=meetings_dnn section_key="dnn" %}
+    {% elif current == "joint" %}
+      {% include "core/SIG/meeting_tab.html" with tab_title="Joint meetings" meetings=meetings_joint section_key="joint" %}
+    {% elif current == "consultations" %}
+      <h2>Consultations</h2>
+      <div class="sd-list">
+        {% for conf in consultations %}
+        <article class="sd-card">
+          <h3>{{ conf.title }}</h3>
+          <p>{{ conf.description|truncatewords:28 }}</p>
+          <div class="sd-tags">
+            <span class="sd-tag">Deadline {{ conf.deadline|date:"d M Y" }}</span>
+            {% if conf.brief_document %}
+            <a class="sd-link" href="{{ conf.brief_document.url }}" target="_blank">View brief</a>
+            {% endif %}
+          </div>
+          <form method="post" action="{% url 'submit_internal_consultation_response' conf.id %}" enctype="multipart/form-data" class="sd-form">
+            {% csrf_token %}
+            <div>
+              <label for="des-{{ conf.id }}">Designation</label>
+              <input id="des-{{ conf.id }}" type="text" name="designation" required>
+            </div>
+            <div>
+              <label for="org-{{ conf.id }}">Organization</label>
+              <input id="org-{{ conf.id }}" type="text" name="organization" required>
+            </div>
+            <div>
+              <label for="res-{{ conf.id }}">Response</label>
+              <textarea id="res-{{ conf.id }}" name="response" rows="3" required></textarea>
+            </div>
+            <div>
+              <label for="doc-{{ conf.id }}">Supporting document <span class="sd-empty">optional</span></label>
+              <input id="doc-{{ conf.id }}" type="file" name="document">
+            </div>
+            <div>
+              <button type="submit" class="sd-btn">Submit response</button>
+            </div>
+          </form>
+        </article>
+        {% empty %}
+        <p class="sd-empty">No open consultations right now.</p>
+        {% endfor %}
+      </div>
+    {% elif current == "events" %}
+      <h2>Upcoming events</h2>
+      <div class="sd-grid">
+        {% for event in events %}
+        <article class="sd-card">
+          <h3>{{ event.title }}</h3>
+          <div class="sd-tags">
+            <span class="sd-tag">{{ event.event_datetime|date:"d M Y" }}</span>
+            <span class="sd-tag">{{ event.get_type_display }}</span>
+          </div>
+          <p>{{ event.desc|truncatewords:25 }}</p>
+          {% if event.join %}
+          <div class="sd-tags">
+            <a class="sd-link" href="{{ event.join }}" target="_blank" rel="noopener noreferrer">Open meeting link</a>
+          </div>
+          {% endif %}
+        </article>
+        {% empty %}
+        <p class="sd-empty">No upcoming events.</p>
+        {% endfor %}
+      </div>
+    {% else %}
+      <h2>My profile</h2>
+      <div class="sd-grid">
+        <div class="sd-field"><span>Full name</span><strong>{{ request.user.get_full_name|default:request.user.username }}</strong></div>
+        <div class="sd-field"><span>Email</span><strong>{{ request.user.email|default:"-" }}</strong></div>
+        <div class="sd-field"><span>Username</span><strong>{{ request.user.username }}</strong></div>
+        <div class="sd-field"><span>Access</span><strong>SIG member</strong></div>
+      </div>
+    {% endif %}
+  {% endwith %}
+</div>
+{% endblock %}

@@ -1,0 +1,265 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ page_copy.hero_title }} — Bharat IG Sphere{% endblock %}
+{% block body_class %}lp-page{% endblock %}
+
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'UI-CSS/landing.css' %}">
+<link rel="stylesheet" href="{% static 'UI-CSS/events.css' %}">
+<link rel="stylesheet" href="{% static 'UI-CSS/global-forums.css' %}?v=5">
+{% endblock %}
+
+{% block content %}
+
+<section class="events-header">
+  <div class="events-header-bg"></div>
+  <div class="events-header-content">
+    <h1>{{ page_copy.hero_title }}</h1>
+    <p>{{ page_copy.hero_subtitle }}</p>
+  </div>
+</section>
+
+<section class="gf-page">
+  <div class="gf-wrap">
+    {% if carousel_slides %}
+    <aside class="gf-aside" aria-label="{{ page_copy.highlights_heading }}">
+      <h2>{{ page_copy.highlights_heading }}</h2>
+      <div class="gf-carousel" id="gf-carousel">
+        <div class="gf-carousel-viewport">
+          {% for slide in carousel_slides %}
+          <figure class="gf-carousel-slide{% if forloop.first %} is-active{% endif %}">
+            <img src="{{ slide.src }}" alt="{{ slide.alt }}" loading="{% if forloop.first %}eager{% else %}lazy{% endif %}">
+            {% if slide.caption %}<figcaption>{{ slide.caption }}</figcaption>{% endif %}
+          </figure>
+          {% endfor %}
+        </div>
+        {% if carousel_slides|length > 1 %}
+        <div class="gf-carousel-nav">
+          <button type="button" class="gf-carousel-btn" id="gf-carousel-prev" aria-label="Previous slide">‹</button>
+          <div class="gf-carousel-dots" id="gf-carousel-dots"></div>
+          <button type="button" class="gf-carousel-btn" id="gf-carousel-next" aria-label="Next slide">›</button>
+        </div>
+        {% endif %}
+      </div>
+    </aside>
+    {% endif %}
+
+    <article class="gf-intro">
+      <h2>{{ page_copy.intro_heading }}</h2>
+      <p>{{ page_copy.intro_text }}</p>
+    </article>
+
+    <div class="gf-board">
+        {% if forum_topics %}
+        <div class="gf-tiles" role="tablist" aria-label="Global forums">
+          {% for t in forum_topics %}
+          <button
+            type="button"
+            class="gf-tile{% if forloop.first %} is-active{% endif %}"
+            role="tab"
+            aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+            data-topic-id="{{ t.id }}"
+          >
+            <span class="gf-tile-copy">
+              <span class="gf-tile-name">{{ t.name }}</span>
+              {% if t.tagline %}<span class="gf-tile-tag">{{ t.tagline }}</span>{% endif %}
+            </span>
+            {% if t.bg_image %}
+            <span class="gf-tile-brand" aria-hidden="true">
+              <img
+                src="{{ t.bg_image }}"
+                alt=""
+                class="gf-tile-logo{% if t.logo_variant == 'wide' %} gf-tile-logo--wide{% elif t.logo_variant == 'tall' %} gf-tile-logo--tall{% endif %}"
+                loading="lazy"
+              >
+            </span>
+            {% endif %}
+          </button>
+          {% endfor %}
+        </div>
+
+        <section class="gf-positions" id="gf-positions" aria-live="polite">
+          <h3 id="gf-positions-heading">{{ page_copy.positions_heading }}</h3>
+          <p class="gf-positions-sub" id="gf-positions-sub">{{ forum_topics.0.name }}</p>
+          <ol class="gf-position-list" id="gf-position-list">
+            {% for p in forum_topics.0.positions %}
+            <li class="gf-position-item">
+              <span class="gf-position-date">{{ p.date_display }}</span>
+              <div>
+                <h4>{{ p.title }}</h4>
+                <p>{{ p.summary }}</p>
+                {% if p.source_label %}<p class="gf-position-source">{{ p.source_label }}</p>{% endif %}
+              </div>
+            </li>
+            {% empty %}
+            <li class="gf-empty">No positions have been published for this forum yet.</li>
+            {% endfor %}
+          </ol>
+        </section>
+        {% else %}
+        <p class="gf-empty">No forums have been published yet.</p>
+        {% endif %}
+    </div>
+  </div>
+</section>
+
+<footer class="lp-footer">
+  <div class="lp-footer-grid">
+    <div class="lp-footer-brand">
+      <img src="{% static 'img/ig-logo3.jpeg' %}" alt="Bharat IG">
+      <div>
+        <strong>Bharat Internet Governance Sphere</strong>
+        <p>Connection, policy, people and participation in India's digital governance.</p>
+      </div>
+    </div>
+    <div>
+      <h4>Explore</h4>
+      <a href="{% url 'home' %}">Home</a>
+      <a href="{% url 'events' %}">Events</a>
+      <a href="{% url 'research_hub' %}">Research</a>
+      <a href="{% url 'blogs' %}">Blogs</a>
+    </div>
+    <div>
+      <h4>Participate</h4>
+      <a href="{% url 'consultations' %}">Stakeholder Engagement</a>
+      <a href="{% url 'capacity' %}">Capacity Building</a>
+      <a href="{% url 'global' %}">India at Global Forums</a>
+      <a href="{% url 'sig' %}">SIG</a>
+    </div>
+    <div>
+      <h4>Connect</h4>
+      <p>Stay connected with India's internet governance community.</p>
+      <div class="lp-social">
+        <a href="https://x.com" target="_blank" rel="noopener" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
+        <a href="https://www.linkedin.com" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+        <a href="https://www.youtube.com" target="_blank" rel="noopener" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+      </div>
+    </div>
+  </div>
+  <div class="lp-footer-bar">
+    <span>© {% now "Y" %} Bharat Internet Governance Sphere (BIG-S). All rights reserved.</span>
+    <span>Privacy Policy · Terms of Use · Contact Us</span>
+  </div>
+</footer>
+
+{{ forum_topics|json_script:"gf-topics-data" }}
+
+<script>
+(function () {
+  var dataEl = document.getElementById("gf-topics-data");
+  var topics = dataEl ? JSON.parse(dataEl.textContent) : [];
+  var listEl = document.getElementById("gf-position-list");
+  var subEl = document.getElementById("gf-positions-sub");
+  var tiles = document.querySelectorAll(".gf-tile");
+
+  function escapeHtml(s) {
+    if (!s) return "";
+    return String(s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
+  function renderPositions(topicId) {
+    var topic = topics.find(function (t) { return t.id === topicId; });
+    if (!topic || !listEl) return;
+    if (subEl) subEl.textContent = topic.name;
+    listEl.innerHTML = "";
+    if (!topic.positions.length) {
+      var empty = document.createElement("li");
+      empty.className = "gf-empty";
+      empty.textContent = "No positions have been published for this forum yet.";
+      listEl.appendChild(empty);
+      return;
+    }
+    topic.positions.forEach(function (p) {
+      var li = document.createElement("li");
+      li.className = "gf-position-item";
+      var source = p.source_label
+        ? '<p class="gf-position-source">' + escapeHtml(p.source_label) + "</p>"
+        : "";
+      li.innerHTML =
+        '<span class="gf-position-date">' + escapeHtml(p.date_display) + "</span>" +
+        "<div><h4>" + escapeHtml(p.title) + "</h4>" +
+        "<p>" + escapeHtml(p.summary) + "</p>" + source + "</div>";
+      listEl.appendChild(li);
+    });
+  }
+
+  tiles.forEach(function (tile) {
+    tile.addEventListener("click", function () {
+      tiles.forEach(function (t) {
+        t.classList.remove("is-active");
+        t.setAttribute("aria-selected", "false");
+      });
+      tile.classList.add("is-active");
+      tile.setAttribute("aria-selected", "true");
+      renderPositions(tile.getAttribute("data-topic-id"));
+      var panel = document.getElementById("gf-positions");
+      if (panel && window.matchMedia("(max-width: 900px)").matches) {
+        panel.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+      if (panel) {
+        panel.classList.remove("is-updated");
+        void panel.offsetWidth;
+        panel.classList.add("is-updated");
+      }
+    });
+  });
+
+  var slides = document.querySelectorAll(".gf-carousel-slide");
+  var dotsWrap = document.getElementById("gf-carousel-dots");
+  var prevBtn = document.getElementById("gf-carousel-prev");
+  var nextBtn = document.getElementById("gf-carousel-next");
+  var idx = 0;
+  var autoplay = null;
+
+  if (slides.length && dotsWrap) {
+    slides.forEach(function (_, i) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "gf-carousel-dot" + (i === 0 ? " is-active" : "");
+      b.setAttribute("aria-label", "Go to slide " + (i + 1));
+      b.addEventListener("click", function () { go(i); });
+      dotsWrap.appendChild(b);
+    });
+  }
+
+  function go(i) {
+    if (!slides.length) return;
+    idx = (i + slides.length) % slides.length;
+    slides.forEach(function (s, j) {
+      s.classList.toggle("is-active", j === idx);
+    });
+    if (!dotsWrap) return;
+    dotsWrap.querySelectorAll(".gf-carousel-dot").forEach(function (d, j) {
+      d.classList.toggle("is-active", j === idx);
+    });
+  }
+
+  if (prevBtn) prevBtn.addEventListener("click", function () { go(idx - 1); });
+  if (nextBtn) nextBtn.addEventListener("click", function () { go(idx + 1); });
+
+  function stopAutoplay() {
+    if (autoplay) clearInterval(autoplay);
+    autoplay = null;
+  }
+  if (slides.length > 1) {
+    autoplay = setInterval(function () { go(idx + 1); }, 6000);
+    var root = document.getElementById("gf-carousel");
+    if (root) {
+      root.addEventListener("mouseenter", stopAutoplay);
+      root.addEventListener("mouseleave", function () {
+        stopAutoplay();
+        autoplay = setInterval(function () { go(idx + 1); }, 6000);
+      });
+    }
+  }
+})();
+</script>
+
+{% endblock %}

@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% block title %}About — Internet Governance Division{% endblock %}
+
+{% block content %}
+
+<div class="ig-main">
+
+  <!-- ================= PAGE HEADER ================= -->
+  <section class="ig-page-header">
+    <h1>About the Internet Governance Division</h1>
+    <p>
+      The Internet Governance Division (IGD) coordinates India’s engagement on
+      Internet governance policy, standards, and global cooperation.
+    </p>
+  </section>
+
+  <!-- ================= MAIN CONTENT ================= -->
+  <div class="ig-about-layout">
+
+    <!-- LEFT CONTENT -->
+    <article class="ig-about-content">
+
+      <section class="ig-section">
+        <h2>Who We Are</h2>
+        <p>
+          The Internet Governance Division (IGD), under the Ministry of Electronics
+          and Information Technology (MeitY), coordinates India’s approach to how
+          the global Internet is governed—its rules, resources, and technical standards.
+        </p>
+        <p>
+          IGD brings together ministries, regulators, industry, academia, civil society,
+          and the technical community to ensure that India’s priorities are clearly
+          represented at national and international forums.
+        </p>
+      </section>
+
+      <section class="ig-section">
+        <h2>What We Do</h2>
+        <ul class="ig-list">
+          <li>Develop policy positions on domain names, Internet number resources, routing security, and trust & safety</li>
+          <li>Engage with global Internet governance and standards bodies</li>
+          <li>Promote secure, interoperable, and inclusive Internet infrastructure in India</li>
+          <li>Strengthen participation of Indian experts in technical and policy processes</li>
+        </ul>
+      </section>
+
+      <section class="ig-section">
+        <h2>How We Work</h2>
+        <ul class="ig-list">
+          <li><strong>Policy Coordination:</strong> Multi-stakeholder consultations and consensus building</li>
+          <li><strong>Technical Stewardship:</strong> Adoption of secure Internet standards and best practices</li>
+          <li><strong>Institutional Support:</strong> Coordination with NIXI and Special Interest Groups (SIGs)</li>
+          <li><strong>Community Engagement:</strong> Workshops, consultations, and public resources</li>
+        </ul>
+      </section>
+
+      <section class="ig-section">
+        <h2>Areas of Focus</h2>
+        <div class="ig-focus-grid">
+          <div class="focus-tile">DNS & Domain Name Policy (IDNs / UA)</div>
+          <div class="focus-tile">Internet Number Resources & Routing Hygiene</div>
+          <div class="focus-tile">Internet Protocols & Standards Adoption</div>
+          <div class="focus-tile">Security & Resilience of Infrastructure</div>
+          <div class="focus-tile">Inclusion, Accessibility & User Trust</div>
+          <div class="focus-tile">International Cooperation</div>
+        </div>
+      </section>
+
+      <section class="ig-section">
+        <p class="ig-highlight">
+          Through this work, IGD helps align India’s Internet priorities with global
+          developments and ensures sustained technical and policy contributions
+          from India.
+        </p>
+      </section>
+
+    </article>
+
+    <!-- RIGHT SIDEBAR -->
+    <aside class="ig-about-sidebar">
+
+      <div class="card">
+        <h3>At a Glance</h3>
+        <ul class="ig-stats">
+          <li><span>Ministry</span> MeitY</li>
+          <li><span>Secretariat</span> NIXI</li>
+          <li><span>Engagement Model</span> Multi-stakeholder</li>
+          <li><span>Global Forums</span> IGF, ITU, ICANN, IETF</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Related Sections</h3>
+        <ul class="ig-quick-links">
+          <li><a href="{% url 'events' %}">Events & Meetings</a></li>
+          <li><a href="{% url 'consultations' %}">Public Consultations</a></li>
+          <li><a href="{% url 'capacity' %}">Capacity Building</a></li>
+          <li><a href="{% url 'sig' %}">Special Interest Groups</a></li>
+        </ul>
+      </div>
+
+    </aside>
+
+  </div>
+</div>
+
+{% endblock %}

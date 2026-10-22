@@ -1,0 +1,207 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}
+{% if mode == "edit" %}Edit event{% else %}Add event{% endif %} | Admin
+{% endblock %}
+
+{% block admin_css %}
+<style>
+  .ef-head{ margin-bottom:16px; }
+  .ef-head h1{ margin:0; }
+  .ef-head p{ margin:6px 0 0; color:#5b6b7c; }
+  .ef-back{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:14px;
+    color:#122033;
+    font-weight:700;
+    font-size:14px;
+    text-decoration:none;
+  }
+  .ef-back:hover{ color:#c96416; }
+  .ef-card{
+    background:#fff;
+    border:1px solid #e8edf3;
+    border-radius:18px;
+    box-shadow:0 10px 24px rgba(15,23,42,.05);
+    padding:22px;
+  }
+  .ef-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:0 16px;
+  }
+  .ef-span{ grid-column:1 / -1; }
+  .ef-card label{
+    display:block;
+    margin:14px 0 6px;
+    color:#122033;
+    font-size:14px;
+    font-weight:700;
+  }
+  .ef-card label span{ color:#c96416; }
+  .ef-card input,
+  .ef-card textarea,
+  .ef-card select{
+    width:100%;
+    min-height:46px;
+    padding:10px 14px;
+    border:1px solid #e8edf3;
+    border-radius:12px;
+    background:#fff;
+    color:#122033;
+    font:inherit;
+    font-size:15px;
+  }
+  .ef-card textarea{ min-height:120px; resize:vertical; }
+  .ef-card input:focus,
+  .ef-card textarea:focus,
+  .ef-card select:focus{
+    outline:2px solid rgba(224,123,42,.35);
+    border-color:#e07b2a;
+  }
+  .ef-file{
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:4px;
+    padding:16px;
+    border:1.5px dashed #d7dee7;
+    border-radius:14px;
+    background:#f8fafc;
+    cursor:pointer;
+  }
+  .ef-file span{ color:#5b6b7c; font-size:13px; font-weight:600; }
+  .ef-file input{
+    position:absolute;
+    width:1px;
+    height:1px;
+    overflow:hidden;
+    clip:rect(0 0 0 0);
+  }
+  .ef-file.is-on{
+    border-style:solid;
+    border-color:#e07b2a;
+    background:#fff;
+  }
+  .ef-size{ margin:8px 0 0; color:#5b6b7c; font-size:13px; }
+  .ef-size strong{ color:#c96416; }
+  .ef-current{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-top:10px;
+  }
+  .ef-current img{
+    width:168px;
+    height:96px;
+    object-fit:cover;
+    border-radius:12px;
+    background:#eef1f5;
+  }
+  .ef-current span{ color:#5b6b7c; font-size:13px; }
+  .ef-actions{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    margin-top:18px;
+  }
+  .ef-save{
+    min-height:46px;
+    padding:0 18px;
+    border:0;
+    border-radius:12px;
+    background:#e07b2a;
+    color:#fff;
+    font-weight:700;
+    cursor:pointer;
+  }
+  .ef-save:hover{ background:#c96416; }
+  @media (max-width: 760px){
+    .ef-grid{ grid-template-columns:1fr; }
+    .ef-actions{ flex-direction:column-reverse; align-items:stretch; }
+    .ef-save{ width:100%; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<a class="ef-back" href="{% url 'admin_events' %}"><i class="fas fa-arrow-left"></i> Events</a>
+
+<div class="ef-head">
+  <h1>{% if mode == "edit" %}Edit event{% else %}Add event{% endif %}</h1>
+  <p>
+    {% if mode == "edit" %}
+    Change the details below. Leave the photo empty to keep the current one.
+    {% else %}
+    This event appears on the public events page after you save it.
+    {% endif %}
+  </p>
+</div>
+
+<form class="ef-card" method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <div class="ef-grid">
+    <div class="ef-span">
+      <label for="ef-title">Title <span>*</span></label>
+      <input id="ef-title" type="text" name="title" maxlength="100" required value="{% if event %}{{ event.title }}{% endif %}">
+    </div>
+    <div class="ef-span">
+      <label for="ef-desc">Description <span>*</span></label>
+      <textarea id="ef-desc" name="description" maxlength="500" required>{% if event %}{{ event.description }}{% endif %}</textarea>
+    </div>
+    <div class="ef-span">
+      <label for="ef-link">Event link</label>
+      <input id="ef-link" type="url" name="event_link" placeholder="https://" value="{% if event %}{{ event.event_link }}{% endif %}">
+    </div>
+    <div>
+      <label for="ef-from">From date <span>*</span></label>
+      <input id="ef-from" type="date" name="event_date" required value="{% if event and event.event_date %}{{ event.event_date }}{% endif %}">
+    </div>
+    <div>
+      <label for="ef-to">To date <span>*</span></label>
+      <input id="ef-to" type="date" name="event_date_to" required value="{% if event and event.event_dateto %}{{ event.event_dateto }}{% endif %}">
+    </div>
+    <div>
+      <label for="ef-type">Event type <span>*</span></label>
+      <select id="ef-type" name="event_type" required>
+        <option value="">Select a type</option>
+        <option value="National" {% if event and event.event_type == 'National' %}selected{% endif %}>National</option>
+        <option value="International" {% if event and event.event_type == 'International' %}selected{% endif %}>International</option>
+      </select>
+    </div>
+    <div>
+      <label for="ef-photo">Event image</label>
+      <label class="ef-file" for="ef-photo">
+        <strong id="ef-photo-name">Choose a photo</strong>
+        <span>JPG or PNG, 1600 × 900 px</span>
+        <input id="ef-photo" type="file" name="photo" accept="image/jpeg,image/png,image/webp">
+      </label>
+      <p class="ef-size">This size fills the event card on phones and large screens.</p>
+      {% if mode == "edit" and event.photo %}
+      <div class="ef-current">
+        <img src="/media/{{ event.photo }}" alt="Current event image">
+        <span>Current photo. Leave the file empty to keep it.</span>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+  <div class="ef-actions">
+    <a class="ef-back" href="{% url 'admin_events' %}">Cancel</a>
+    <button class="ef-save" type="submit">{% if mode == "edit" %}Update event{% else %}Save event{% endif %}</button>
+  </div>
+</form>
+<script>
+document.getElementById("ef-photo").addEventListener("change", function () {
+  var box = document.querySelector(".ef-file");
+  var name = document.getElementById("ef-photo-name");
+  var picked = this.files && this.files[0];
+  name.textContent = picked ? picked.name : "Choose a photo";
+  box.classList.toggle("is-on", !!picked);
+});
+</script>
+{% endblock %}

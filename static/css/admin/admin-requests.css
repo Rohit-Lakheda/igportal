@@ -1,0 +1,217 @@
+/* ================= WRAPPER ================= */
+
+.requests-wrapper{
+  padding:10px 0;
+}
+
+/* ================= HEADER ================= */
+
+.requests-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-bottom:18px;
+}
+
+.requests-header h4{
+  font-family:'Playfair Display',serif;
+  font-size:20px;
+  margin:0;
+  color:var(--primary);
+}
+
+/* ================= FILTER BAR ================= */
+
+.filter-bar{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+
+.filter-bar input,
+.filter-bar select{
+  padding:6px 10px;
+  border-radius:8px;
+  border:1px solid #ddd;
+  font-size:13px;
+}
+
+.btn-accent{
+  background:var(--accent);
+  color:#fff;
+  border:none;
+  padding:6px 14px;
+  border-radius:20px;
+  font-size:13px;
+  transition:.2s ease;
+}
+
+.btn-accent:hover{
+  transform:translateY(-2px);
+  box-shadow:0 6px 18px rgba(184,115,51,.3);
+}
+
+/* ================= GRID ================= */
+
+.requests-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:18px;
+}
+
+/* ================= CARD ================= */
+
+.request-card{
+  background:#ffffff;
+  border-radius:14px;
+  padding:15px;
+  box-shadow:0 8px 25px rgba(0,0,0,.05);
+  display:flex;
+  flex-direction:column;
+  transition:.25s ease;
+}
+
+.request-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 12px 30px rgba(0,0,0,.08);
+}
+
+/* ================= CARD TOP ================= */
+
+.card-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:10px;
+}
+
+.card-top strong{
+  font-size:14px;
+}
+
+/* Application Type Badge */
+
+.type-badge{
+  background:rgba(184,115,51,.15);
+  padding:3px 8px;
+  border-radius:12px;
+  font-size:11px;
+  margin-left:6px;
+}
+
+/* ================= STATUS BADGES ================= */
+
+.status-badge{
+  font-size:11px;
+  padding:4px 8px;
+  border-radius:12px;
+  font-weight:600;
+}
+
+.status-badge.pending{
+  background:#fff3cd;
+  color:#856404;
+}
+
+.status-badge.approved{
+  background:#d4edda;
+  color:#155724;
+}
+
+.status-badge.rejected{
+  background:#f8d7da;
+  color:#721c24;
+}
+
+/* ================= BODY ================= */
+
+.card-body{
+  font-size:12.5px;
+  margin-bottom:12px;
+}
+
+.card-body p{
+  margin:4px 0;
+}
+
+/* ================= ACTIONS ================= */
+
+.card-actions{
+  margin-top:auto;
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+}
+
+.card-actions button{
+  border:none;
+  padding:5px 10px;
+  border-radius:6px;
+  font-size:12px;
+  cursor:pointer;
+  transition:.2s ease;
+}
+
+/* View */
+
+.card-actions button:first-child{
+  background:#6c757d;
+  color:#fff;
+}
+
+.card-actions button:first-child:hover{
+  background:#5a6268;
+}
+
+/* Approve */
+
+.card-actions .approve{
+  background:#28a745;
+  color:#fff;
+}
+
+.card-actions .approve:hover{
+  background:#218838;
+}
+
+/* Reject */
+
+.card-actions .reject{
+  background:#dc3545;
+  color:#fff;
+}
+
+.card-actions .reject:hover{
+  background:#c82333;
+}
+
+/* ================= EMPTY STATE ================= */
+
+.no-data{
+  padding:20px;
+  text-align:center;
+  font-size:13px;
+  color:#999;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:768px){
+
+  .requests-header{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
+  .filter-bar{
+    width:100%;
+  }
+
+  .filter-bar input{
+    flex:1;
+  }
+
+}

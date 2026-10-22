@@ -1,0 +1,266 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Government Admin Dashboard{% endblock %}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1e3a8a;      /* Deep Navy Blue */
+      --primary-light: #3b5bbd;
+      --primary-dark: #172554;
+      --accent: #2563eb;
+      --sidebar-bg: #111827;
+      --text-light: #f1f5f9;
+      --text-muted: #94a3b8;
+      --card-bg: #ffffff;
+      --border: #e2e8f0;
+    }
+
+    body {
+      background: linear-gradient(to bottom, #e0e7ff, #f8fafc);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    .topbar {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 16px 32px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      min-height: 100vh;
+      gap: 24px;
+      padding: 20px;
+      padding-top: 90px; /* Space for topbar */
+    }
+
+    .sidebar {
+      background: var(--sidebar-bg);
+      color: var(--text-light);
+      border-radius: 16px;
+      padding: 28px 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .sidebar .logo {
+      font-size: 1.6rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 40px;
+      color: #60a5fa;
+      letter-spacing: 0.5px;
+    }
+
+    .sidebar a {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      color: #cbd5e1;
+      text-decoration: none;
+      padding: 14px 18px;
+      border-radius: 12px;
+      margin-bottom: 8px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .sidebar a i {
+      font-size: 1.3rem;
+      width: 24px;
+    }
+
+    .sidebar a:hover {
+      background: #1e293b;
+      color: white;
+      transform: translateX(6px);
+    }
+
+    .sidebar a.active {
+      background: linear-gradient(to right, var(--accent), #3b82f6);
+      color: white;
+      font-weight: 600;
+      box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+    }
+
+    .content {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 36px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    .content h2 {
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: var(--primary-dark);
+      margin-bottom: 10px;
+    }
+
+    .content .welcome-text {
+      color: #64748b;
+      font-size: 1.05rem;
+      margin-bottom: 32px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+
+    .card {
+      background: linear-gradient(to bottom right, #ffffff, #f8fafc);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 28px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 5px;
+      height: 100%;
+      background: var(--accent);
+      opacity: 0.8;
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+    }
+
+    .card h4 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--primary);
+      margin: 0 0 10px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card h4 i {
+      color: var(--accent);
+      font-size: 1.4rem;
+    }
+
+    .card p {
+      color: #64748b;
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    .footer-note {
+      color: #64748b;
+      font-size: 0.95rem;
+      line-height: 1.7;
+      padding: 20px;
+      background: #f1f5f9;
+      border-radius: 12px;
+      border-left: 4px solid var(--accent);
+    }
+
+    @media (max-width: 992px) {
+      .dashboard {
+        grid-template-columns: 1fr;
+        padding-top: 100px;
+      }
+      .sidebar {
+        border-radius: 16px 16px 0 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <div class="topbar d-flex justify-content-between align-items-center">
+    <h4 class="mb-0 fw-semibold text-dark">Government Administration Portal</h4>
+    <div class="d-flex align-items-center gap-3">
+      <span class="text-muted">Welcome back,</span>
+      <strong>{{ request.user.get_full_name|default:request.user.username|default:"Admin" }}</strong>
+      <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width:46px; height:46px;">
+        <i class="bi bi-person fs-4"></i>
+      </div>
+    </div>
+  </div>
+
+{% block content %}
+  <div class="dashboard">
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="logo">
+        <i class="bi bi-shield-lock me-2"></i> GovAdmin
+      </div>
+      <a href="{% url 'admin1_dashboard' %}" class="active">
+        <i class="bi bi-speedometer2"></i> Dashboard
+      </a>
+      <a href="#">
+        <i class="bi bi-gear"></i> Admin Settings
+      </a>
+      <a href="{% url 'add_meeting' %}">
+        <i class="bi bi-calendar-plus"></i> Add Meeting
+      </a>
+      <a href="{% url 'member' %}">
+        <i class="bi bi-people"></i> Member Management
+      </a>
+      <a href="{% url 'consultation'%}">
+        <i class="bi bi-chat-square-text"></i> Add Consultation
+      </a>
+      <a href="{% url 'events1' %}">
+        <i class="bi bi-calendar-event"></i> Add Event
+      </a>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="content">
+      <h2>Dashboard Overview</h2>
+      <p class="welcome-text">Manage government operations, meetings, members, and events efficiently from one secure platform.</p>
+
+      <div class="cards">
+        <div class="card">
+          <h4><i class="bi bi-eye"></i> Total Observers</h4>
+          <p>View and manage all Special Interest Group (SIG) observer applications with full access control.</p>
+        </div>
+        <div class="card">
+          <h4><i class="bi bi-hourglass-split"></i> Pending Reviews</h4>
+          <p>Review, approve, or reject applications currently awaiting administrative action.</p>
+        </div>
+        <div class="card">
+          <h4><i class="bi bi-check-circle"></i> System Status</h4>
+          <p>All systems are operating normally. No pending alerts or maintenance required.</p>
+        </div>
+      </div>
+
+      <div class="footer-note">
+        This is your secure government administration dashboard.<br>
+        All actions are logged and encrypted. Use the sidebar to navigate to forms for adding meetings, events, consultations, or managing members.
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+</body>
+</html>

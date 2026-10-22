@@ -1,0 +1,122 @@
+{% extends "admin/base.html" %}
+{% load static %}
+{% block title %}Membership requests | Admin{% endblock %}
+
+{% block admin_css %}
+<style>
+  .rq-head{ display:flex; justify-content:space-between; align-items:flex-end; gap:16px; flex-wrap:wrap; }
+  .rq-head h1, .rq-section h2{ margin:0; font-family:"Playfair Display", Georgia, serif; }
+  .rq-head p, .rq-section p{ margin:6px 0 0; color:#5b6b7c; }
+  .rq-count{ padding:8px 12px; border-radius:999px; background:#fff; border:1px solid #e8edf3; font-weight:700; font-size:14px; }
+  .rq-search{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .rq-search input, .rq-search select{
+    min-height:44px; padding:0 14px; border:1px solid #e8edf3; border-radius:12px; background:#fff; color:#122033; font:inherit; font-size:14px;
+  }
+  .rq-search input{ width:min(280px, 100%); }
+  .rq-search input:focus, .rq-search select:focus, .rq-pass:focus{
+    outline:2px solid rgba(224,123,42,.35); border-color:#e07b2a;
+  }
+  .rq-search button{
+    min-height:44px; padding:0 16px; border:0; border-radius:12px; background:#e07b2a; color:#fff; font-weight:700; cursor:pointer;
+  }
+  .rq-search button:hover{ background:#c96416; }
+  .rq-section{ display:flex; flex-direction:column; gap:12px; }
+  .rq-list{ display:flex; flex-direction:column; gap:12px; }
+  .rq-card{
+    background:#fff; border:1px solid #e8edf3; border-radius:18px; padding:16px 18px;
+    box-shadow:0 10px 24px rgba(15,23,42,.05);
+  }
+  .rq-top{ display:flex; justify-content:space-between; gap:12px; align-items:flex-start; }
+  .rq-card h3{ margin:0; font-size:18px; color:#122033; }
+  .rq-card .sub{ margin:4px 0 0; color:#5b6b7c; font-size:13.5px; }
+  .rq-tags{ display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
+  .rq-tags span, .rq-status{
+    padding:4px 10px; border-radius:999px; background:#f4f7fb; border:1px solid #e8edf3; color:#5b6b7c; font-size:12.5px; font-weight:700;
+  }
+  .rq-status.pending{ color:#c96416; background:rgba(224,123,42,.12); border-color:transparent; }
+  .rq-status.approved{ color:#166534; background:rgba(22,163,74,.1); border-color:transparent; }
+  .rq-status.rejected{ color:#b42318; background:#fff5f5; border-color:transparent; }
+  .rq-note{ margin:10px 0 0; color:#334155; font-size:14px; line-height:1.5; }
+  .rq-actions{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-top:14px; }
+  .rq-actions form{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:0; }
+  .rq-pass{
+    min-height:38px; width:min(220px, 100%); padding:0 12px; border:1px solid #e8edf3; border-radius:10px; font:inherit; font-size:13px;
+  }
+  .rq-actions button{
+    display:inline-flex; align-items:center; justify-content:center; height:38px; padding:0 14px;
+    border-radius:10px; border:1px solid #e8edf3; background:#fff; font-weight:700; font-size:13px; line-height:1; cursor:pointer;
+  }
+  .rq-actions .yes{ background:#e07b2a; border-color:#e07b2a; color:#fff; }
+  .rq-actions .yes:hover{ background:#c96416; }
+  .rq-actions .no{ color:#b42318; }
+  .rq-actions .no:hover{ border-color:#b42318; background:#fff5f5; }
+  .rq-empty{ padding:28px 16px; text-align:center; background:#fff; border:1px dashed #d7dee7; border-radius:18px; color:#5b6b7c; }
+  .rq-link{ color:#c96416; font-weight:700; text-decoration:none; font-size:14px; }
+  .rq-link:hover{ color:#e07b2a; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-section">
+  <div class="rq-head">
+    <div>
+      <h1>Membership requests</h1>
+      <p>Approve or reject an application. Pending items are the ones still waiting for a decision.</p>
+    </div>
+    <div class="rq-count">{{ users|length }} application{{ users|length|pluralize }}</div>
+  </div>
+
+  <form method="get" class="rq-search">
+    <input type="text" name="search" value="{{ search }}" placeholder="Search email or organization">
+    <select name="status" onchange="this.form.submit()" aria-label="Status">
+      <option value="">All statuses</option>
+      <option value="pending" {% if status == "pending" %}selected{% endif %}>Pending</option>
+      <option value="approved" {% if status == "approved" %}selected{% endif %}>Approved</option>
+      <option value="rejected" {% if status == "rejected" %}selected{% endif %}>Rejected</option>
+    </select>
+    <button type="submit">Search</button>
+  </form>
+
+  <section class="rq-section">
+    <div class="rq-list">
+      {% for user in users %}
+      <article class="rq-card">
+        <div class="rq-top">
+          <div>
+            <h3>{{ user.company_name|default:user.email }}</h3>
+            <p class="sub">{{ user.email }}{% if user.mobile %} · {{ user.mobile }}{% endif %}</p>
+          </div>
+          <span class="rq-status {{ user.application_status }}">{{ user.application_status|title }}</span>
+        </div>
+        <div class="rq-tags">
+          <span>{{ user.application_type|default:"No type"|title }}</span>
+          {% if user.state %}<span>{{ user.state }}</span>{% endif %}
+          {% if user.sig_selection %}<span>{{ user.sig_selection }}</span>{% endif %}
+        </div>
+        {% if user.reason %}
+        <p class="rq-note">{{ user.reason }}</p>
+        {% endif %}
+        {% if user.application_status == "pending" %}
+        <div class="rq-actions">
+          <form method="post" onsubmit="return confirm('Approve this application?');">
+            {% csrf_token %}
+            <input type="hidden" name="user_id" value="{{ user.id }}">
+            <input type="hidden" name="status" value="approved">
+            <button type="submit" class="yes">Approve</button>
+          </form>
+          <form method="post" onsubmit="return confirm('Reject this application?');">
+            {% csrf_token %}
+            <input type="hidden" name="user_id" value="{{ user.id }}">
+            <input type="hidden" name="status" value="rejected">
+            <button type="submit" class="no">Reject</button>
+          </form>
+        </div>
+        {% endif %}
+      </article>
+      {% empty %}
+      <div class="rq-empty">No account applications match this filter.</div>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}

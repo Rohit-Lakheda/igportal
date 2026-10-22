@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block title %}Special Interest Groups — IG Portal{% endblock %}
+
+{% block content %}
+
+<div class="sig-page" style="max-width:1200px;margin:auto;padding:24px;">
+
+  <!-- Hero Title -->
+  <div class="sig-hero" style="text-align:center;margin-bottom:40px;">
+    <h1 style="font-size:36px;color:#1f3a5f;margin-bottom:12px;">Special Interest Groups (SIG)</h1>
+    <p class="small" style="font-size:16px;color:#4b5563;">
+      SIGs are expert working groups that collaborate on focused Internet governance topics and contribute to
+      consultations and events.
+    </p>
+  </div>
+
+  <!-- About Us Tile -->
+  <div class="sig-tile"
+    style="background:#fff;padding:24px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.08);margin-bottom:24px;">
+    <h2 style="color:#1f3a5f;margin-bottom:12px;">About Us</h2>
+    <p class="small" style="color:#374151;">
+      The Special Interest Groups (SIGs) are India’s collaborative platform for Internet governance bringing government,
+      industry, academia, civil society, and the technical community together to shape standards, policies, and
+      practices that serve the country’s digital future.
+    </p>
+    <p class="small" style="color:#374151;">
+      Guided by the Internet Governance Division, MeitY, and supported by NIXI, the SIGs convert expert dialogue into
+      actionable outputs: position papers, policy recommendations, capacity-building programs, and inputs to global
+      bodies such as <strong>IETF</strong>, <strong>ICANN</strong>, <strong>APNIC</strong>, and <strong>W3C</strong>.
+    </p>
+  </div>
+
+  <!-- Our SIGs Tile -->
+  <div class="sig-tile"
+    style="background:#fff;padding:24px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.08);margin-bottom:24px;">
+    <h2 style="color:#1f3a5f;margin-bottom:12px;">Our SIGs</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;">
+      <!-- Each SIG Card -->
+      <div style="background:#f9fafb;padding:16px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.05);">
+        <h3 style="margin-bottom:6px;color:#1f3a5f;">SIG — Internet Protocols & Standards</h3>
+        <p class="small" style="color:#4b5563;">Focused on Internet protocols, standards, and technical
+          interoperability.</p>
+      </div>
+      <div style="background:#f9fafb;padding:16px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.05);">
+        <h3 style="margin-bottom:6px;color:#1f3a5f;">SIG — Domain Names & Related Issues</h3>
+        <p class="small" style="color:#4b5563;">Covers domain name management, DNS policies, and related Internet
+          infrastructure.</p>
+      </div>
+      <div style="background:#f9fafb;padding:16px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.05);">
+        <h3 style="margin-bottom:6px;color:#1f3a5f;">SIG — Future of Internet</h3>
+        <p class="small" style="color:#4b5563;">Explores emerging technologies, governance challenges, and trends
+          shaping the Internet.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- About SIGs Tile -->
+  <div class="sig-tile"
+    style="background:#fff;padding:24px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.08);margin-bottom:24px;">
+    <h2 style="color:#1f3a5f;margin-bottom:12px;">About Our SIGs</h2>
+    <p class="small" style="color:#374151;">
+      Each SIG convenes practitioners, researchers and stakeholders to develop inputs, host activities, and share
+      knowledge artifacts. Public summaries are published here.
+    </p>
+    <ul class="small" style="padding-left:18px;color:#374151;">
+      <li>Workstreams announced via the Events and Consultations tabs</li>
+      <li>Open calls for contributions as applicable</li>
+      <li>Outputs archived for public reference</li>
+    </ul>
+  </div>
+
+  <!-- SIG Member Login -->
+  <div class="sig-tile"
+    style="background:#fff;padding:24px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.08);margin-bottom:24px;text-align:center;">
+    <h2 style="color:#1f3a5f;margin-bottom:12px;">SIG Member Login</h2>
+    <p class="small" style="color:#374151;margin-bottom:12px;">
+      SIG members can log in to access workstream discussions, collaboration tools, and contribution portals.
+    </p>
+    <a href="{% url 'siglogin' %}" class="btn primary" style="padding:10px 20px;font-weight:600;">Member Login →</a>
+  </div>
+
+</div>
+
+{% endblock %}

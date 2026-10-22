@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create an account — Bharat IG Sphere</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'UI-CSS/login.css' %}?v=5">
+</head>
+<body>
+  <main class="lg-page">
+    <div class="lg-card">
+      <img src="{% static 'img/ig-logo3.jpeg' %}" alt="Bharat IG">
+      <h1>Create an account</h1>
+
+      {% if messages %}
+      {% for message in messages %}
+      <div class="lg-alert lg-alert-{{ message.tags }}">{{ message }}</div>
+      {% endfor %}
+      {% endif %}
+
+      <form method="post">
+        {% csrf_token %}
+
+        <label for="rg-first">First Name</label>
+        <input id="rg-first" type="text" name="first_name" autocomplete="given-name" required maxlength="80" pattern="[A-Za-z][A-Za-z.'\-]*(?: [A-Za-z][A-Za-z.'\-]*)?" title="Use letters only. One space is allowed between the first and middle name. A hyphen, apostrophe, or full stop is allowed.">
+
+        <label for="rg-last">Last Name</label>
+        <input id="rg-last" type="text" name="last_name" autocomplete="family-name" maxlength="80" pattern="[A-Za-z][A-Za-z.'\-]*" title="Use letters only, with no spaces. A hyphen, apostrophe, or full stop is allowed.">
+
+        <label for="rg-email">Email Address</label>
+        <input id="rg-email" type="email" name="email" autocomplete="email" required>
+
+        <label for="rg-org">Organization / Institution</label>
+        <input id="rg-org" type="text" name="organization" autocomplete="organization">
+
+        <button type="submit">Create account</button>
+      </form>
+
+      <p class="lg-alt">Already have an account? <a href="{% url 'login' %}">Sign in</a></p>
+      <a class="lg-home" href="{% url 'home' %}">Back to home</a>
+    </div>
+  </main>
+</body>
+</html>

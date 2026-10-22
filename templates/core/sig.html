@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Special Interest Groups — Bharat IG Sphere{% endblock %}
+{% block body_class %}lp-page{% endblock %}
+
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'UI-CSS/landing.css' %}">
+<link rel="stylesheet" href="{% static 'UI-CSS/events.css' %}">
+<link rel="stylesheet" href="{% static 'UI-CSS/sig.css' %}?v=2">
+{% endblock %}
+
+{% block content %}
+
+<section class="events-header">
+  <div class="events-header-bg"></div>
+  <div class="events-header-content">
+    <h1>Special Interest Groups</h1>
+    <p>Structured platforms for stakeholder participation in India’s Internet Governance ecosystem.</p>
+    <div class="sig-hero-actions">
+      <a href="{% url 'siglogin' %}" class="sig-btn sig-btn-solid">SIG Login</a>
+      <a href="{% url 'apply_sig_member' %}" class="sig-btn sig-btn-ghost">Apply as SIG Member</a>
+    </div>
+  </div>
+</section>
+
+<section class="sig-page">
+  <div class="sig-wrap">
+    <article class="sig-intro">
+      <h2>A link between government and stakeholders</h2>
+      <p>Special Interest Groups (SIGs) connect the Government with domestic stakeholders and keep a structured two-way flow of information, insights, and feedback.</p>
+      <p>Academia, industry, civil society, and technical communities take part in policy and technical discussions, while the Government can share priorities, build consensus, and support national and global initiatives.</p>
+      <p>SIGs also strengthen capacity in technical and policy domains and support India’s leadership in global Internet Governance.</p>
+    </article>
+
+    <h2 class="sig-section-title">Current Special Interest Groups</h2>
+    <div class="sig-grid">
+      <article class="sig-card">
+        <div class="sig-card-header">
+          <h3>SIG on Domain Names and Numbers</h3>
+          <span class="sig-tag">SIG–DNN</span>
+        </div>
+        <p>Focuses on policy, operational, and technical aspects related to domain names, IP addresses, and numbering resources, including global coordination mechanisms and India’s participation.</p>
+      </article>
+
+      <article class="sig-card">
+        <div class="sig-card-header">
+          <h3>SIG on Internet Protocols and Standards</h3>
+          <span class="sig-tag">SIG–IPS</span>
+        </div>
+        <p>Engages stakeholders on Internet standards development, protocol evolution, and technical coordination processes that underpin a secure, stable, and interoperable Internet.</p>
+      </article>
+
+      <article class="sig-card">
+        <div class="sig-card-header">
+          <h3>SIG on Future of Internet</h3>
+          <span class="sig-tag">SIG–FI</span>
+        </div>
+        <p>Addresses emerging Internet governance challenges related to future technologies, digital public infrastructure, resilience, inclusion, and long-term evolution of the Internet ecosystem.</p>
+      </article>
+    </div>
+
+    <article class="sig-cta">
+      <h2>Participate in structured policy dialogue</h2>
+      <p>Join a Special Interest Group and contribute to India’s engagement in global Internet Governance processes.</p>
+      <div class="sig-hero-actions">
+        <a href="{% url 'apply_sig_member' %}" class="sig-btn sig-btn-solid">Apply as SIG Member</a>
+        <a href="{% url 'apply_observer' %}" class="sig-btn sig-btn-line">Apply as Observer</a>
+        <a href="{% url 'siglogin' %}" class="sig-btn sig-btn-line">Member Login</a>
+      </div>
+    </article>
+  </div>
+</section>
+
+<footer class="lp-footer">
+  <div class="lp-footer-grid">
+    <div class="lp-footer-brand">
+      <img src="{% static 'img/ig-logo3.jpeg' %}" alt="Bharat IG">
+      <div>
+        <strong>Bharat Internet Governance Sphere</strong>
+        <p>Connection, policy, people and participation in India's digital governance.</p>
+      </div>
+    </div>
+    <div>
+      <h4>Explore</h4>
+      <a href="{% url 'home' %}">Home</a>
+      <a href="{% url 'events' %}">Events</a>
+      <a href="{% url 'research_hub' %}">Research</a>
+      <a href="{% url 'blogs' %}">Blogs</a>
+    </div>
+    <div>
+      <h4>Participate</h4>
+      <a href="{% url 'consultations' %}">Stakeholder Engagement</a>
+      <a href="{% url 'capacity' %}">Capacity Building</a>
+      <a href="{% url 'global' %}">India at Global Forums</a>
+      <a href="{% url 'sig' %}">SIG</a>
+    </div>
+    <div>
+      <h4>Connect</h4>
+      <p>Stay connected with India's internet governance community.</p>
+      <div class="lp-social">
+        <a href="https://x.com" target="_blank" rel="noopener" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
+        <a href="https://www.linkedin.com" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+        <a href="https://www.youtube.com" target="_blank" rel="noopener" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+      </div>
+    </div>
+  </div>
+  <div class="lp-footer-bar">
+    <span>© {% now "Y" %} Bharat Internet Governance Sphere (BIG-S). All rights reserved.</span>
+    <span>Privacy Policy · Terms of Use · Contact Us</span>
+  </div>
+</footer>
+
+{% endblock %}

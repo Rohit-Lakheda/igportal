@@ -1,0 +1,45 @@
+{% extends "core/research/base_research.html" %}
+{% block title %}{{ broad.name }} — Open source{% endblock %}
+{% block research_body %}
+<section class="research-header research-header--compact">
+  <div class="research-header-bg"></div>
+  <div class="research-header-inner">
+    <nav class="research-breadcrumb" aria-label="Breadcrumb">
+      <a href="{% url 'research_hub' %}">Research</a>
+      <span class="research-breadcrumb-sep" aria-hidden="true">/</span>
+      <a href="{% url 'open_source_index' %}">Open source</a>
+      <span class="research-breadcrumb-sep" aria-hidden="true">/</span>
+      <span>{{ broad.name }}</span>
+    </nav>
+    <h1>{{ broad.name }}</h1>
+  </div>
+</section>
+
+<section class="research-section">
+  <div class="research-wrap">
+    <div class="research-toolbar">
+      <a href="{% url 'open_source_index' %}" class="research-text-link">← All areas</a>
+      {% if request.session.member_uuid and request.session.member_role|default:''|lower == 'member' %}
+      <a href="{% url 'open_source_submit' %}" class="research-btn research-btn--primary">Submit</a>
+      {% endif %}
+    </div>
+
+    <div class="research-card-list">
+      {% for item in projects %}
+      <article class="research-row-card">
+        <div class="research-row-main">
+          <h2><a href="{% url 'open_source_project' broad.slug item.project.slug %}">{{ item.project.name }}</a></h2>
+          <p class="research-muted">{{ item.project.description|truncatewords:32 }}</p>
+        </div>
+        <div class="research-row-meta">
+          <span class="research-pill">{{ item.approved_count }} contribution{{ item.approved_count|pluralize }}</span>
+          <a href="{% url 'open_source_project' broad.slug item.project.slug %}" class="research-text-link">Open <span aria-hidden="true">→</span></a>
+        </div>
+      </article>
+      {% empty %}
+      <p class="research-empty">No projects with approved contributions in this area.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

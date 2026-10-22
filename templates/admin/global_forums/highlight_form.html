@@ -1,0 +1,73 @@
+{% extends "admin/base.html" %}
+{% block title %}{% if highlight %}Edit highlight{% else %}Add highlight{% endif %} | Admin{% endblock %}
+
+{% block admin_css %}
+<style>
+  .gf-back{ display:inline-flex; align-items:center; gap:8px; margin-bottom:14px; color:#122033; font-weight:700; font-size:14px; text-decoration:none; }
+  .gf-back:hover{ color:#c96416; }
+  .gf-form{ background:#fff; border:1px solid #e8edf3; border-radius:18px; padding:22px; box-shadow:0 10px 24px rgba(15,23,42,.05); }
+  .gf-form h1{ margin:0 0 16px; font-family:"Playfair Display", Georgia, serif; font-size:32px; }
+  .gf-grid{ display:grid; grid-template-columns:1fr 140px; gap:16px; }
+  .gf-span{ grid-column:1 / -1; }
+  .gf-form label{ display:block; margin:0 0 6px; font-size:14px; font-weight:700; }
+  .gf-form input{
+    box-sizing:border-box; width:100%; height:44px; padding:0 14px; border:1px solid #e8edf3; border-radius:12px; background:#fff; color:#122033; font:inherit; font-size:14px;
+  }
+  .gf-form input[type=file]{ height:auto; padding:10px 14px; }
+  .gf-form input:focus{ outline:2px solid rgba(224,123,42,.35); border-color:#e07b2a; }
+  .gf-note{ margin:6px 0 0; color:#5b6b7c; font-size:13px; }
+  .gf-current{ width:100%; max-height:180px; object-fit:cover; border-radius:12px; margin-bottom:8px; background:#f4f7fb; }
+  .gf-check{ display:flex; align-items:center; gap:8px; min-height:44px; }
+  .gf-check input{ width:18px; height:18px; }
+  .gf-check label{ margin:0; }
+  .gf-actions{ display:flex; justify-content:flex-end; gap:8px; margin-top:16px; }
+  .gf-actions button, .gf-actions a{
+    display:inline-flex; align-items:center; justify-content:center; height:44px; padding:0 16px; border-radius:12px; border:1px solid #e8edf3; background:#fff; color:#122033; font-weight:700; text-decoration:none; cursor:pointer;
+  }
+  .gf-actions button{ background:#e07b2a; border-color:#e07b2a; color:#fff; }
+  .gf-actions button:hover{ background:#c96416; }
+  @media (max-width: 700px){ .gf-grid{ grid-template-columns:1fr; } }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-section">
+  <a class="gf-back" href="{% url 'admin_global_forums' %}"><i class="fas fa-arrow-left"></i> Global forums</a>
+  <form class="gf-form" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <h1>{% if highlight %}Edit highlight{% else %}Add highlight{% endif %}</h1>
+    <div class="gf-grid">
+      <div class="gf-span">
+        <label for="hl-cap">Caption</label>
+        <input id="hl-cap" type="text" name="caption" value="{{ highlight.caption|default:'' }}">
+      </div>
+      <div>
+        <label for="hl-alt">Image description</label>
+        <input id="hl-alt" type="text" name="alt_text" value="{{ highlight.alt_text|default:'' }}">
+      </div>
+      <div>
+        <label for="hl-sort">Sort</label>
+        <input id="hl-sort" type="number" name="sort_order" value="{{ highlight.sort_order|default:0 }}">
+      </div>
+      <div class="gf-span">
+        <label for="hl-img">Photo</label>
+        {% if highlight and highlight.picture_url %}<img class="gf-current" src="{{ highlight.picture_url }}" alt="">{% endif %}
+        <input id="hl-img" type="file" name="image" accept="image/jpeg,image/png,image/webp">
+        <p class="gf-note">1500 × 500 px (3:1), JPG or PNG. Leave empty to keep the current photo.</p>
+      </div>
+      <div class="gf-span">
+        <label for="hl-url">Image link</label>
+        <input id="hl-url" type="url" name="image_url" value="{{ highlight.image_url|default:'' }}" placeholder="Used only when no file is uploaded">
+      </div>
+      <div class="gf-check gf-span">
+        <input id="hl-pub" type="checkbox" name="is_published" {% if not highlight or highlight.is_published %}checked{% endif %}>
+        <label for="hl-pub">Show on the public page</label>
+      </div>
+    </div>
+    <div class="gf-actions">
+      <a href="{% url 'admin_global_forums' %}">Cancel</a>
+      <button type="submit">Save highlight</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

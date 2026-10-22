@@ -1,0 +1,123 @@
+{% extends "admin/base.html" %}
+{% block title %}{{ c.title }} | Admin{% endblock %}
+
+{% block admin_css %}
+<style>
+  .ef-back{
+    display:inline-flex; align-items:center; gap:8px; margin-bottom:14px;
+    color:#122033; font-weight:700; font-size:14px; text-decoration:none;
+  }
+  .ef-back:hover{ color:#c96416; }
+  .sv-card{
+    background:#fff; border:1px solid #e8edf3; border-radius:18px; padding:22px;
+    box-shadow:0 10px 24px rgba(15,23,42,.05);
+  }
+  .sv-top{ display:flex; justify-content:space-between; gap:12px; align-items:flex-start; }
+  .sv-card h1, .sv-card h2{ margin:0; font-family:"Playfair Display", Georgia, serif; }
+  .sv-card h2{ font-size:26px; }
+  .sv-meta{ display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
+  .sv-meta span, .sv-meta a{
+    padding:4px 10px; border-radius:999px; background:#f4f7fb; border:1px solid #e8edf3; color:#5b6b7c; font-size:12.5px; font-weight:700; text-decoration:none;
+  }
+  .sv-meta a:hover{ border-color:#e07b2a; color:#c96416; }
+  .sv-meta .open{ color:#166534; background:rgba(22,163,74,.1); border-color:transparent; }
+  .sv-meta .closed{ color:#b42318; background:#fff5f5; border-color:transparent; }
+  .sv-meta .upcoming{ color:#c96416; background:rgba(224,123,42,.12); border-color:transparent; }
+  .sv-block{ margin-top:16px; }
+  .sv-block h3{ margin:0 0 6px; font-size:14px; }
+  .sv-block p{ margin:0; color:#334155; line-height:1.5; }
+  .sv-edit{
+    display:inline-flex; align-items:center; justify-content:center; height:38px; padding:0 14px;
+    border-radius:10px; background:#e07b2a; color:#fff; font-weight:700; font-size:13px; text-decoration:none;
+  }
+  .sv-edit:hover{ background:#c96416; color:#fff; }
+  .sv-list{ display:flex; flex-direction:column; gap:12px; margin-top:12px; }
+  .sv-comment{
+    background:#fff; border:1px solid #e8edf3; border-radius:18px; padding:16px 18px;
+    box-shadow:0 10px 24px rgba(15,23,42,.05);
+  }
+  .sv-comment h3{ margin:0; font-size:16px; }
+  .sv-comment .sub{ margin:4px 0 0; color:#5b6b7c; font-size:13.5px; }
+  .sv-comment p{ margin:10px 0 0; color:#334155; line-height:1.5; }
+  .sv-actions{ display:flex; gap:8px; margin-top:12px; }
+  .sv-actions a{
+    display:inline-flex; align-items:center; justify-content:center; height:38px; padding:0 14px;
+    border-radius:10px; border:1px solid #e8edf3; background:#fff; font-weight:700; font-size:13px; text-decoration:none; color:#122033;
+  }
+  .sv-actions .yes{ background:#e07b2a; border-color:#e07b2a; color:#fff; }
+  .sv-actions .no{ color:#b42318; }
+  .sv-empty{ padding:28px 16px; text-align:center; background:#fff; border:1px dashed #d7dee7; border-radius:18px; color:#5b6b7c; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-section">
+  <a class="ef-back" href="{% url 'stakeholder_consultation' %}"><i class="fas fa-arrow-left"></i> Stakeholder consultations</a>
+
+  <article class="sv-card">
+    <div class="sv-top">
+      <div>
+        <h1>{{ c.title }}</h1>
+        <div class="sv-meta">
+          {% if c.organization %}<span>{{ c.organization }}</span>{% endif %}
+          {% if c.category %}<span>{{ c.category }}</span>{% endif %}
+          <span class="{% if c.status == 'Open' %}open{% elif c.status == 'Closed' %}closed{% elif c.status == 'Upcoming' %}upcoming{% endif %}">{{ c.status }}</span>
+          <span>Opens {% if c.open_date|date:'d M Y' %}{{ c.open_date|date:'d M Y' }}{% else %}{{ c.open_date|default:"—" }}{% endif %}</span>
+          <span>Closes {% if c.close_date|date:'d M Y' %}{{ c.close_date|date:'d M Y' }}{% else %}{{ c.close_date|default:"—" }}{% endif %}</span>
+          {% if c.contact_email %}<span>{{ c.contact_email }}</span>{% endif %}
+          {% if c.requester %}<span>{{ c.requester }}</span>{% endif %}
+          {% for doc in documents %}
+          <a href="{{ doc.document_path }}" target="_blank" rel="noopener">{{ doc.document_name }}</a>
+          {% endfor %}
+        </div>
+      </div>
+      <a class="sv-edit" href="{% url 'stakeholder_consultation_edit' c.id %}">Edit</a>
+    </div>
+    {% if c.description %}
+    <div class="sv-block">
+      <h3>Description</h3>
+      <p>{{ c.description|linebreaksbr }}</p>
+    </div>
+    {% endif %}
+    {% if c.input_focus %}
+    <div class="sv-block">
+      <h3>Input focus</h3>
+      <p>{{ c.input_focus|linebreaksbr }}</p>
+    </div>
+    {% endif %}
+    {% if c.proposals %}
+    <div class="sv-block">
+      <h3>Proposals</h3>
+      <p>{{ c.proposals|linebreaksbr }}</p>
+    </div>
+    {% endif %}
+  </article>
+
+  <section class="sv-card">
+    <h2>Comments · {{ comments|length }}</h2>
+    <div class="sv-list">
+      {% for comment in comments %}
+      <article class="sv-comment">
+        <h3>{{ comment.user_email|default:"Unknown" }}</h3>
+        <p class="sub">
+          {{ comment.organization|default:"No organization" }}{% if comment.designation %} · {{ comment.designation }}{% endif %}
+          {% if comment.user_company %} · {{ comment.user_company }}{% endif %}
+          · {{ comment.status|default:"Pending" }}
+          · {{ comment.created_at|date:"d M Y" }}
+        </p>
+        <p>{{ comment.comment|linebreaksbr }}</p>
+        <div class="sv-actions">
+          {% if comment.document_path %}
+          <a href="{{ comment.document_path }}" target="_blank" rel="noopener">File</a>
+          {% endif %}
+          <a class="yes" href="{% url 'moderate_comment' id=comment.id %}?status=Approved">Approve</a>
+          <a class="no" href="{% url 'moderate_comment' id=comment.id %}?status=Rejected">Reject</a>
+        </div>
+      </article>
+      {% empty %}
+      <div class="sv-empty">No comments yet.</div>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}

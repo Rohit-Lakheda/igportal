@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% block title %}Create SIG Member — Admin{% endblock %}
+{% block content %}
+<div class="card">
+  <h2 style="margin:0 0 12px 0;">Create SIG Member (Admin)</h2>
+  <p class="small">Staff-only page for creating SIG Members.</p>
+
+  {% if messages %}
+    {% for m in messages %}
+      <div class="small" style="margin:8px 0; padding:10px; border-radius:8px; background:var(--glass-2);">
+        {{ m }}
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  {% if just_created %}
+    <div class="card" style="margin:10px 0; background:var(--glass-2);">
+      <strong>Created:</strong> {{ just_created.first_name }} {{ just_created.last_name }} ({{ just_created.email }})<br/>
+      <strong>Mobile:</strong> {{ just_created.mobile }}<br/>
+      <strong>Group:</strong> {{ just_created.group }}<br/>
+      <strong>Designation:</strong> {{ just_created.designation }}<br/>
+      {% if generated_password %}
+        <div style="margin-top:8px;">
+          <strong>Login created.</strong><br/>
+          <span class="small">Username: {{ just_created.email }}<br/>Password: <code>{{ generated_password }}</code></span>
+        </div>
+      {% else %}
+        <div style="margin-top:8px;">
+          <strong>No login created.</strong>
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  <form method="post" style="margin-top:10px;">
+    {% csrf_token %}
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+      <div>
+        <label>First Name</label>
+        <input type="text" name="first_name" required value="{{ posted.first_name|default:'' }}">
+      </div>
+      <div>
+        <label>Last Name</label>
+        <input type="text" name="last_name" required value="{{ posted.last_name|default:'' }}">
+      </div>
+      <div>
+        <label>Email</label>
+        <input type="email" name="email" required value="{{ posted.email|default:'' }}">
+      </div>
+      <div>
+        <label>Mobile (10–15 digits)</label>
+        <input type="text" name="mobile" required value="{{ posted.mobile|default:'' }}">
+      </div>
+      <div>
+        <label>Group</label>
+        <select name="group_id" required>
+          <option value="">-- Select Group --</option>
+          {% for g in groups %}
+            <option value="{{ g.id }}" {% if posted.group_id|default:'' == g.id|stringformat:'s' %}selected{% endif %}>
+              {{ g.code }} — {{ g.name }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label>Designation</label>
+        <select name="designation_id" required>
+          <option value="">-- Select Designation --</option>
+          {% for d in designations %}
+            <option value="{{ d.id }}" {% if posted.designation_id|default:'' == d.id|stringformat:'s' %}selected{% endif %}>
+              {{ d.code }} — {{ d.name }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+      <div style="grid-column:1 / -1; display:flex; align-items:center; gap:8px;">
+        <input type="checkbox" id="create_login" name="create_login" {% if posted.create_login %}checked{% else %}checked{% endif %}>
+        <label for="create_login">Create login (username = email) and auto-generate password</label>
+      </div>
+    </div>
+
+    <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:12px;">
+      <button class="btn" type="reset">Reset</button>
+      <button class="btn primary" type="submit">Create Member</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

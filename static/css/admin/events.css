@@ -1,0 +1,161 @@
+.admin-section{
+  padding:10px 0;
+}
+
+/* TOP BAR */
+.admin-topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:15px;
+  gap:10px;
+}
+
+.admin-search-form{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+
+/* INPUTS */
+.admin-input,
+.admin-select{
+  padding:6px 10px;
+  border-radius:8px;
+  border:1px solid #ddd;
+  font-size:13px;
+}
+
+.btn-primary-admin{
+  background:var(--accent);
+  border:none;
+  color:#fff;
+  padding:6px 14px;
+  border-radius:20px;
+  font-size:13px;
+}
+
+/* TABLE CARD */
+.admin-table-card{
+  background:#fff;
+  border-radius:14px;
+  overflow:hidden;
+  box-shadow:0 10px 30px rgba(0,0,0,.06);
+}
+
+/* TABLE */
+.admin-table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:13px;
+}
+
+.admin-table th,
+.admin-table td{
+  padding:10px 12px;
+  border-bottom:1px solid #eee;
+}
+
+.admin-table th{
+  background:#f9fafb;
+  font-weight:600;
+}
+
+.admin-table tr:hover{
+  background:rgba(184,115,51,.05);
+}
+
+/* DESCRIPTION */
+.admin-desc-link{
+  cursor:pointer;
+  text-decoration:none;
+  color:var(--primary);
+}
+
+.admin-desc-link:hover{
+  color:var(--accent);
+}
+
+/* BADGE */
+.admin-badge{
+  background:rgba(184,115,51,.15);
+  padding:3px 10px;
+  border-radius:12px;
+  font-size:12px;
+}
+
+/* IMAGE */
+.admin-thumb{
+  width:45px;
+  height:45px;
+  border-radius:8px;
+  object-fit:cover;
+}
+
+/* ACTIONS */
+.admin-actions{
+  display:flex;
+  gap:6px;
+}
+
+.admin-icon-btn{
+  width:28px;
+  height:28px;
+  border:none;
+  border-radius:6px;
+  background:#f3f4f6;
+  font-size:12px;
+}
+
+.admin-icon-btn:hover{
+  background:rgba(184,115,51,.2);
+}
+
+.admin-icon-btn.danger:hover{
+  background:rgba(255,0,0,.15);
+}
+
+/* EMPTY */
+.admin-empty{
+  text-align:center;
+  padding:20px;
+  color:#999;
+}
+
+/* PAGINATION */
+.admin-pagination{
+  margin-top:12px;
+  display:flex;
+  justify-content:center;
+  gap:6px;
+}
+
+.page-btn{
+  padding:4px 10px;
+  border-radius:6px;
+  background:#f3f4f6;
+  text-decoration:none;
+  font-size:12px;
+  color:#000;
+}
+
+.page-btn.active{
+  background:var(--accent);
+  color:#fff;
+}
+
+/* MOBILE */
+@media(max-width:768px){
+  .admin-table thead{
+    display:none;
+  }
+  .admin-table tr{
+    display:block;
+    padding:10px;
+  }
+  .admin-table td{
+    display:block;
+    padding:6px 0;
+  }
+}

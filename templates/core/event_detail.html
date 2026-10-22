@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ event.title|default:"Event" }} — Bharat IG Sphere{% endblock %}
+{% block body_class %}lp-page{% endblock %}
+
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'UI-CSS/landing.css' %}">
+<link rel="stylesheet" href="{% static 'UI-CSS/events.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<section class="events-header">
+  <div class="events-header-bg"></div>
+  <div class="events-header-content">
+    <h1>Events and Engagements</h1>
+    <p>National and international Internet Governance participation</p>
+  </div>
+</section>
+
+<section class="ed-page">
+  <div class="ed-wrap">
+    <article class="ed-card">
+      <a href="{% url 'events' %}" class="ed-back"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> All events</a>
+
+      <div class="ed-layout">
+        {% if event.photo %}
+        <div class="ed-photo-wrap">
+          <img src="{{ MEDIA_URL }}{{ event.photo }}" alt="{{ event.title|default:'Event' }}" class="ed-photo">
+        </div>
+        {% endif %}
+
+        <div class="ed-body">
+          {% if event.event_type and event.event_type|lower != "none" %}
+          <span class="ed-type">{{ event.event_type }}</span>
+          {% endif %}
+
+          <h1>{{ event.title|default:"Event" }}</h1>
+
+          <p class="ed-date">
+            <i class="fa-regular fa-calendar" aria-hidden="true"></i>
+            {{ event.event_date|date:"d M Y" }}{% if event.event_dateto and event.event_dateto != event.event_date %} – {{ event.event_dateto|date:"d M Y" }}{% endif %}
+          </p>
+
+          <div class="ed-description">{{ event.description }}</div>
+
+          {% if event.event_link %}
+          <a href="{{ event.event_link }}" class="ed-link" target="_blank" rel="noopener">Visit event page</a>
+          {% endif %}
+        </div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<footer class="lp-footer">
+  <div class="lp-footer-grid">
+    <div class="lp-footer-brand">
+      <img src="{% static 'img/ig-logo3.jpeg' %}" alt="Bharat IG">
+      <div>
+        <strong>Bharat Internet Governance Sphere</strong>
+        <p>Connection, policy, people and participation in India's digital governance.</p>
+      </div>
+    </div>
+    <div>
+      <h4>Explore</h4>
+      <a href="{% url 'home' %}">Home</a>
+      <a href="{% url 'events' %}">Events</a>
+      <a href="{% url 'research_hub' %}">Research</a>
+      <a href="{% url 'blogs' %}">Blogs</a>
+    </div>
+    <div>
+      <h4>Participate</h4>
+      <a href="{% url 'consultations' %}">Stakeholder Engagement</a>
+      <a href="{% url 'capacity' %}">Capacity Building</a>
+      <a href="{% url 'global' %}">India at Global Forums</a>
+      <a href="{% url 'sig' %}">SIG</a>
+    </div>
+    <div>
+      <h4>Connect</h4>
+      <p>Stay connected with India's internet governance community.</p>
+      <div class="lp-social">
+        <a href="https://x.com" target="_blank" rel="noopener" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
+        <a href="https://www.linkedin.com" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+        <a href="https://www.youtube.com" target="_blank" rel="noopener" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+      </div>
+    </div>
+  </div>
+  <div class="lp-footer-bar">
+    <span>© {% now "Y" %} Bharat Internet Governance Sphere (BIG-S). All rights reserved.</span>
+    <span>Privacy Policy · Terms of Use · Contact Us</span>
+  </div>
+</footer>
+
+{% endblock %}

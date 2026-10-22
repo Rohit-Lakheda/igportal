@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ title }} — Bharat IG Sphere</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'UI-CSS/login.css' %}?v=6">
+</head>
+<body>
+  <main class="lg-page lg-page-form">
+    <div class="lg-card lg-card-wide">
+      <img src="{% static 'img/ig-logo3.jpeg' %}" alt="Bharat IG">
+      <h1>{{ title }}</h1>
+
+      {% if messages %}
+      {% for message in messages %}
+      <div class="lg-alert lg-alert-{{ message.tags }}">{{ message }}</div>
+      {% endfor %}
+      {% endif %}
+
+      <form method="post" action="" novalidate>
+        {% csrf_token %}
+        <div class="lg-grid">
+          {% for field in form %}
+          <div class="sig-form-field {% if field.field.widget.input_type == 'textarea' or field.name == 'reason' or field.name == 'work_experience' or field.name == 'bio' %}full{% endif %}">
+            <label for="{{ field.id_for_label }}">
+              {{ field.label }}
+              {% if field.field.required %}<span class="lg-star">*</span>{% endif %}
+            </label>
+            {{ field }}
+            {% if field.help_text %}
+            <div class="lg-help">{{ field.help_text }}</div>
+            {% endif %}
+            {% for error in field.errors %}
+            <div class="lg-error">{{ error }}</div>
+            {% endfor %}
+          </div>
+          {% endfor %}
+        </div>
+        <button type="submit">Submit</button>
+      </form>
+
+      <p class="lg-alt">Already have an account? <a href="{% url 'siglogin' %}">Sign in</a></p>
+      <a class="lg-home" href="{% url 'home' %}">Back to home</a>
+    </div>
+  </main>
+</body>
+</html>

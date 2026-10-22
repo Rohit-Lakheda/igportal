@@ -1,0 +1,142 @@
+/* =========================================================
+   EVENT DETAIL SYSTEM — Bharat IG Sphere
+========================================================= */
+
+.event-detail-header {
+    position: relative;
+    min-height: 35vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #fff;
+    padding: 60px 20px;
+    overflow: hidden;
+}
+
+.event-detail-header-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%);
+    z-index: 1;
+}
+
+.event-detail-header-bg::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top right, rgba(37, 99, 235, 0.2), transparent 70%);
+}
+
+.event-detail-header-content {
+    position: relative;
+    z-index: 2;
+    max-width: 900px;
+}
+
+.event-detail-header h1 {
+    font-size: 42px;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 15px;
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.event-meta-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 20px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #e2e8f0;
+}
+
+/* CONTENT CONTAINER */
+.event-detail-container {
+    max-width: 900px;
+    margin: -60px auto 100px;
+    position: relative;
+    z-index: 10;
+    padding: 0 20px;
+}
+
+.event-detail-card {
+    background: #ffffff;
+    border-radius: 24px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+    padding: 50px;
+    border: 1px solid #f1f5f9;
+}
+
+/* HERO IMAGE INSIDE CARD */
+.event-hero-img-box {
+    width: 100%;
+    margin-bottom: 40px;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.event-hero-img {
+    width: 100%;
+    max-height: 500px;
+    object-fit: cover;
+    display: block;
+}
+
+/* DESCRIPTION */
+.event-description {
+    font-size: 17px;
+    line-height: 1.8;
+    color: #334155;
+    margin-bottom: 40px;
+}
+
+/* ACTIONS */
+.event-detail-actions {
+    display: flex;
+    justify-content: center;
+    padding-top: 30px;
+    border-top: 1px solid #f1f5f9;
+}
+
+.event-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 36px;
+    background: #2563eb;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 16px;
+    border-radius: 999px;
+    transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.25);
+}
+
+.event-btn:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 15px 35px rgba(37, 99, 235, 0.35);
+    background: #1d4ed8;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .event-detail-header h1 {
+        font-size: 30px;
+    }
+
+    .event-detail-card {
+        padding: 30px;
+    }
+
+    .event-detail-header {
+        min-height: 25vh;
+    }
+}

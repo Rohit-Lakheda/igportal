@@ -1,0 +1,183 @@
+/* =========================================================
+   INTERACTIVE HOME SYSTEM — Bharat IG Sphere
+   Advanced UI + Motion + Animation
+========================================================= */
+
+/* ---------- GLOBAL MOTION ---------- */
+.section{
+  position:relative;
+  overflow:hidden;
+}
+
+.section::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(circle at 10% 10%, rgba(99,102,241,.08), transparent 40%),
+    radial-gradient(circle at 90% 30%, rgba(34,197,94,.08), transparent 40%),
+    radial-gradient(circle at 50% 90%, rgba(14,165,233,.06), transparent 40%);
+  z-index:0;
+}
+
+.section > *{
+  position:relative;
+  z-index:1;
+}
+
+/* ---------- HERO ---------- */
+.hero{
+  position:relative;
+  min-height:92vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  overflow:hidden;
+}
+
+.hero-bg{
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(120deg,rgba(15,23,42,.6),rgba(15,23,42,.6)),
+    url("/static/img/bg.png") center/cover no-repeat;
+  animation:slowZoom 30s infinite alternate;
+}
+
+@keyframes slowZoom{
+  from{transform:scale(1);}
+  to{transform:scale(1.1);}
+}
+
+.hero-content{
+  max-width:900px;
+  animation:heroEntry 1.2s ease forwards;
+}
+
+@keyframes heroEntry{
+  from{opacity:0; transform:translateY(40px);}
+  to{opacity:1; transform:translateY(0);}
+}
+
+.hero h1{
+  font-size:64px;
+  background:linear-gradient(90deg,#e0e7ff,#ecfeff,#dcfce7);
+  -webkit-background-clip:text;
+  color:transparent;
+  animation:gradientFlow 8s infinite linear;
+}
+
+@keyframes gradientFlow{
+  from{background-position:0%;}
+  to{background-position:200%;}
+}
+
+.hero-sub{
+  color:#e5e7eb;
+  font-size:20px;
+  margin-top:20px;
+}
+
+/* ---------- FLOATING EFFECT ---------- */
+.float{
+  animation:float 6s ease-in-out infinite;
+}
+
+@keyframes float{
+  0%{transform:translateY(0)}
+  50%{transform:translateY(-12px)}
+  100%{transform:translateY(0)}
+}
+
+/* ---------- CARDS ---------- */
+.update-card,
+.program-card,
+.knowledge-card,
+.focus-card{
+  backdrop-filter:blur(10px);
+  background:rgba(255,255,255,.85);
+  position:relative;
+  overflow:hidden;
+}
+
+.update-card::after,
+.program-card::after,
+.knowledge-card::after,
+.focus-card::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(120deg,transparent,rgba(99,102,241,.12),transparent);
+  opacity:0;
+  transition:.5s;
+}
+
+.update-card:hover::after,
+.program-card:hover::after,
+.knowledge-card:hover::after,
+.focus-card:hover::after{
+  opacity:1;
+}
+
+/* ---------- ENTRY ANIMATION ---------- */
+.reveal{
+  opacity:0;
+  transform:translateY(40px);
+  transition:1s;
+}
+
+.reveal.active{
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* ---------- PARALLAX ---------- */
+.parallax{
+  background-attachment:fixed;
+}
+
+/* ---------- CTA ---------- */
+.section-cta{
+  background:
+    linear-gradient(135deg,#1e293b,#0f172a),
+    radial-gradient(circle at top right,rgba(34,197,94,.25),transparent 60%);
+  color:#fff;
+}
+
+.section-cta h2{
+  background:linear-gradient(90deg,#bbf7d0,#93c5fd,#c7d2fe);
+  -webkit-background-clip:text;
+  color:transparent;
+}
+
+/* ---------- BUTTONS ---------- */
+.btn-primary{
+  background:linear-gradient(135deg,#22c55e,#16a34a,#0ea5e9);
+  background-size:200%;
+  animation:btnFlow 6s infinite linear;
+}
+
+@keyframes btnFlow{
+  from{background-position:0%;}
+  to{background-position:200%;}
+}
+
+.btn-outline{
+  border:2px solid rgba(255,255,255,.5);
+  color:#fff;
+}
+
+/* ---------- SECTION WAVES ---------- */
+.section-light{
+  clip-path: polygon(0 0,100% 0,100% 95%,0 100%);
+}
+
+.section-gradient{
+  clip-path: polygon(0 5%,100% 0,100% 100%,0 95%);
+}
+
+/* ---------- GLOW ---------- */
+.glow{
+  box-shadow:0 0 40px rgba(99,102,241,.25);
+}

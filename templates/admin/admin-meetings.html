@@ -1,0 +1,281 @@
+{% extends "admin/base.html" %}
+{% load static %}
+{% block title %}Meetings | Admin{% endblock %}
+
+{% block admin_css %}
+<style>
+  .mt-head{ display:flex; justify-content:space-between; align-items:flex-end; gap:16px; flex-wrap:wrap; }
+  .mt-head h1, .mt-form h2{ margin:0; font-family:"Playfair Display", Georgia, serif; }
+  .mt-head p{ margin:6px 0 0; color:#5b6b7c; }
+  .mt-count{ padding:8px 12px; border-radius:999px; background:#fff; border:1px solid #e8edf3; font-weight:700; font-size:14px; }
+  .mt-bar{ display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; align-items:center; }
+  .mt-search{ display:flex; gap:8px; align-items:center; }
+  .mt-search input{
+    box-sizing:border-box; width:min(280px, 100%); height:44px; padding:0 14px; border:1px solid #e8edf3; border-radius:12px; background:#fff; color:#122033; font:inherit; font-size:14px;
+  }
+  .mt-search input:focus, .mt-form input:focus, .mt-form select:focus{
+    outline:2px solid rgba(224,123,42,.35); border-color:#e07b2a;
+  }
+  .mt-add, .mt-search button{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px; height:44px; padding:0 16px; border:0; border-radius:12px; background:#e07b2a; color:#fff; font-weight:700; line-height:1; white-space:nowrap; cursor:pointer;
+  }
+  .mt-add:hover, .mt-search button:hover{ background:#c96416; }
+  .mt-form{
+    display:none; background:#fff; border:1px solid #e8edf3; border-radius:18px; padding:22px;
+    box-shadow:0 10px 24px rgba(15,23,42,.05);
+  }
+  .mt-form.is-on{ display:block; }
+  .mt-form h2{ font-size:26px; margin-bottom:6px; }
+  .mt-form .hint{ margin:0 0 16px; color:#5b6b7c; font-size:14px; }
+  .mt-grid{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .mt-span{ grid-column:1 / -1; }
+  .mt-form label{ display:block; margin:0 0 6px; font-size:14px; font-weight:700; }
+  .mt-current{ margin:0 0 6px; font-size:13px; color:#5b6b7c; }
+  .mt-current a{ color:#c96416; font-weight:700; text-decoration:none; }
+  .mt-current a:hover{ color:#e07b2a; }
+  .mt-form input, .mt-form select{
+    box-sizing:border-box; width:100%; height:44px; padding:0 14px; border:1px solid #e8edf3; border-radius:12px; background:#fff; color:#122033; font:inherit; font-size:14px;
+  }
+  .mt-form input[type=file]{ height:auto; padding:10px 14px; }
+  .mt-actions{ display:flex; justify-content:flex-end; gap:8px; margin-top:16px; }
+  .mt-actions button{
+    display:inline-flex; align-items:center; justify-content:center; height:44px; padding:0 16px; border-radius:12px; border:1px solid #e8edf3; background:#fff; color:#122033; font-weight:700; font-size:14px; line-height:1; cursor:pointer;
+  }
+  .mt-actions .yes{ background:#e07b2a; border-color:#e07b2a; color:#fff; }
+  .mt-actions .yes:hover{ background:#c96416; }
+  .mt-list{ display:flex; flex-direction:column; gap:12px; }
+  .mt-card{
+    display:grid; grid-template-columns:minmax(0, 1fr) auto; gap:16px; align-items:center;
+    background:#fff; border:1px solid #e8edf3; border-radius:18px; padding:16px 18px;
+    box-shadow:0 10px 24px rgba(15,23,42,.05);
+  }
+  .mt-card h3{ margin:0; font-size:18px; color:#122033; }
+  .mt-meta{ display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+  .mt-meta span, .mt-meta a{
+    padding:4px 10px; border-radius:999px; background:#f4f7fb; border:1px solid #e8edf3; color:#5b6b7c; font-size:12.5px; font-weight:700; text-decoration:none;
+  }
+  .mt-meta a:hover{ border-color:#e07b2a; color:#c96416; }
+  .mt-actions-row{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .mt-actions-row form{ margin:0; display:flex; }
+  .mt-actions-row a, .mt-actions-row button{
+    display:inline-flex; align-items:center; justify-content:center; height:38px; padding:0 14px;
+    border-radius:10px; border:1px solid #e8edf3; background:#fff; color:#122033; font-weight:700; font-size:13px; line-height:1; text-decoration:none; cursor:pointer;
+  }
+  .mt-actions-row a:hover, .mt-actions-row button:hover{ border-color:#e07b2a; color:#c96416; }
+  .mt-actions-row .danger{ color:#b42318; }
+  .mt-actions-row .danger:hover{ border-color:#b42318; background:#fff5f5; color:#b42318; }
+  .mt-empty{ padding:28px 16px; text-align:center; background:#fff; border:1px dashed #d7dee7; border-radius:18px; color:#5b6b7c; }
+  @media (max-width: 800px){
+    .mt-grid, .mt-card{ grid-template-columns:1fr; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-section">
+  <div class="mt-head">
+    <div>
+      <h1>Meetings</h1>
+      <p>Add a SIG meeting with its agenda, minutes, and supporting file.</p>
+    </div>
+    <div class="mt-count">{{ total_records }} meeting{{ total_records|pluralize }}</div>
+  </div>
+
+  <div class="mt-bar">
+    <form method="get" class="mt-search">
+      <input type="text" name="search" value="{{ search }}" placeholder="Search title or SIG">
+      <button type="submit">Search</button>
+    </form>
+    <button type="button" class="mt-add" onclick="openMeetingForm('add')"><i class="fas fa-plus"></i> Create meeting</button>
+  </div>
+
+  <form id="addForm" class="mt-form" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="create">
+    <h2>Create meeting</h2>
+    <p class="hint">Agenda, minutes, and the supporting file are all required.</p>
+    <div class="mt-grid">
+      <div>
+        <label for="add-title">Title</label>
+        <input id="add-title" type="text" name="title" required>
+      </div>
+      <div>
+        <label for="add-date">Date and time</label>
+        <input id="add-date" type="datetime-local" name="date" required>
+      </div>
+      <div>
+        <label for="add-sig">SIG</label>
+        <select id="add-sig" name="sig_type" required>
+          <option value="">Choose a SIG</option>
+          <option value="FI">Future of Internet</option>
+          <option value="TPS">Internet Protocols &amp; Standards</option>
+          <option value="DNN">Domain Names &amp; Related Issues</option>
+          <option value="Joint">Joint SIG</option>
+        </select>
+      </div>
+      <div>
+        <label for="add-link">Meeting link</label>
+        <input id="add-link" type="url" name="meeting_link" placeholder="https://">
+      </div>
+      <div>
+        <label for="add-agenda">Agenda</label>
+        <input id="add-agenda" type="file" name="agenda" required>
+      </div>
+      <div>
+        <label for="add-minutes">Minutes</label>
+        <input id="add-minutes" type="file" name="minutes" required>
+      </div>
+      <div class="mt-span">
+        <label for="add-support">Supporting file</label>
+        <input id="add-support" type="file" name="supporting_document" required>
+      </div>
+    </div>
+    <div class="mt-actions">
+      <button type="button" onclick="closeMeetingForms()">Cancel</button>
+      <button type="submit" class="yes">Publish meeting</button>
+    </div>
+  </form>
+
+  <form id="editForm" class="mt-form" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="edit">
+    <input type="hidden" name="meeting_id" id="edit-id">
+    <h2>Edit meeting</h2>
+    <p class="hint">Upload a file only when you want to replace the one already saved.</p>
+    <div class="mt-grid">
+      <div>
+        <label for="edit-title">Title</label>
+        <input id="edit-title" type="text" name="title" required>
+      </div>
+      <div>
+        <label for="edit-date">Date and time</label>
+        <input id="edit-date" type="datetime-local" name="date" required>
+      </div>
+      <div>
+        <label for="edit-sig">SIG</label>
+        <select id="edit-sig" name="sig_type" required>
+          <option value="FI">Future of Internet</option>
+          <option value="TPS">Internet Protocols &amp; Standards</option>
+          <option value="DNN">Domain Names &amp; Related Issues</option>
+          <option value="Joint">Joint SIG</option>
+        </select>
+      </div>
+      <div>
+        <label for="edit-link">Meeting link</label>
+        <input id="edit-link" type="url" name="meeting_link" placeholder="https://">
+      </div>
+      <div>
+        <label for="edit-agenda">Replace agenda</label>
+        <p class="mt-current" id="edit-agenda-current">No file uploaded</p>
+        <input id="edit-agenda" type="file" name="agenda">
+      </div>
+      <div>
+        <label for="edit-minutes">Replace minutes</label>
+        <p class="mt-current" id="edit-minutes-current">No file uploaded</p>
+        <input id="edit-minutes" type="file" name="minutes">
+      </div>
+      <div class="mt-span">
+        <label for="edit-support">Replace supporting file</label>
+        <p class="mt-current" id="edit-support-current">No file uploaded</p>
+        <input id="edit-support" type="file" name="supporting_document">
+      </div>
+    </div>
+    <div class="mt-actions">
+      <button type="button" onclick="closeMeetingForms()">Cancel</button>
+      <button type="submit" class="yes">Save changes</button>
+    </div>
+  </form>
+
+  <div class="mt-list">
+    {% for m in meetings %}
+    <article class="mt-card">
+      <div>
+        <h3>{{ m.title }}</h3>
+        <div class="mt-meta">
+          <span>{{ m.get_sig_type_display }}</span>
+          <span>{{ m.date|date:"d M Y, h:i A" }}</span>
+          {% if m.agenda %}<a href="{{ m.agenda.url }}" target="_blank" rel="noopener">Agenda</a>{% endif %}
+          {% if m.minutes %}<a href="{{ m.minutes.url }}" target="_blank" rel="noopener">Minutes</a>{% endif %}
+          {% if m.supporting_document %}<a href="{{ m.supporting_document.url }}" target="_blank" rel="noopener">Supporting file</a>{% endif %}
+          {% if m.meeting_link %}<a href="{{ m.meeting_link }}" target="_blank" rel="noopener">Join link</a>{% endif %}
+        </div>
+      </div>
+      <div class="mt-actions-row">
+        <button
+          type="button"
+          data-id="{{ m.id }}"
+          data-title="{{ m.title }}"
+          data-date="{{ m.date|date:'Y-m-d\\TH:i' }}"
+          data-sig="{{ m.sig_type }}"
+          data-link="{{ m.meeting_link|default:'' }}"
+          data-agenda-url="{% if m.agenda %}{{ m.agenda.url }}{% endif %}"
+          data-agenda-name="{% if m.agenda %}{{ m.agenda.name }}{% endif %}"
+          data-minutes-url="{% if m.minutes %}{{ m.minutes.url }}{% endif %}"
+          data-minutes-name="{% if m.minutes %}{{ m.minutes.name }}{% endif %}"
+          data-support-url="{% if m.supporting_document %}{{ m.supporting_document.url }}{% endif %}"
+          data-support-name="{% if m.supporting_document %}{{ m.supporting_document.name }}{% endif %}"
+          onclick="openMeetingEdit(this)"
+        >Edit</button>
+        <a href="{% url 'admin_moderate_documents' %}?meeting_id={{ m.id }}">Uploads</a>
+        <form method="post" onsubmit="return confirm('Delete this meeting?');">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="delete">
+          <input type="hidden" name="meeting_id" value="{{ m.id }}">
+          <button type="submit" class="danger">Delete</button>
+        </form>
+      </div>
+    </article>
+    {% empty %}
+    <div class="mt-empty">No meetings yet. Create the first one.</div>
+    {% endfor %}
+  </div>
+</div>
+<script>
+function closeMeetingForms(){
+  document.getElementById("addForm").classList.remove("is-on");
+  document.getElementById("editForm").classList.remove("is-on");
+}
+function openMeetingForm(){
+  closeMeetingForms();
+  var form = document.getElementById("addForm");
+  form.classList.add("is-on");
+  form.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+function fileLabel(path){
+  if (!path) return "View file";
+  var parts = path.split("/");
+  return parts[parts.length - 1] || "View file";
+}
+function setCurrentFile(id, url, path){
+  var el = document.getElementById(id);
+  el.textContent = "";
+  if (url) {
+    var link = document.createElement("a");
+    link.href = url;
+    link.target = "_blank";
+    link.rel = "noopener";
+    link.textContent = "View " + fileLabel(path);
+    el.appendChild(link);
+  } else {
+    el.textContent = "No file uploaded";
+  }
+}
+function openMeetingEdit(button){
+  closeMeetingForms();
+  document.getElementById("edit-id").value = button.getAttribute("data-id") || "";
+  document.getElementById("edit-title").value = button.getAttribute("data-title") || "";
+  document.getElementById("edit-date").value = button.getAttribute("data-date") || "";
+  document.getElementById("edit-sig").value = button.getAttribute("data-sig") || "FI";
+  document.getElementById("edit-link").value = button.getAttribute("data-link") || "";
+  setCurrentFile("edit-agenda-current", button.getAttribute("data-agenda-url"), button.getAttribute("data-agenda-name"));
+  setCurrentFile("edit-minutes-current", button.getAttribute("data-minutes-url"), button.getAttribute("data-minutes-name"));
+  setCurrentFile("edit-support-current", button.getAttribute("data-support-url"), button.getAttribute("data-support-name"));
+  document.getElementById("edit-agenda").value = "";
+  document.getElementById("edit-minutes").value = "";
+  document.getElementById("edit-support").value = "";
+  var form = document.getElementById("editForm");
+  form.classList.add("is-on");
+  form.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+</script>
+{% endblock %}

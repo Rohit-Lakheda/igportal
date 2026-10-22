@@ -1,0 +1,118 @@
+.pf-page {
+  background: #eef1f5;
+  padding: 28px 0 72px;
+}
+
+.pf-wrap {
+  width: min(860px, calc(100% - 40px));
+  margin: 0 auto;
+}
+
+.pf-card {
+  background: #fff;
+  border: 1px solid #e8edf3;
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+  padding: 24px 26px 22px;
+  margin-bottom: 16px;
+}
+
+.pf-card h2 {
+  margin: 0 0 16px;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 26px;
+  color: #122033;
+}
+
+.pf-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 16px;
+}
+
+.pf-span {
+  grid-column: 1 / -1;
+}
+
+.pf-card label {
+  display: block;
+  margin: 12px 0 6px;
+  color: #122033;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.pf-card input {
+  width: 100%;
+  min-height: 46px;
+  padding: 0 14px;
+  border: 1px solid #e8edf3;
+  border-radius: 12px;
+  font-size: 15px;
+  color: #122033;
+  background: #fff;
+}
+
+.pf-card input[readonly] {
+  background: #f7f8fb;
+  color: #5b6b7c;
+}
+
+.pf-card input:focus {
+  outline: 2px solid rgba(224, 123, 42, 0.35);
+  border-color: #e07b2a;
+}
+
+.pf-card button {
+  margin-top: 18px;
+  min-height: 46px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 12px;
+  background: #e07b2a;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.pf-card button:hover {
+  background: #c96416;
+}
+
+.pf-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 0;
+  border-top: 1px solid #e8edf3;
+}
+
+.pf-row strong {
+  display: block;
+  color: #122033;
+}
+
+.pf-row span,
+.pf-empty {
+  color: #5b6b7c;
+  font-size: 13.5px;
+}
+
+.pf-row em {
+  color: #c96416;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.pf-empty {
+  margin: 0;
+}
+
+@media (max-width: 700px) {
+  .pf-grid {
+    grid-template-columns: 1fr;
+  }
+}

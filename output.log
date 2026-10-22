@@ -1,0 +1,52 @@
+nohup: ignoring input
+[27/May/2026 16:52:29] "GET /sig/ HTTP/1.1" 200 13224
+[27/May/2026 16:52:29] "GET /static/UI-CSS/nav.css HTTP/1.1" 200 7541
+[27/May/2026 16:52:29] "GET /static/UI-CSS/home.css HTTP/1.1" 200 7790
+[27/May/2026 16:52:30] "GET /static/UI-CSS/capacity.css HTTP/1.1" 200 3057
+[27/May/2026 16:52:30] "GET /static/UI-CSS/sig.css HTTP/1.1" 200 3286
+[27/May/2026 16:52:30] "GET /static/UI-CSS/events.css HTTP/1.1" 200 7505
+[27/May/2026 16:52:30] "GET /static/img/ig-logo3.jpeg HTTP/1.1" 200 106863
+[27/May/2026 16:52:30] "GET /static/img/bg.png HTTP/1.1" 404 179
+[27/May/2026 16:52:30] "GET /favicon.ico HTTP/1.1" 404 179
+[27/May/2026 16:52:34] "GET /sig/ HTTP/1.1" 200 13224
+[27/May/2026 16:52:34] "GET /static/UI-CSS/capacity.css HTTP/1.1" 200 3057
+[27/May/2026 16:52:34] "GET /static/UI-CSS/sig.css HTTP/1.1" 200 3286
+[27/May/2026 16:52:34] "GET /static/UI-CSS/nav.css HTTP/1.1" 200 7541
+[27/May/2026 16:52:34] "GET /static/UI-CSS/home.css HTTP/1.1" 200 7790
+[27/May/2026 16:52:34] "GET /static/UI-CSS/events.css HTTP/1.1" 200 7505
+[27/May/2026 16:52:34] "GET /static/img/ig-logo3.jpeg HTTP/1.1" 200 106863
+[27/May/2026 16:52:34] "GET /static/img/bg.png HTTP/1.1" 404 179
+[27/May/2026 16:52:35] "GET /favicon.ico HTTP/1.1" 404 179
+[27/May/2026 16:52:38] "GET /events/ HTTP/1.1" 200 19177
+[27/May/2026 16:52:38] "GET /media/events/1768478673_enevntimage.png HTTP/1.1" 404 179
+[27/May/2026 16:52:38] "GET /media/events/1768480667_enevntimage.png HTTP/1.1" 404 179
+[27/May/2026 16:52:38] "GET /media/events/1768480552_enevntimage.png HTTP/1.1" 404 179
+[27/May/2026 16:52:38] "GET /static/img/bg.png HTTP/1.1" 404 179
+[27/May/2026 16:52:38] "GET /media/events/1768480698_enevntimage.png HTTP/1.1" 404 179
+[27/May/2026 16:52:38] "GET /media/events/1770914546_react-js-and-vite-js-logo-on-night-sky-background-3539552582.jpg HTTP/1.1" 404 179
+[27/May/2026 16:52:59] "GET /events/ HTTP/1.1" 200 19177
+[27/May/2026 16:52:59] "GET /static/UI-CSS/capacity.css HTTP/1.1" 200 3057
+[27/May/2026 16:52:59] "GET /static/UI-CSS/home.css HTTP/1.1" 200 7790
+[27/May/2026 16:52:59] "GET /static/UI-CSS/nav.css HTTP/1.1" 200 7541
+[27/May/2026 16:52:59] "GET /static/UI-CSS/events.css HTTP/1.1" 200 7505
+[27/May/2026 16:53:00] "GET /static/img/ig-logo3.jpeg HTTP/1.1" 200 106863
+[27/May/2026 16:53:00] "GET /static/img/bg.png HTTP/1.1" 404 179
+[27/May/2026 16:53:00] "GET /media/events/1768480667_enevntimage.png HTTP/1.1" 404 179
+[27/May/2026 16:53:00] "GET /media/events/1770914546_react-js-and-vite-js-logo-on-night-sky-background-3539552582.jpg HTTP/1.1" 404 179
+[27/May/2026 16:53:00] "GET /media/events/1768480552_enevntimage.png HTTP/1.1" 404 179
+[27/May/2026 16:53:00] "GET /media/events/1768478673_enevntimage.png HTTP/1.1" 404 179
+[27/May/2026 16:53:00] "GET /media/events/1768480698_enevntimage.png HTTP/1.1" 404 179
+[27/May/2026 16:53:00] "GET /favicon.ico HTTP/1.1" 404 179
+Performing system checks...
+
+System check identified no issues (0 silenced).
+
+You have 4 unapplied migration(s). Your project may not work properly until you apply the migrations for app(s): core.
+Run 'python manage.py migrate' to apply them.
+May 27, 2026 - 16:51:57
+Django version 5.2.13, using settings 'igportal.settings'
+Starting development server at http://0.0.0.0:80/
+Quit the server with CONTROL-C.
+
+WARNING: This is a development server. Do not use it in a production setting. Use a production WSGI or ASGI server instead.
+For more information on production servers see: https://docs.djangoproject.com/en/5.2/howto/deployment/

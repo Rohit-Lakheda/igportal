@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Stakeholder Engagement — Bharat IG Sphere{% endblock %}
+{% block body_class %}lp-page{% endblock %}
+
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'UI-CSS/landing.css' %}">
+<link rel="stylesheet" href="{% static 'UI-CSS/consultations.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<section class="events-header pc-hero">
+  <div class="events-header-bg pc-hero-bg"></div>
+  <div class="events-header-content">
+    <h1>Stakeholder Engagement</h1>
+    <p>Transparent, inclusive and participatory governance through open consultations.</p>
+  </div>
+</section>
+
+<section class="pc-find">
+  <div class="pc-find-row">
+    <h2>Find proceedings</h2>
+    <label class="pc-search">
+      <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+      <input type="search" id="searchInput" placeholder="Search title, organization, or keyword" aria-label="Search proceedings" autocomplete="off">
+    </label>
+  </div>
+  <div class="pc-status" role="tablist" aria-label="Proceeding status">
+    <button type="button" class="pc-tab active" data-bucket="open" aria-selected="true">Open</button>
+    <button type="button" class="pc-tab" data-bucket="upcoming" aria-selected="false">Upcoming</button>
+    <button type="button" class="pc-tab" data-bucket="pending" aria-selected="false">Pending</button>
+    <button type="button" class="pc-tab" data-bucket="closed" aria-selected="false">Closed</button>
+  </div>
+</section>
+
+<section class="pc-list">
+  <div class="pc-sheet" id="pcGrid">
+    {% for c in open_proceedings %}
+      {% include "core/includes/consultation_card.html" with c=c bucket="open" badge="Open" %}
+    {% endfor %}
+    {% for c in upcoming_proceedings %}
+      {% include "core/includes/consultation_card.html" with c=c bucket="upcoming" badge="Upcoming" %}
+    {% endfor %}
+    {% for c in pending_proceedings %}
+      {% include "core/includes/consultation_card.html" with c=c bucket="pending" badge="Pending" %}
+    {% endfor %}
+    {% for c in closed_proceedings %}
+      {% include "core/includes/consultation_card.html" with c=c bucket="closed" badge="Closed" %}
+    {% endfor %}
+    <p id="pcEmpty" class="pc-empty" hidden>No proceedings match this view.</p>
+  </div>
+</section>
+
+<footer class="lp-footer">
+  <div class="lp-footer-grid">
+    <div class="lp-footer-brand">
+      <img src="{% static 'img/ig-logo3.jpeg' %}" alt="Bharat IG">
+      <div>
+        <strong>Bharat Internet Governance Sphere</strong>
+        <p>Connection, policy, people and participation in India's digital governance.</p>
+      </div>
+    </div>
+    <div>
+      <h4>Explore</h4>
+      <a href="{% url 'home' %}">Home</a>
+      <a href="{% url 'events' %}">Events</a>
+      <a href="{% url 'research_hub' %}">Research</a>
+      <a href="{% url 'blogs' %}">Blogs</a>
+    </div>
+    <div>
+      <h4>Participate</h4>
+      <a href="{% url 'consultations' %}">Stakeholder Engagement</a>
+      <a href="{% url 'capacity' %}">Capacity Building</a>
+      <a href="{% url 'global' %}">India at Global Forums</a>
+      <a href="{% url 'sig' %}">SIG</a>
+    </div>
+    <div>
+      <h4>Connect</h4>
+      <p>Stay connected with India's internet governance community.</p>
+      <div class="lp-social">
+        <a href="https://x.com" target="_blank" rel="noopener" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
+        <a href="https://www.linkedin.com" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+        <a href="https://www.youtube.com" target="_blank" rel="noopener" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+      </div>
+    </div>
+  </div>
+  <div class="lp-footer-bar">
+    <span>© {% now "Y" %} Bharat Internet Governance Sphere (BIG-S). All rights reserved.</span>
+    <span>Privacy Policy · Terms of Use · Contact Us</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  const tabs = document.querySelectorAll(".pc-tab");
+  const cards = document.querySelectorAll(".pc-row");
+  const empty = document.getElementById("pcEmpty");
+  const searchInput = document.getElementById("searchInput");
+  let bucket = "open";
+
+  function applyFilters() {
+    const query = (searchInput && searchInput.value ? searchInput.value : "").toLowerCase().trim();
+    let visible = 0;
+    cards.forEach((card) => {
+      const text = (card.textContent || "").toLowerCase();
+      const show = card.dataset.bucket === bucket && (!query || text.includes(query));
+      card.hidden = !show;
+      if (show) visible += 1;
+    });
+    if (empty) empty.hidden = visible !== 0;
+  }
+
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      bucket = tab.dataset.bucket;
+      tabs.forEach((item) => {
+        const on = item === tab;
+        item.classList.toggle("active", on);
+        item.setAttribute("aria-selected", on ? "true" : "false");
+      });
+      applyFilters();
+    });
+  });
+
+  if (searchInput) searchInput.addEventListener("input", applyFilters);
+  applyFilters();
+})();
+</script>
+
+{% endblock %}

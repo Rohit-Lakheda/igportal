@@ -1,0 +1,110 @@
+{% extends "admin/base.html" %}
+{% block title %}Research papers | Admin{% endblock %}
+
+{% block admin_css %}
+<style>
+  .oc-back{
+    display:inline-flex; align-items:center; gap:8px; margin-bottom:14px;
+    color:#122033; font-weight:700; font-size:14px; text-decoration:none;
+  }
+  .oc-back:hover{ color:#c96416; }
+  .oc-head{ display:flex; justify-content:space-between; align-items:flex-end; gap:16px; flex-wrap:wrap; }
+  .oc-head h1{ margin:0; font-family:"Playfair Display", Georgia, serif; }
+  .oc-head p{ margin:6px 0 0; color:#5b6b7c; }
+  .oc-count{ padding:8px 12px; border-radius:999px; background:#fff; border:1px solid #e8edf3; font-weight:700; font-size:14px; }
+  .oc-tools select{
+    box-sizing:border-box; height:44px; padding:0 14px; border:1px solid #e8edf3; border-radius:12px; background:#fff; color:#122033; font:inherit; font-size:14px;
+  }
+  .oc-tools select:focus{ outline:2px solid rgba(224,123,42,.35); border-color:#e07b2a; }
+  .oc-list{ display:flex; flex-direction:column; gap:12px; }
+  .oc-card{
+    display:grid; grid-template-columns:minmax(0, 1fr) auto; gap:16px; align-items:center;
+    background:#fff; border:1px solid #e8edf3; border-radius:18px; padding:16px 18px;
+    box-shadow:0 10px 24px rgba(15,23,42,.05);
+  }
+  .oc-card h2{ margin:0; font-size:18px; color:#122033; }
+  .oc-meta{ display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+  .oc-meta span, .oc-meta a{
+    padding:4px 10px; border-radius:999px; background:#f4f7fb; border:1px solid #e8edf3; color:#5b6b7c; font-size:12.5px; font-weight:700; text-decoration:none;
+  }
+  .oc-meta a:hover{ border-color:#e07b2a; color:#c96416; }
+  .oc-meta .pending{ color:#c96416; background:rgba(224,123,42,.12); border-color:transparent; }
+  .oc-meta .approved{ color:#166534; background:rgba(22,163,74,.1); border-color:transparent; }
+  .oc-meta .rejected{ color:#b42318; background:#fff5f5; border-color:transparent; }
+  .oc-actions{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .oc-actions form{ margin:0; display:flex; }
+  .oc-actions a, .oc-actions button{
+    display:inline-flex; align-items:center; justify-content:center; height:38px; padding:0 14px;
+    border-radius:10px; border:1px solid #e8edf3; background:#fff; color:#122033; font-weight:700; font-size:13px; line-height:1; text-decoration:none; cursor:pointer;
+  }
+  .oc-actions a:hover{ border-color:#e07b2a; color:#c96416; }
+  .oc-actions .yes{ background:#e07b2a; border-color:#e07b2a; color:#fff; }
+  .oc-actions .yes:hover{ background:#c96416; }
+  .oc-actions .no{ color:#b42318; }
+  .oc-actions .no:hover{ border-color:#b42318; background:#fff5f5; }
+  .oc-empty{ padding:28px 16px; text-align:center; background:#fff; border:1px dashed #d7dee7; border-radius:18px; color:#5b6b7c; }
+  @media (max-width: 700px){ .oc-card{ grid-template-columns:1fr; } }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-section">
+  <a class="oc-back" href="{% url 'admin_research_hub' %}"><i class="fas fa-arrow-left"></i> Research and open source</a>
+  <div class="oc-head">
+    <div>
+      <h1>Research papers</h1>
+      <p>Each card is one version. Approve it after the topic itself is approved.</p>
+    </div>
+    <div class="oc-count">{{ papers|length }} paper{{ papers|length|pluralize }}</div>
+  </div>
+
+  <form method="get" class="oc-tools">
+    <select name="status" onchange="this.form.submit()" aria-label="Status">
+      <option value="pending" {% if filter_status == 'pending' %}selected{% endif %}>Pending</option>
+      <option value="approved" {% if filter_status == 'approved' %}selected{% endif %}>Approved</option>
+      <option value="rejected" {% if filter_status == 'rejected' %}selected{% endif %}>Rejected</option>
+      <option value="all" {% if filter_status == 'all' %}selected{% endif %}>All statuses</option>
+    </select>
+  </form>
+
+  <div class="oc-list">
+    {% for p in papers %}
+    <article class="oc-card">
+      <div>
+        <h2>{{ p.title }}</h2>
+        <div class="oc-meta">
+          <span>{{ p.specific_topic.broad_topic.name }}</span>
+          <span>{{ p.specific_topic.name }}</span>
+          <span>Version {{ p.version }}</span>
+          <span class="{{ p.status }}">{{ p.get_status_display }}</span>
+          {% if p.submitter_email %}<span>{{ p.submitter_email }}</span>{% endif %}
+          <span>{{ p.uploaded_at|date:"d M Y, h:i A" }}</span>
+          {% if p.document %}<a href="{% url 'admin_research_paper_file' p.pk %}" target="_blank" rel="noopener">File</a>{% endif %}
+        </div>
+      </div>
+      <div class="oc-actions">
+        <a href="{% url 'admin_research_paper_edit' p.pk %}">Edit</a>
+        {% if p.status == 'pending' %}
+        <form method="post">
+          {% csrf_token %}
+          <input type="hidden" name="pk" value="{{ p.pk }}">
+          <input type="hidden" name="action" value="approve">
+          <input type="hidden" name="return_status" value="{{ filter_status }}">
+          <button type="submit" class="yes">Approve</button>
+        </form>
+        <form method="post" onsubmit="return confirm('Reject this paper?');">
+          {% csrf_token %}
+          <input type="hidden" name="pk" value="{{ p.pk }}">
+          <input type="hidden" name="action" value="reject">
+          <input type="hidden" name="return_status" value="{{ filter_status }}">
+          <button type="submit" class="no">Reject</button>
+        </form>
+        {% endif %}
+      </div>
+    </article>
+    {% empty %}
+    <div class="oc-empty">No papers match this filter.</div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

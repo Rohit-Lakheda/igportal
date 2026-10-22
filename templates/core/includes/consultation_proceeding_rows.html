@@ -1,0 +1,16 @@
+{% for c in items %}
+<tr class="pc-row" data-org="{{ c.organization|default:'' }}" data-bucket="{{ bucket }}">
+  <td class="pc-title-cell">
+  <a href="{% url 'Proceedingsdtl' c.id %}" class="pc-title-link">
+    <i class="fa fa-file-text-o"></i>
+    {{ c.title }}
+</a>
+  </td>
+  <td>{{ c.organization|default:"—" }}</td>
+  <td>{% if c.open_date %}{{ c.open_date|date:"d M Y" }}{% else %}—{% endif %}</td>
+  <td>{% if c.close_date %}{{ c.close_date|date:"d M Y" }}{% else %}—{% endif %}</td>
+  <td><span class="pc-badge {{ badge_class }}">{{ badge_label }}</span></td>
+</tr>
+{% empty %}
+<tr><td colspan="5" class="empty">{{ empty_msg }}</td></tr>
+{% endfor %}

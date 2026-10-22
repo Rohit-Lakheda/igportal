@@ -1,0 +1,185 @@
+{% extends "admin/base.html" %}
+{% block title %}Global forums | Admin{% endblock %}
+
+{% block admin_css %}
+<style>
+  .gf-head{ display:flex; justify-content:space-between; align-items:flex-end; gap:16px; flex-wrap:wrap; }
+  .gf-head h1, .gf-form h2, .gf-section h2{ margin:0; font-family:"Playfair Display", Georgia, serif; }
+  .gf-head p, .gf-section p, .gf-form .hint{ margin:6px 0 0; color:#5b6b7c; }
+  .gf-count{ padding:8px 12px; border-radius:999px; background:#fff; border:1px solid #e8edf3; font-weight:700; font-size:14px; }
+  .gf-form, .gf-card{
+    background:#fff; border:1px solid #e8edf3; border-radius:18px; padding:22px;
+    box-shadow:0 10px 24px rgba(15,23,42,.05);
+  }
+  .gf-form h2{ font-size:26px; margin-bottom:16px; }
+  .gf-form .hint{ margin:-8px 0 16px; }
+  .gf-grid{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .gf-span{ grid-column:1 / -1; }
+  .gf-form label{ display:block; margin:0 0 6px; font-size:14px; font-weight:700; }
+  .gf-form input, .gf-form textarea{
+    box-sizing:border-box; width:100%; height:44px; padding:0 14px; border:1px solid #e8edf3; border-radius:12px; background:#fff; color:#122033; font:inherit; font-size:14px;
+  }
+  .gf-form textarea{ height:auto; min-height:90px; padding:12px 14px; resize:vertical; }
+  .gf-form input:focus, .gf-form textarea:focus{ outline:2px solid rgba(224,123,42,.35); border-color:#e07b2a; }
+  .gf-actions{ display:flex; justify-content:flex-end; gap:8px; margin-top:16px; }
+  .gf-actions button, .gf-add, .gf-row a, .gf-row button{
+    display:inline-flex; align-items:center; justify-content:center; height:38px; padding:0 14px;
+    border-radius:10px; border:1px solid #e8edf3; background:#fff; color:#122033; font-weight:700; font-size:13px; line-height:1; text-decoration:none; cursor:pointer;
+  }
+  .gf-actions button, .gf-add{ height:44px; padding:0 16px; border-radius:12px; background:#e07b2a; border-color:#e07b2a; color:#fff; font-size:14px; gap:8px; }
+  .gf-actions button:hover, .gf-add:hover{ background:#c96416; color:#fff; }
+  .gf-section{ display:flex; flex-direction:column; gap:12px; }
+  .gf-section-head{ display:flex; justify-content:space-between; align-items:flex-end; gap:12px; flex-wrap:wrap; }
+  .gf-list{ display:flex; flex-direction:column; gap:12px; }
+  .gf-card{
+    display:grid; grid-template-columns:72px minmax(0, 1fr) auto; gap:16px; align-items:center; padding:14px 18px;
+  }
+  .gf-card img, .gf-ph{
+    width:72px; height:48px; object-fit:contain; border-radius:10px; background:#f4f7fb; border:1px solid #e8edf3;
+  }
+  .gf-ph{ display:grid; place-items:center; color:#8a97a6; font-size:11px; font-weight:700; }
+  .gf-card h3{ margin:0; font-size:18px; }
+  .gf-meta{ display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+  .gf-meta span{
+    padding:4px 10px; border-radius:999px; background:#f4f7fb; border:1px solid #e8edf3; color:#5b6b7c; font-size:12.5px; font-weight:700;
+  }
+  .gf-meta .on{ color:#166534; background:rgba(22,163,74,.1); border-color:transparent; }
+  .gf-meta .off{ color:#b42318; background:#fff5f5; border-color:transparent; }
+  .gf-row{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .gf-row form{ margin:0; display:flex; }
+  .gf-row a:hover{ border-color:#e07b2a; color:#c96416; }
+  .gf-row .danger{ color:#b42318; }
+  .gf-row .danger:hover{ border-color:#b42318; background:#fff5f5; }
+  .gf-empty{ padding:28px 16px; text-align:center; background:#fff; border:1px dashed #d7dee7; border-radius:18px; color:#5b6b7c; }
+  @media (max-width: 800px){
+    .gf-grid, .gf-card{ grid-template-columns:1fr; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-section">
+  <div class="gf-head">
+    <div>
+      <h1>India at Global Forums</h1>
+      <p>Edit the public page text, the forum tiles, their positions, and the highlight photos.</p>
+    </div>
+    <a class="gf-count" href="{% url 'global' %}" target="_blank" rel="noopener">Open public page</a>
+  </div>
+
+  <form class="gf-form" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="page">
+    <h2>Page text</h2>
+    <div class="gf-grid">
+      <div>
+        <label for="gf-title">Banner title</label>
+        <input id="gf-title" type="text" name="hero_title" value="{{ page_copy.hero_title }}" required>
+      </div>
+      <div>
+        <label for="gf-pos">Positions heading</label>
+        <input id="gf-pos" type="text" name="positions_heading" value="{{ page_copy.positions_heading }}">
+      </div>
+      <div class="gf-span">
+        <label for="gf-sub">Banner text</label>
+        <textarea id="gf-sub" name="hero_subtitle" rows="2">{{ page_copy.hero_subtitle }}</textarea>
+      </div>
+      <div>
+        <label for="gf-ih">Introduction heading</label>
+        <input id="gf-ih" type="text" name="intro_heading" value="{{ page_copy.intro_heading }}">
+      </div>
+      <div>
+        <label for="gf-hh">Highlights heading</label>
+        <input id="gf-hh" type="text" name="highlights_heading" value="{{ page_copy.highlights_heading }}">
+      </div>
+      <div class="gf-span">
+        <label for="gf-it">Introduction</label>
+        <textarea id="gf-it" name="intro_text" rows="3">{{ page_copy.intro_text }}</textarea>
+      </div>
+    </div>
+    <div class="gf-actions">
+      <button type="submit">Save page text</button>
+    </div>
+  </form>
+
+  <section class="gf-section">
+    <div class="gf-section-head">
+      <div>
+        <h2>Forums</h2>
+        <p>Each forum is a tile. Positions are the statements shown when it is selected.</p>
+      </div>
+      <a class="gf-add" href="{% url 'admin_global_forum_add' %}"><i class="fas fa-plus"></i> Add forum</a>
+    </div>
+    <div class="gf-list">
+      {% for forum in forums %}
+      <article class="gf-card">
+        {% if forum.picture_url %}
+        <img src="{{ forum.picture_url }}" alt="">
+        {% else %}
+        <div class="gf-ph">No logo</div>
+        {% endif %}
+        <div>
+          <h3>{{ forum.name }}</h3>
+          <div class="gf-meta">
+            {% if forum.tagline %}<span>{{ forum.tagline }}</span>{% endif %}
+            <span>Sort {{ forum.sort_order }}</span>
+            <span class="{% if forum.is_published %}on{% else %}off{% endif %}">{% if forum.is_published %}Published{% else %}Hidden{% endif %}</span>
+          </div>
+        </div>
+        <div class="gf-row">
+          <a href="{% url 'admin_global_forum_positions' forum.pk %}">Positions</a>
+          <a href="{% url 'admin_global_forum_edit' forum.pk %}">Edit</a>
+          <form method="post" onsubmit="return confirm('Remove this forum and its positions?');">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="delete_forum">
+            <input type="hidden" name="pk" value="{{ forum.pk }}">
+            <button type="submit" class="danger">Delete</button>
+          </form>
+        </div>
+      </article>
+      {% empty %}
+      <div class="gf-empty">No forums yet.</div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="gf-section">
+    <div class="gf-section-head">
+      <div>
+        <h2>Highlights</h2>
+        <p>Photos in the strip beside the introduction. Use 1500 × 500 px.</p>
+      </div>
+      <a class="gf-add" href="{% url 'admin_global_highlight_add' %}"><i class="fas fa-plus"></i> Add highlight</a>
+    </div>
+    <div class="gf-list">
+      {% for slide in highlights %}
+      <article class="gf-card">
+        {% if slide.picture_url %}
+        <img src="{{ slide.picture_url }}" alt="">
+        {% else %}
+        <div class="gf-ph">No photo</div>
+        {% endif %}
+        <div>
+          <h3>{{ slide.caption|default:slide.alt_text|default:"Highlight" }}</h3>
+          <div class="gf-meta">
+            <span>Sort {{ slide.sort_order }}</span>
+            <span class="{% if slide.is_published %}on{% else %}off{% endif %}">{% if slide.is_published %}Published{% else %}Hidden{% endif %}</span>
+          </div>
+        </div>
+        <div class="gf-row">
+          <a href="{% url 'admin_global_highlight_edit' slide.pk %}">Edit</a>
+          <form method="post" onsubmit="return confirm('Remove this highlight?');">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="delete_highlight">
+            <input type="hidden" name="pk" value="{{ slide.pk }}">
+            <button type="submit" class="danger">Delete</button>
+          </form>
+        </div>
+      </article>
+      {% empty %}
+      <div class="gf-empty">No highlights yet.</div>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}

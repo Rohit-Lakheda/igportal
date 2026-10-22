@@ -1,0 +1,96 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}Open source projects | Admin{% endblock %}
+
+{% block admin_css %}
+<link rel="stylesheet" href="{% static 'css/admin/admin-table.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="admin-section">
+
+  <div class="admin-header">
+    <div class="admin-header-title">
+      <h1>Open source — projects</h1>
+      <div class="admin-breadcrumb">
+        <a href="{% url 'admin_dashboard' %}">Dashboard</a>
+        <span>/</span>
+        <a href="{% url 'admin_research_hub' %}">Research &amp; OSS</a>
+        <span>/</span>
+        <span>OSS projects</span>
+      </div>
+      <p>Approve the project shell; then approve each contribution version separately.</p>
+    </div>
+  </div>
+
+  {% include "admin/research/_messages.html" %}
+
+  <div class="admin-topbar">
+    <form method="get" class="admin-search-form">
+      <label class="me-2 text-secondary small">Status</label>
+      <select name="status" class="admin-input w-auto" onchange="this.form.submit()">
+        <option value="pending" {% if filter_status == 'pending' %}selected{% endif %}>Pending</option>
+        <option value="approved" {% if filter_status == 'approved' %}selected{% endif %}>Approved</option>
+        <option value="rejected" {% if filter_status == 'rejected' %}selected{% endif %}>Rejected</option>
+        <option value="all" {% if filter_status == 'all' %}selected{% endif %}>All</option>
+      </select>
+    </form>
+    <a href="{% url 'admin_research_hub' %}" class="btn btn-outline-secondary btn-sm">Back to hub</a>
+  </div>
+
+  <div class="admin-table-card">
+    <div class="table-responsive">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Broad topic</th>
+            <th>Project</th>
+            <th>Proposed by</th>
+            <th>Status</th>
+            <th>Created</th>
+            <th style="width:200px">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for proj in projects %}
+          <tr>
+            <td>{{ proj.broad_topic.name }}</td>
+            <td>
+              <div class="fw-semibold">{{ proj.name }}</div>
+              <div class="small text-muted">{{ proj.description|truncatechars:80 }}</div>
+            </td>
+            <td class="small">{{ proj.proposed_by_email|default:"—" }}</td>
+            <td>
+              <span class="badge {% if proj.status == 'approved' %}bg-success{% elif proj.status == 'rejected' %}bg-danger{% else %}bg-warning text-dark{% endif %}">{{ proj.get_status_display }}</span>
+            </td>
+            <td class="small">{{ proj.created_at|date:"Y-m-d H:i" }}</td>
+            <td>
+              {% if proj.status == 'pending' %}
+              <form method="post" class="d-inline">{% csrf_token %}
+                <input type="hidden" name="pk" value="{{ proj.pk }}">
+                <input type="hidden" name="action" value="approve">
+                <input type="hidden" name="return_status" value="{{ filter_status }}">
+                <button type="submit" class="btn btn-sm btn-success me-1">Approve</button>
+              </form>
+              <form method="post" class="d-inline">{% csrf_token %}
+                <input type="hidden" name="pk" value="{{ proj.pk }}">
+                <input type="hidden" name="action" value="reject">
+                <input type="hidden" name="return_status" value="{{ filter_status }}">
+                <button type="submit" class="btn btn-sm btn-outline-danger">Reject</button>
+              </form>
+              {% else %}
+              <span class="text-muted small">—</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="6" class="admin-empty">No projects in this filter.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

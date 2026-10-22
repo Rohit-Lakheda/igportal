@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+  {% load static %}
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+  <title>{% block title %}Bharat Internet Governance Sphere{% endblock %}</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.gsoogleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Core CSS -->
+  <!-- <link rel="stylesheet" href="{% static 'UI-CSS/core.css' %}"> -->
+  <link rel="stylesheet" href="{% static 'UI-CSS/nav.css' %}">
+  {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+
+<!-- ================= GLASS CAPSULE NAV ================= -->
+<header class="glass-header">
+
+  <div class="glass-wrapper">
+
+    <!-- Brand -->
+    <div class="glass-brand">
+      <img src="{% static 'img/ig-logo3.jpeg' %}" class="glass-logo" alt="Logo">
+      <div class="glass-text">
+        <div class="glass-title">Bharat Internet Governance Sphere</div>
+        <div class="glass-sub">India’s Digital Governance Network</div>
+      </div>
+    </div>
+
+    <!-- Navigation Capsule -->
+    <div class="glass-nav-box">
+      <nav class="glass-nav" id="glassNav">
+
+        <a href="{% url 'home' %}" class="glass-link active">Home</a>
+        <a href="{% url 'events' %}" class="glass-link">Events</a>
+        <a href="{% url 'consultations' %}" class="glass-link">Stakeholders</a>
+
+        <!-- Research Dropdown -->
+        <div class="glass-dropdown">
+          <span class="glass-link">Research</span>
+          <div class="glass-dropdown-menu">
+            <a target="_blank" href="https://portal.aiori.in/">AIORI Portal</a>
+            <a target="_blank" href="https://nixi.in/scheme/">NIXI Internship Scheme</a>
+          </div>
+        </div>
+
+        <a href="{% url 'capacity' %}" class="glass-link">Capacity</a>
+        <a href="{% url 'global' %}" class="glass-link">India at Global Forums</a>
+        <a href="{% url 'sig' %}" class="glass-link">SIG</a>
+
+      </nav>
+    </div>
+
+    <!-- User / Auth Dropdown -->
+    <div class="glass-user">
+
+      <div class="user-icon" id="userToggle">
+        <i class="fa fa-user"></i>
+      </div>
+
+      <div class="user-menu" id="userMenu">
+        {% if request.session.member_uuid and request.session.member_role == 'Member' %}
+          <a href="#"><i class="fa fa-gauge"></i> Dashboard</a>
+          <a href="#"><i class="fa fa-user"></i> Profile</a>
+          <div class="divider"></div>
+          <a href="{% url 'sig_logout' %}" class="danger"><i class="fa fa-sign-out"></i> Logout</a>
+        {% else %}
+          <a href="{% url 'login' %}"><i class="fa fa-sign-in"></i> Login</a>
+          <a href="{% url 'sigregister' %}"><i class="fa fa-user-plus"></i> Sign Up</a>
+        {% endif %}
+      </div>
+
+    </div>
+
+    <!-- Mobile Toggle -->
+    <div class="glass-toggle" id="glassToggle">
+      <span></span><span></span><span></span>
+    </div>
+
+  </div>
+
+</header>
+<!-- ================= PAGE CONTENT ================= -->
+<main class="site-main">
+  {% block content %} {% endblock %}
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <p>© Bharat IG Sphere — Managed by NIXI, Supported by MeitY</p>
+  </div>
+</footer>
+
+<!-- ================= SCRIPTS ================= -->
+<script>
+  // Mobile menu
+  const navToggle = document.getElementById("navToggle");
+  const navCenter = document.getElementById("navCenter");
+
+  navToggle.addEventListener("click", ()=>{
+    navCenter.classList.toggle("open");
+  });
+
+  // Scroll shadow
+  window.addEventListener("scroll",()=>{
+    document.body.classList.toggle("scrolled", window.scrollY > 40);
+  });
+</script>
+
+
+<script>
+const glassToggle = document.getElementById("glassToggle");
+const glassNav = document.getElementById("glassNav");
+const userToggle = document.getElementById("userToggle");
+const userMenu = document.getElementById("userMenu");
+
+if(glassToggle){
+  glassToggle.onclick = ()=> glassNav.classList.toggle("open");
+}
+
+if(userToggle){
+  userToggle.onclick = ()=> userMenu.style.display =
+    userMenu.style.display === "block" ? "none" : "block";
+}
+
+document.addEventListener("click", (e)=>{
+  if(userToggle && !userToggle.contains(e.target) && !userMenu.contains(e.target)){
+    userMenu.style.display="none";
+  }
+});
+</script>
+
+
+</body>
+</html>

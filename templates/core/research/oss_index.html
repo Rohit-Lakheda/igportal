@@ -1,0 +1,90 @@
+{% extends "core/research/base_research.html" %}
+{% load static %}
+{% block title %}Open source projects — Bharat IG Sphere{% endblock %}
+{% block body_class %}lp-page{% endblock %}
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'UI-CSS/landing.css' %}">
+<link rel="stylesheet" href="{% static 'UI-CSS/research.css' %}">
+{% endblock %}
+{% block research_body %}
+<section class="events-header">
+  <div class="events-header-bg"></div>
+  <div class="events-header-content">
+    <h1>Open source projects</h1>
+    <p>Projects appear after admin approval. Each contribution keeps its own version number.</p>
+  </div>
+</section>
+
+<section class="rr-page">
+  <div class="rr-wrap">
+    <article class="rr-sheet">
+      <div class="rr-top">
+        <a href="{% url 'research_hub' %}" class="rr-back"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Research</a>
+        {% if request.session.member_uuid and request.session.member_role|default:''|lower == 'member' %}
+        <a href="{% url 'open_source_submit' %}" class="rr-submit">Submit a project</a>
+        {% endif %}
+      </div>
+
+      {% for row in rows %}
+      <h2 class="rr-group">{{ row.broad.name }}</h2>
+      {% for pr in row.projects %}
+      <a class="rr-row" href="{% url 'open_source_project' row.broad.slug pr.project.slug %}">
+        <span class="rr-ico" aria-hidden="true"><i class="fa-solid fa-code"></i></span>
+        <div class="rr-copy">
+          <h2>{{ pr.project.name }}</h2>
+          <p>{{ pr.project.description|truncatewords:28 }}</p>
+        </div>
+        <div class="rr-stats">
+          <span><strong>{{ pr.contribution_count }}</strong> contribution{{ pr.contribution_count|pluralize }}</span>
+          <span>Latest <strong>v{{ pr.latest_version }}</strong></span>
+        </div>
+        <span class="rr-open">Open <span aria-hidden="true">→</span></span>
+      </a>
+      {% endfor %}
+      {% empty %}
+      <p class="rr-empty">No approved open-source projects with published contributions yet.</p>
+      {% endfor %}
+    </article>
+  </div>
+</section>
+
+<footer class="lp-footer">
+  <div class="lp-footer-grid">
+    <div class="lp-footer-brand">
+      <img src="{% static 'img/ig-logo3.jpeg' %}" alt="Bharat IG">
+      <div>
+        <strong>Bharat Internet Governance Sphere</strong>
+        <p>Connection, policy, people and participation in India's digital governance.</p>
+      </div>
+    </div>
+    <div>
+      <h4>Explore</h4>
+      <a href="{% url 'home' %}">Home</a>
+      <a href="{% url 'events' %}">Events</a>
+      <a href="{% url 'research_hub' %}">Research</a>
+      <a href="{% url 'blogs' %}">Blogs</a>
+    </div>
+    <div>
+      <h4>Participate</h4>
+      <a href="{% url 'consultations' %}">Stakeholder Engagement</a>
+      <a href="{% url 'capacity' %}">Capacity Building</a>
+      <a href="{% url 'global' %}">India at Global Forums</a>
+      <a href="{% url 'sig' %}">SIG</a>
+    </div>
+    <div>
+      <h4>Connect</h4>
+      <p>Stay connected with India's internet governance community.</p>
+      <div class="lp-social">
+        <a href="https://x.com" target="_blank" rel="noopener" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
+        <a href="https://www.linkedin.com" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+        <a href="https://www.youtube.com" target="_blank" rel="noopener" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+      </div>
+    </div>
+  </div>
+  <div class="lp-footer-bar">
+    <span>© {% now "Y" %} Bharat Internet Governance Sphere (BIG-S). All rights reserved.</span>
+    <span>Privacy Policy · Terms of Use · Contact Us</span>
+  </div>
+</footer>
+{% endblock %}

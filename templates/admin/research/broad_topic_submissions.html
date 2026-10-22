@@ -1,0 +1,142 @@
+{% extends "admin/base.html" %}
+{% block title %}{{ topic.name }} submissions | Admin{% endblock %}
+
+{% block admin_css %}
+<style>
+  .bs-back{
+    display:inline-flex; align-items:center; gap:8px; margin-bottom:14px;
+    color:#122033; font-weight:700; font-size:14px; text-decoration:none;
+  }
+  .bs-back:hover{ color:#c96416; }
+  .bs-head h1, .bs-section h2{ margin:0; font-family:"Playfair Display", Georgia, serif; }
+  .bs-head p, .bs-section p{ margin:6px 0 0; color:#5b6b7c; }
+  .bs-section{ display:flex; flex-direction:column; gap:12px; }
+  .bs-list{ display:flex; flex-direction:column; gap:12px; }
+  .bs-card{
+    display:grid; grid-template-columns:minmax(0, 1fr) auto; gap:16px; align-items:center;
+    background:#fff; border:1px solid #e8edf3; border-radius:18px; padding:16px 18px;
+    box-shadow:0 10px 24px rgba(15,23,42,.05);
+  }
+  .bs-card h3{ margin:0; font-size:18px; color:#122033; }
+  .bs-meta{ display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+  .bs-meta span{
+    padding:4px 10px; border-radius:999px; background:#f4f7fb; border:1px solid #e8edf3; color:#5b6b7c; font-size:12.5px; font-weight:700;
+  }
+  .bs-meta .pending{ color:#c96416; background:rgba(224,123,42,.12); border-color:transparent; }
+  .bs-meta .approved{ color:#166534; background:rgba(22,163,74,.1); border-color:transparent; }
+  .bs-meta .rejected{ color:#b42318; background:#fff5f5; border-color:transparent; }
+  .bs-card a.edit{
+    display:inline-flex; align-items:center; justify-content:center; height:38px; padding:0 14px;
+    border-radius:10px; border:1px solid #e8edf3; background:#fff; color:#122033; font-weight:700; font-size:13px; text-decoration:none;
+  }
+  .bs-card a.edit:hover{ border-color:#e07b2a; color:#c96416; }
+  .bs-empty{ padding:28px 16px; text-align:center; background:#fff; border:1px dashed #d7dee7; border-radius:18px; color:#5b6b7c; }
+  @media (max-width: 700px){ .bs-card{ grid-template-columns:1fr; } }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-section">
+  <a class="bs-back" href="{% url 'admin_research_broad_topics' %}"><i class="fas fa-arrow-left"></i> Broad topics</a>
+  <div class="bs-head">
+    <h1>{{ topic.name }}</h1>
+    <p>Everything submitted under this topic. Each paper and contribution version stays its own row.</p>
+  </div>
+
+  <section class="bs-section">
+    <div>
+      <h2>Specific topics</h2>
+      <p>{{ specific_topics|length }} topic{{ specific_topics|length|pluralize }}</p>
+    </div>
+    <div class="bs-list">
+      {% for t in specific_topics %}
+      <article class="bs-card">
+        <div>
+          <h3>{{ t.name }}</h3>
+          <div class="bs-meta">
+            <span class="{{ t.status }}">{{ t.get_status_display }}</span>
+            <span>{{ t.created_at|date:"d M Y, h:i A" }}</span>
+          </div>
+        </div>
+        <a class="edit" href="{% url 'admin_research_specific_topic_edit' t.pk %}">Edit</a>
+      </article>
+      {% empty %}
+      <div class="bs-empty">No specific topics yet.</div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="bs-section">
+    <div>
+      <h2>Papers</h2>
+      <p>{{ papers|length }} version{{ papers|length|pluralize }}</p>
+    </div>
+    <div class="bs-list">
+      {% for p in papers %}
+      <article class="bs-card">
+        <div>
+          <h3>{{ p.title }}</h3>
+          <div class="bs-meta">
+            <span>{{ p.specific_topic.name }}</span>
+            <span>Version {{ p.version }}</span>
+            <span class="{{ p.status }}">{{ p.get_status_display }}</span>
+            <span>{{ p.uploaded_at|date:"d M Y, h:i A" }}</span>
+          </div>
+        </div>
+        <a class="edit" href="{% url 'admin_research_paper_edit' p.pk %}">Edit</a>
+      </article>
+      {% empty %}
+      <div class="bs-empty">No papers yet.</div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="bs-section">
+    <div>
+      <h2>Open source projects</h2>
+      <p>{{ projects|length }} project{{ projects|length|pluralize }}</p>
+    </div>
+    <div class="bs-list">
+      {% for pr in projects %}
+      <article class="bs-card">
+        <div>
+          <h3>{{ pr.name }}</h3>
+          <div class="bs-meta">
+            <span class="{{ pr.status }}">{{ pr.get_status_display }}</span>
+            <span>{{ pr.created_at|date:"d M Y, h:i A" }}</span>
+          </div>
+        </div>
+        <a class="edit" href="{% url 'admin_research_oss_project_edit' pr.pk %}">Edit</a>
+      </article>
+      {% empty %}
+      <div class="bs-empty">No projects yet.</div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="bs-section">
+    <div>
+      <h2>Open source contributions</h2>
+      <p>{{ contributions|length }} version{{ contributions|length|pluralize }}</p>
+    </div>
+    <div class="bs-list">
+      {% for c in contributions %}
+      <article class="bs-card">
+        <div>
+          <h3>{{ c.title }}</h3>
+          <div class="bs-meta">
+            <span>{{ c.project.name }}</span>
+            <span>Version {{ c.version }}</span>
+            <span class="{{ c.status }}">{{ c.get_status_display }}</span>
+            <span>{{ c.uploaded_at|date:"d M Y, h:i A" }}</span>
+          </div>
+        </div>
+        <a class="edit" href="{% url 'admin_research_oss_contribution_edit' c.pk %}">Edit</a>
+      </article>
+      {% empty %}
+      <div class="bs-empty">No contributions yet.</div>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}

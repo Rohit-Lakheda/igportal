@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Create SIG Member</h2>
+
+<form method="post">
+  {% csrf_token %}
+
+  <label>First Name</label>
+  <input type="text" name="first_name" required>
+
+  <label>Last Name</label>
+  <input type="text" name="last_name" required>
+
+  <label>Email</label>
+  <input type="email" name="email" required>
+
+  <label>Mobile Number</label>
+  <input type="text" name="mobile" required>
+
+  <label>SIG Role</label>
+  <select name="sig_role" required>
+    <option value="">Select</option>
+    <option value="FI">FI</option>
+    <option value="INN">INN</option>
+    <option value="TPS">TPS</option>
+  </select>
+
+  <br><br>
+  <button type="submit">Create SIG Member</button>
+</form>
+{% endblock %}

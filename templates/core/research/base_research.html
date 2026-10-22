@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'UI-CSS/research.css' %}">
+{% endblock %}
+{% block content %}
+<div class="research-page">
+  {% if messages %}
+  <div class="research-messages" role="status">
+    {% for message in messages %}
+    <div class="research-message research-message--{{ message.tags|default:'info' }}">{{ message }}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% block research_body %}{% endblock %}
+</div>
+<script>
+  document.querySelectorAll(".research-messages").forEach(function (box) {
+    setTimeout(function () { box.remove(); }, 2000);
+  });
+</script>
+{% endblock %}

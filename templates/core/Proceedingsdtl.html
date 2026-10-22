@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ c.title|default:"Proceeding" }} — Bharat IG Sphere{% endblock %}
+{% block body_class %}lp-page{% endblock %}
+
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'UI-CSS/landing.css' %}">
+<link rel="stylesheet" href="{% static 'UI-CSS/consultations.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<section class="pc-hero">
+  <div class="pc-hero-bg"></div>
+  <div class="events-header-content">
+    <h1>Stakeholder Engagement</h1>
+    <p>Transparent, inclusive and participatory governance through open consultations.</p>
+  </div>
+</section>
+
+<section class="pd-page">
+  <div class="pd-wrap">
+    <article class="pd-card">
+      <a href="{% url 'consultations' %}" class="pd-back"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> All proceedings</a>
+
+      <header class="pd-head">
+        <div>
+          <span class="pd-kicker {% if c.bucket != 'open' %}is-closed{% endif %}">{% if c.bucket == "upcoming" %}Upcoming{% elif c.bucket == "pending" %}Pending{% elif c.bucket == "open" %}Open{% else %}Closed{% endif %}</span>
+          <h1>{{ c.title|default:"Proceeding" }}</h1>
+        </div>
+        {% if c.bucket == 'open' and c.days_left != None and c.days_left >= 0 %}
+        <p class="pd-days">{% if c.days_left == 0 %}Closes today{% else %}{{ c.days_left }} day{{ c.days_left|pluralize }} left{% endif %}</p>
+        {% endif %}
+      </header>
+
+      {% if already_commented %}
+      <p class="pd-note">You have already submitted input for this proceeding.</p>
+      {% elif c.bucket != 'open' %}
+      <p class="pd-note">This proceeding is not accepting new submissions.</p>
+      {% endif %}
+
+      <div class="pd-layout">
+        <aside class="pd-facts">
+          {% if c.organization %}
+          <div><span>Organization</span><strong>{{ c.organization }}</strong></div>
+          {% endif %}
+          <div><span>Requester</span><strong>{{ c.requester|default:"Bharat IG Network" }}</strong></div>
+          {% if c.category %}
+          <div><span>Category</span><strong>{{ c.category }}</strong></div>
+          {% endif %}
+          <div>
+            <span>Contact</span>
+            {% if c.contact_email %}
+            <a href="mailto:{{ c.contact_email }}">{{ c.contact_email }}</a>
+            {% else %}
+            <a href="mailto:sig-sectt@nixi.in">sig-sectt@nixi.in</a>
+            {% endif %}
+          </div>
+          <div>
+            <span>Timeline</span>
+            <strong>
+              {% if c.open_date %}{{ c.open_date|date:"d M Y" }}{% else %}Opens later{% endif %}
+              {% if c.close_date %} – {{ c.close_date|date:"d M Y" }}{% endif %}
+            </strong>
+          </div>
+        </aside>
+
+        <div class="pd-body">
+          <h2>About this consultation</h2>
+          <div class="pd-prose">{{ c.description|linebreaks }}</div>
+
+          {% if c.input_focus %}
+          <h2>What we need your input on</h2>
+          <div class="pd-prose">{{ c.input_focus|linebreaks }}</div>
+          {% endif %}
+
+          {% if c.proposals %}
+          <h2>Proposals and documents</h2>
+          <div class="pd-prose">{{ c.proposals|linebreaks }}</div>
+          {% endif %}
+
+          {% if consultation_docs %}
+          <h2>Attachments</h2>
+          <div class="pd-docs">
+            {% for doc in consultation_docs %}
+            <a href="{{ doc.document_path }}" target="_blank" rel="noopener">{{ doc.document_name }}</a>
+            {% endfor %}
+          </div>
+          {% endif %}
+
+          {% if already_commented %}
+          <h2>Your submission</h2>
+          <blockquote class="pd-quote">{{ user_comment.comment }}</blockquote>
+          <div class="pd-meta-line">
+            <span>{{ user_comment.designation }} · {{ user_comment.organization }}</span>
+            <span>{{ user_comment.status }}</span>
+            <span>{{ user_comment.created_at|date:"d M Y" }}</span>
+          </div>
+          {% if user_comment.document_path %}
+          <p><a class="pd-file" href="{{ user_comment.document_path }}" target="_blank" rel="noopener">View attachment</a></p>
+          {% endif %}
+
+          {% elif c.bucket == 'open' %}
+            {% if request.session.member_uuid %}
+            <h2>Submit your contribution</h2>
+            <p class="pd-note">Add your comment and an optional supporting document (PDF or Word, max 5 MB).</p>
+            <form method="post" action="{% url 'submit_comment' consultation_id=c.id %}" enctype="multipart/form-data" class="pd-form">
+              {% csrf_token %}
+              <div>
+                <label for="id_comment">Comment</label>
+                <textarea id="id_comment" name="comment" placeholder="Your perspective on this consultation" required rows="6"></textarea>
+              </div>
+              <div class="pd-two">
+                <div>
+                  <label for="id_designation">Designation</label>
+                  <input id="id_designation" type="text" name="designation" placeholder="Policy researcher" required>
+                </div>
+                <div>
+                  <label for="id_org">Organization</label>
+                  <input id="id_org" type="text" name="Org" placeholder="Company or institution" required>
+                </div>
+              </div>
+              <div>
+                <label for="id_document">Supporting document</label>
+                <input id="id_document" type="file" name="document" accept=".pdf,.doc,.docx">
+                <p class="pd-hint">Optional. PDF or Word, max 5 MB.</p>
+              </div>
+              <div>
+                <button type="submit" class="pd-submit">Submit</button>
+              </div>
+            </form>
+            {% else %}
+            <div class="pd-signin">
+              <p>Sign in with your Bharat IG Sphere member account to submit input on this consultation.</p>
+              <a href="{% url 'login' %}?next={{ request.path|urlencode }}" class="pd-text-link">Provide your input</a>
+            </div>
+            {% endif %}
+          {% endif %}
+        </div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<footer class="lp-footer">
+  <div class="lp-footer-grid">
+    <div class="lp-footer-brand">
+      <img src="{% static 'img/ig-logo3.jpeg' %}" alt="Bharat IG">
+      <div>
+        <strong>Bharat Internet Governance Sphere</strong>
+        <p>Connection, policy, people and participation in India's digital governance.</p>
+      </div>
+    </div>
+    <div>
+      <h4>Explore</h4>
+      <a href="{% url 'home' %}">Home</a>
+      <a href="{% url 'events' %}">Events</a>
+      <a href="{% url 'research_hub' %}">Research</a>
+      <a href="{% url 'blogs' %}">Blogs</a>
+    </div>
+    <div>
+      <h4>Participate</h4>
+      <a href="{% url 'consultations' %}">Stakeholder Engagement</a>
+      <a href="{% url 'capacity' %}">Capacity Building</a>
+      <a href="{% url 'global' %}">India at Global Forums</a>
+      <a href="{% url 'sig' %}">SIG</a>
+    </div>
+    <div>
+      <h4>Connect</h4>
+      <p>Stay connected with India's internet governance community.</p>
+      <div class="lp-social">
+        <a href="https://x.com" target="_blank" rel="noopener" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
+        <a href="https://www.linkedin.com" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+        <a href="https://www.youtube.com" target="_blank" rel="noopener" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+      </div>
+    </div>
+  </div>
+  <div class="lp-footer-bar">
+    <span>© {% now "Y" %} Bharat Internet Governance Sphere (BIG-S). All rights reserved.</span>
+    <span>Privacy Policy · Terms of Use · Contact Us</span>
+  </div>
+</footer>
+
+{% endblock %}
