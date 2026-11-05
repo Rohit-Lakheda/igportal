@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Page Not Found | Bharat Internet Governance Sphere{% endblock %}
+
+{% block content %}
+<div style="text-align: center; padding: 100px 20px;">
+    <h1 style="font-size: 72px; margin-bottom: 10px;">404</h1>
+    <h2 style="margin-bottom: 20px;">Page Not Found</h2>
+    <p style="margin-bottom: 30px;">
+        Sorry, the page you're looking for doesn't exist or has been moved.
+    </p>
+    <a href="{% url 'home' %}" style="color: inherit; text-decoration: underline;">
+        ← Back to Home
+    </a>
+</div>
+{% endblock %}

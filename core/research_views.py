@@ -11,6 +11,8 @@ from django.utils.text import slugify
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.http import require_http_methods
 
+from .mailer import pref_send_mail
+
 from .models import (
     OpenSourceContribution,
     OpenSourceProject,
@@ -150,6 +152,8 @@ def research_repository_index(request):
     )
     rows = []
     for bt in topics:
+        if not bt.slug or slugify(bt.slug) != bt.slug:
+            continue  # invalid slug - skip to avoid crashing the page
         approved_topics = ResearchSpecificTopic.objects.filter(
             broad_topic=bt,
             status=ResearchSpecificTopic.Status.APPROVED,
@@ -337,6 +341,14 @@ def research_repository_submit(request, member):
                     status=ResearchPaper.Status.PENDING,
                 )
                 paper.save()
+
+            pref_send_mail(
+                "research_submit",
+                {"email": member["email"], "name": display_name or member["email"]},
+                title=title,
+                request=request,
+                notify_admin=True,
+            )
 
             messages.success(
                 request,
