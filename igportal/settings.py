@@ -105,7 +105,7 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = "sig-sectt@nixi.in"
 EMAIL_HOST_PASSWORD = "D2gBFz36ieL5"
 DEFAULT_FROM_EMAIL = "IG Portal <sig-sectt@nixi.in>"
-
+ADMIN_NOTIFY_EMAIL = "sig-sectt@nixi.in"
 ADMIN_NOTIFICATION_EMAIL = "sig-sectt@nixi.in"
 
 
@@ -115,3 +115,18 @@ SITE_URL = "http://127.0.0.1:8000"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
+
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "INFO",
+    },
+}

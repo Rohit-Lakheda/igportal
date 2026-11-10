@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Server Error | Bharat Internet Governance Sphere{% endblock %}
+
+{% block content %}
+<div style="text-align: center; padding: 100px 20px;">
+    <h1 style="font-size: 72px; margin-bottom: 10px;">500</h1>
+    <h2 style="margin-bottom: 20px;">Something Went Wrong</h2>
+    <p style="margin-bottom: 30px;">
+        We're sorry, an unexpected error occurred on our end. Please try again later.
+    </p>
+    <a href="{% url 'home' %}" style="color: inherit; text-decoration: underline;">
+        ← Back to Home
+    </a>
+</div>
+{% endblock %}

@@ -13,6 +13,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
+from .mailer import pref_send_mail
 from django.db.models import Q
 from django.urls import reverse
 import re
@@ -719,6 +720,21 @@ def blog_page(request):
                 status="Pending",
                 read_time=read_time
             )
+
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "SELECT email, company_name FROM ig_account WHERE uuid = %s LIMIT 1",
+                    [member_uuid],
+                )
+                member_row = cursor.fetchone()
+
+            if member_row:
+                pref_send_mail(
+                    "blog_submit",
+                    {"email": member_row[0], "name": member_row[1] or member_row[0]},
+                    title=title,
+                    request=request,
+                )
 
             messages.success(
                 request,
@@ -3708,6 +3724,12 @@ def sigregister(request):
                     """,
                     [make_password(password), timezone.now(), account_id],
                 )
+            pref_send_mail(
+                "sig_register",
+                {"email": email, "name": email},
+                request=request,
+            )
+
             messages.success(request, "Password set successfully. You can now login.")
             return redirect("siglogin")
 
@@ -3757,6 +3779,12 @@ def sigregister(request):
             print("SIG REGISTER ERROR:", e)
             messages.error(request, "Account setup failed. Please try again.")
             return redirect("sigregister")
+
+        pref_send_mail(
+            "sig_register",
+            {"email": email, "name": approved_request.first_name or email},
+            request=request,
+        )
 
         messages.success(request, "Account setup completed. You can now login.")
         return redirect("siglogin")
@@ -4276,6 +4304,21 @@ def public_register(request):
                 messages.error(request, message)
             return render(request, "core/register.html")
 
+        password = (request.POST.get("password") or "").strip()
+        confirm_password = (request.POST.get("confirm_password") or "").strip()
+
+        if not password or not confirm_password:
+            messages.error(request, "Password and confirm password are required.")
+            return render(request, "core/register.html")
+
+        if password != confirm_password:
+            messages.error(request, "Passwords do not match.")
+            return render(request, "core/register.html")
+
+        if len(password) < 6:
+            messages.error(request, "Password must be at least 6 characters.")
+            return render(request, "core/register.html")
+
         # Check Existing Email
         with connection.cursor() as cursor:
             cursor.execute("""
@@ -4291,12 +4334,8 @@ def public_register(request):
                 "Email already registered. Please login."
             )
             return redirect('login')
-        # Generate Password
-        raw_password = (
-            f"{email.split('@')[0]}"
-            f"@{random.randint(1000,9999)}"
-        )
-        password_hash = make_password(raw_password)
+        # Use the password the user chose during registration
+        password_hash = make_password(password)
         uuid_val = str(uuid.uuid4())
         # Insert User
         with connection.cursor() as cursor:
@@ -4332,36 +4371,22 @@ def public_register(request):
             ])
 
         # Send Email
-        send_mail(
-
-            subject="IG Portal – Login Credentials",
-
-            message=f"""
-Hello {fname},
-
-Your account has been created successfully.
-
-Login Details:
-
-Email: {email}
-Password: {raw_password}
-
-Please login to continue.
-
-Regards,
-IG Portal
-""",
-
-            from_email=settings.DEFAULT_FROM_EMAIL,
-
-            recipient_list=[email],
-
-            fail_silently=True
+        pref_send_mail(
+            "welcome",
+            {"email": email, "name": fname or email},
+            body=(
+                f"Hello {fname},\n\n"
+                f"Your account has been created successfully.\n\n"
+                f"You can now login using the email and password you set during registration.\n\n"
+                f"Regards,\n"
+                f"IG Portal"
+            ),
+            request=request,
         )
 
         messages.success(
             request,
-            "Registration successful. Login credentials sent to your email."
+            "Registration successful. You can now login with your email and password."
         )
 
         return redirect('login')
@@ -4542,7 +4567,13 @@ def apply_sig_member(request):
     if request.method == "POST":
         form = SIGMemberForm(request.POST)
         if form.is_valid():
-            form.save()
+            member_req = form.save()
+            pref_send_mail(
+                "sig_apply",
+                {"email": member_req.email, "name": f"{member_req.first_name} {member_req.last_name}".strip()},
+                request=request,
+                notify_admin=True,
+            )
             messages.success(request, "Your SIG Member application has been submitted and is pending admin approval.")
             return redirect("sig")
     else:
