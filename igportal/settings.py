@@ -1,8 +1,10 @@
 
 import os
 from pathlib import Path
+from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR / ".env")
 
 
 SECRET_KEY = 'dev-secret-key-change-me'
@@ -102,10 +104,10 @@ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "sig-sectt@nixi.in"
-EMAIL_HOST_PASSWORD = "D2gBFz36ieL5"
-DEFAULT_FROM_EMAIL = "IG Portal <sig-sectt@nixi.in>"
-ADMIN_NOTIFY_EMAIL = "sig-sectt@nixi.in"
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
+ADMIN_NOTIFY_EMAIL = os.environ.get("ADMIN_NOTIFY_EMAIL")
 ADMIN_NOTIFICATION_EMAIL = "sig-sectt@nixi.in"
 
 

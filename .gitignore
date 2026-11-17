@@ -4,3 +4,6 @@ media/*.mp4
 *.mov
 *.avi
 *.mkv
+
+# Environment variables (secrets) — never commit this file
+.env
